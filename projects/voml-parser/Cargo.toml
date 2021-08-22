@@ -10,16 +10,24 @@ exclude = ["/tests/*"]
 edition = "2018"
 
 [dependencies]
-arc-rs = "0.5"
-serde = "1.0"
-serde_json = { version = "1.0", optional = true }
-toml = { version = "0.5", optional = true }
-# toml_edit = "*"
-yaml-rust = { version = "0.4", optional = true }
-# serde_yaml = "*"
-serde-hjson = { version = "0.9", optional = true }
+peginator = "0.3.0"
+#arc-rs = "0.5"
+#serde = "1.0"
+#serde_json = { version = "1.0", optional = true }
+#toml = { version = "0.5", optional = true }
+## toml_edit = "*"
+#yaml-rust = { version = "0.4", optional = true }
+## serde_yaml = "*"
+#serde-hjson = { version = "0.9", optional = true }
+
+[dependencies.saha-types]
+path = "../saha-types"
+
 
 [dev-dependencies]
+
+[build-dependencies]
+peginator = "0.3.0"
 
 [features]
 default = []
