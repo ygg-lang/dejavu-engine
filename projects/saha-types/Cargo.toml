@@ -1,5 +1,5 @@
 [package]
-name = "sub_projects"
+name = "saha-types"
 publish = false
 version = "0.0.0"
 authors = ["Aster <192607617@qq.com>"]
@@ -11,6 +11,7 @@ license = "MPL-2.0"
 edition = "2021"
 
 [dependencies]
+diagnostic = "0.4.1"
 
 [dev-dependencies]
 

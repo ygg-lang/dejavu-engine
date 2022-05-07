@@ -1,0 +1,29 @@
+[package]
+name = "saha-parser"
+version = "0.1.0"
+authors = ["192607617@qq.com"]
+description = "External function system for arc"
+license = "MPL-2.0"
+readme = "../../Readme.md"
+repository = "https://github.com/doki-land/arc-rs"
+exclude = ["/tests/*"]
+edition = "2018"
+
+[dependencies]
+arc-rs = "0.5"
+serde = "1.0"
+serde_json = { version = "1.0", optional = true }
+toml = { version = "0.5", optional = true }
+# toml_edit = "*"
+yaml-rust = { version = "0.4", optional = true }
+# serde_yaml = "*"
+serde-hjson = { version = "0.9", optional = true }
+
+[dev-dependencies]
+
+[features]
+default = []
+
+json = ["serde_json", "serde_json/preserve_order"]
+yaml = ["yaml-rust"]
+hjson = ["serde-hjson"]
