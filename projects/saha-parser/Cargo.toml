@@ -22,6 +22,7 @@ peginator = "0.3.0"
 
 [dependencies.saha-types]
 path = "../saha-types"
+features = ["peginator"]
 
 
 [dev-dependencies]

@@ -11,6 +11,7 @@ edition = "2021"
 
 [dependencies]
 diagnostic = "0.4.1"
+peginator = { version = "0.3.0", optional = true }
 
 [dependencies.voml-collection]
 #version = "0.3.0"
