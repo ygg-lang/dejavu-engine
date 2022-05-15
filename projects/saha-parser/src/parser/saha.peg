@@ -12,10 +12,10 @@ SlotExpressionNode = left:SlotL value:IdentifierNode right:SlotR;
 
 
 @no_skip_ws
-SlotL = [ws:Whitespace] "{%" [trim:TrimMode];
+SlotL = [space:UnicodeSpace] "{%" [trim:TrimMode];
 
 @no_skip_ws
-SlotR = [trim:TrimMode] "%}" [ws:Whitespace];
+SlotR = [trim:TrimMode] "%}" [space:UnicodeSpace];
 
 
 
@@ -45,7 +45,10 @@ XID_START = char;
 XID_CONTINUE = char;
 
 @no_skip_ws
-Whitespace = {Comment |  '\t' | '\n' | '\x0C' | '\r' | ' '};
+Whitespace = {Comment | UnicodeSpace};
+
+@extern(crate::utils::unicode_whitespace)
+UnicodeSpace;
 
 @no_skip_ws
 Comment = '#' {!'\n' char} '\n';
