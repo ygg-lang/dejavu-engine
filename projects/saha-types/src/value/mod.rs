@@ -1,8 +1,8 @@
 use crate::Location;
 
 pub struct SahaNode {
-    value: SahaValue,
-    span: Location,
+    pub kind: SahaValue,
+    pub span: Location,
 }
 
 pub enum SahaValue {

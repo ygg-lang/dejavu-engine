@@ -1,4 +1,4 @@
-pub use self::errors::{SahaError, SahaResult, Location};
+pub use self::errors::{Location, SahaError, SahaResult, *};
 
 mod errors;
 

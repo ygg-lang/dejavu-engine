@@ -1,18 +1,48 @@
 @export
-FunctionDef = 'fn' name:Ident '(' param_list:ParamList ')' [ '->' return_value:Type ];
+SahaParser = { SahaStatements+ } $;
 
-ParamList = self_param:SelfParam {',' params:Param} | params:Param  {',' params:Param} | ;
+SahaStatements =
+	@:SlotNode
+;
 
-Param = name:Ident ':' typ: Type;
+SlotNode = SLOT_L SLOT_R;
 
-SelfParam = [ref_type:ReferenceMarker] 'self';
+@no_skip_ws
+SlotL = "{%" trim:TrimMode;
 
-Type = [ref_type:ReferenceMarker] typename:Ident;
+@no_skip_ws
+SlotR = trim:TrimMode "%}";
 
-ReferenceMarker = @:MutableReference | @:ImmutableReference;
+EndNode = left:SlotL EndWord right:SlotR;
 
-ImmutableReference = '&';
-MutableReference = '&' 'mut';
+@no_skip_ws
+EndWord = 'end' | "end-if" | "end-for";
+
+TrimMode = '_' | '-' | '=';
+
+@string
+@position
+@no_skip_ws
+IdentifierNode = (XID_START | '_') {XID_CONTINUE};
+
+@string
+@position
+SpecialNode = 'null' | 'default' | 'true' | 'false';
+
+@char
+@check(unicode_ident::is_xid_start)
+XID_START = char;
+
+@char
+@check(unicode_ident::is_xid_continue)
+XID_CONTINUE = char;
+
+@no_skip_ws
+CommentL = "{#" trim:TrimMode;
+
+@no_skip_ws
+CommentR = trim:TrimMode "#}";
+
 
 @string
 @no_skip_ws

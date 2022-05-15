@@ -11,7 +11,10 @@ mod location;
 
 mod display;
 
-pub type SahaResult<T> = Result<T, SahaError>;
+#[cfg(feature = "peginator")]
+mod for_peg;
+
+pub type SahaResult<T = ()> = Result<T, SahaError>;
 
 pub struct SahaError {
     kind: Box<SahaErrorKind>,
@@ -43,6 +46,8 @@ pub enum SahaErrorKind {
     SyntaxError { message: String, span: Location },
     RuntimeError { message: String },
 }
+
+
 
 impl SahaError {
     pub fn with_span(mut self, start: usize, end: usize) -> Self {
