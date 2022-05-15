@@ -1,33 +1,40 @@
 @export
-SahaParser = { SahaStatements+ } $;
+SahaParser = { statements:SahaStatements } $;
 
 SahaStatements =
-	@:SlotNode
+	@:SlotExpressionNode |
+	@:EndNode
 ;
 
-SlotNode = SLOT_L SLOT_R;
+SlotExpressionNode = left:SlotL value:IdentifierNode right:SlotR;
+
+
+
 
 @no_skip_ws
-SlotL = "{%" trim:TrimMode;
+SlotL = [ws:Whitespace] "{%" [trim:TrimMode];
 
 @no_skip_ws
-SlotR = trim:TrimMode "%}";
+SlotR = [trim:TrimMode] "%}" [ws:Whitespace];
+
+
 
 EndNode = left:SlotL EndWord right:SlotR;
 
 @no_skip_ws
-EndWord = 'end' | "end-if" | "end-for";
+EndWord = 'end' ['-'|'_'] ["if" | "for"];
 
+@char
 TrimMode = '_' | '-' | '=';
+
+@string
+@position
+SpecialNode = 'null' | 'default' | 'true' | 'false';
 
 @string
 @position
 @no_skip_ws
 IdentifierNode = (XID_START | '_') {XID_CONTINUE};
-
-@string
-@position
-SpecialNode = 'null' | 'default' | 'true' | 'false';
 
 @char
 @check(unicode_ident::is_xid_start)
@@ -38,12 +45,13 @@ XID_START = char;
 XID_CONTINUE = char;
 
 @no_skip_ws
+Whitespace = {Comment |  '\t' | '\n' | '\x0C' | '\r' | ' '};
+
+@no_skip_ws
+Comment = '#' {!'\n' char} '\n';
+
+@no_skip_ws
 CommentL = "{#" trim:TrimMode;
 
 @no_skip_ws
 CommentR = trim:TrimMode "#}";
-
-
-@string
-@no_skip_ws
-Ident = {'a'..'z' | 'A'..'Z' | '_' | '0'..'9'};

@@ -19,7 +19,7 @@ impl Display for SahaErrorKind {
 }
 
 impl Debug for Location {
-    fn fmt(&self, _: &mut Formatter<'_>) -> std::fmt::Result {
-        todo!()
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{file}{start}..{end}", file = self.file, start = self.start, end = self.end)
     }
 }
