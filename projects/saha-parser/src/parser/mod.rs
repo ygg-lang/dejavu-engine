@@ -1,7 +1,8 @@
 use peginator::PegParser;
 
-use crate::parser::saha::{SahaStatements, SlotExpressionNode};
 use saha_types::{SahaError, SahaResult};
+
+use crate::parser::saha::{SahaStatements, SlotExpressionNode, SlotL, SlotR};
 
 use self::saha::SahaParser;
 
@@ -25,8 +26,11 @@ impl SahaParser {
     pub fn visit(self, ctx: &mut ParserContext) {
         for statement in self.statements {
             match statement {
-                SahaStatements::EndNode(v) => {
-                    println!("{:#?}", v)
+                SahaStatements::UnicodeSpace(s) => {
+                    println!("{}", s)
+                }
+                SahaStatements::UnicodeText(s) => {
+                    println!("{}", s)
                 }
                 SahaStatements::SlotExpressionNode(v) => v.visit(ctx),
             }
@@ -36,7 +40,32 @@ impl SahaParser {
 
 impl SlotExpressionNode {
     pub fn visit(self, ctx: &mut ParserContext) {
-        println!("{:?}", self.left.trim);
         println!("{:#?}", self)
+    }
+}
+
+impl SlotL {
+    fn as_str(&self) -> &str {
+        match self.trim {
+            Some('_') => s,
+            Some('-') => s,
+            Some('=') => "",
+            _ => s,
+        }
+    }
+}
+
+impl SlotR {
+    fn as_str(&self) -> &str {
+        let s = match &self.space {
+            None => return "",
+            Some(s) => s.as_str(),
+        };
+        match self.trim {
+            Some('_') => s,
+            Some('-') => s,
+            Some('=') => "",
+            _ => s,
+        }
     }
 }

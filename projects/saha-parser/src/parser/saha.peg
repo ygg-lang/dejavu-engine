@@ -3,7 +3,8 @@ SahaParser = { statements:SahaStatements } $;
 
 SahaStatements =
 	@:SlotExpressionNode |
-	@:EndNode
+	@:UnicodeSpace |
+	@:UnicodeText
 ;
 
 SlotExpressionNode = left:SlotL value:IdentifierNode right:SlotR;
@@ -12,10 +13,10 @@ SlotExpressionNode = left:SlotL value:IdentifierNode right:SlotR;
 
 
 @no_skip_ws
-SlotL = [space:UnicodeSpace] "{%" [trim:TrimMode];
+SlotL = "{%" [trim:TrimMode];
 
 @no_skip_ws
-SlotR = [trim:TrimMode] "%}" [space:UnicodeSpace];
+SlotR = [trim:TrimMode] "%}";
 
 
 
@@ -46,6 +47,10 @@ XID_CONTINUE = char;
 
 @no_skip_ws
 Whitespace = {Comment | UnicodeSpace};
+
+
+@extern(crate::utils::unicode_text)
+UnicodeText;
 
 @extern(crate::utils::unicode_whitespace)
 UnicodeSpace;
