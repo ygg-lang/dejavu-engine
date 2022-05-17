@@ -1,16 +1,26 @@
 @export
-SahaParser = { statements:SahaStatements } $;
+SahaParser = parsed:SahaStatementNodes $;
 
-SahaStatements =
+SahaStatementNodes = { statements:SahaStatement };
+
+SahaStatement =
+	@:SlotFor |
 	@:SlotExpressionNode |
-	@:UnicodeSpace |
 	@:UnicodeText
 ;
 
-SlotExpressionNode = left:SlotL value:IdentifierNode right:SlotR;
+SlotFor = start:SlotForStart inner:SahaStatementNodes end:EndNode;
 
+SlotForStart = left:SlotL "for" value:ValueNode "in" value:ValueNode right:SlotR;
 
+SlotElse = left:SlotL "else" right:SlotR;
 
+SlotExpressionNode = left:SlotL value:ValueNode right:SlotR;
+
+ValueNode =
+	@:IdentifierNode |
+	@:SpecialNode
+;
 
 @no_skip_ws
 SlotL = "{%" [trim:TrimMode];
@@ -18,12 +28,10 @@ SlotL = "{%" [trim:TrimMode];
 @no_skip_ws
 SlotR = [trim:TrimMode] "%}";
 
-
-
 EndNode = left:SlotL EndWord right:SlotR;
 
 @no_skip_ws
-EndWord = 'end' ['-'|'_'] ["if" | "for"];
+EndWord = 'end' ['-'|'_'] ["if" | "for" | "filter"];
 
 @char
 TrimMode = '_' | '-' | '=';

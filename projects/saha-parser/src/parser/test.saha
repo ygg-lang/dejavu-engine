@@ -1,5 +1,9 @@
 
 
-	{%- name -%}
-	[   text   ]
-	{%= name =%}
+
+
+{% for a in v %}
+	{%- null -%}
+	[   none   ]
+	{%= true =%}
+{% end-for %}

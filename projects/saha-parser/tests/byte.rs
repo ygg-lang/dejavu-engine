@@ -1,5 +1,6 @@
 // use arc_number::Number;
 // use std::converter::TryInto;
+use saha_parser::parse;
 use std::str::FromStr;
 //
 // #[test]
@@ -21,4 +22,9 @@ use std::str::FromStr;
 #[test]
 fn te() {
     println!("{:?}", f64::from_str("1_5.0"))
+}
+
+#[test]
+fn test() {
+    parse().unwrap();
 }
