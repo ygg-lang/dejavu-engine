@@ -19,7 +19,7 @@ pub struct ParserContext {
 
 impl ParserContext {
     pub fn text(&self, s: String, r: Range<usize>) -> SahaNode {
-        SahaNode { kind: SahaValue::Text(s), span: Location { file: self.file.clone(), start: r.start, end: r.end } }
+        SahaNode::text(s).with_range(r).with_file(&self.file)
     }
     pub fn null(&self, r: Range<usize>) -> SahaNode {
         SahaNode { kind: SahaValue::Null, span: Location { file: self.file.clone(), start: r.start, end: r.end } }
@@ -49,10 +49,11 @@ impl SahaStatementNodes {
             match statement {
                 SahaStatement::UnicodeText(s) => out.push(ctx.text(s, Range::default())),
                 SahaStatement::SlotFor(s) => {
+                    let mut inner = s.inner.visit(ctx);
                     destroy_left(&mut out, s.start.left);
-                    let v = s.inner.visit(ctx);
-                    println!("{:#?}", v);
-                    println!("{:#?}", s.end);
+                    destroy_right(&mut inner, s.start.right);
+                    destroy_left(&mut inner, s.end.left);
+                    destroy_right(&mut out, s.end.right);
                 }
                 SahaStatement::SlotExpressionNode(v) => v.visit(ctx),
             }
@@ -90,13 +91,24 @@ impl SpecialNode {
 }
 
 pub fn destroy_left(list: &mut Vec<SahaNode>, mode: SlotL) -> Option<()> {
-    let last = list.last_mut()?;
+    let last = list.last_mut()?.mut_text()?;
+    match mode.trim {
+        Some('=') => *last = last.trim_end().to_string(),
+        Some('-') => {}
+        Some('_') => {}
+        _ => {}
+    }
 
     None
 }
 
 pub fn destroy_right(list: &mut Vec<SahaNode>, mode: SlotR) -> Option<()> {
-    let first = list.first()?;
-
+    let first = list.first_mut()?.mut_text()?;
+    match mode.trim {
+        Some('=') => *first = first.trim_start().to_string(),
+        Some('-') => {}
+        Some('_') => {}
+        _ => {}
+    }
     None
 }
