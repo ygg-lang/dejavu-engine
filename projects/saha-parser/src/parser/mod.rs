@@ -2,7 +2,7 @@ use std::ops::Range;
 
 use peginator::PegParser;
 
-use saha_types::{FileID, Location, SahaError, SahaNode, SahaResult, SahaValue};
+use saha_types::{FileID, SahaError, SahaNode, SahaResult};
 
 use crate::parser::saha::{SahaStatement, SahaStatementNodes, SlotExpressionNode, SlotL, SlotR, SpecialNode, ValueNode};
 
@@ -18,14 +18,17 @@ pub struct ParserContext {
 }
 
 impl ParserContext {
+    pub fn id(&self, s: String, r: Range<usize>) -> SahaNode {
+        SahaNode::identifier(s).with_range(r).with_file(&self.file)
+    }
     pub fn text(&self, s: String, r: Range<usize>) -> SahaNode {
         SahaNode::text(s).with_range(r).with_file(&self.file)
     }
     pub fn null(&self, r: Range<usize>) -> SahaNode {
-        SahaNode { kind: SahaValue::Null, span: Location { file: self.file.clone(), start: r.start, end: r.end } }
+        SahaNode::null().with_range(r).with_file(&self.file)
     }
     pub fn bool(&self, v: bool, r: Range<usize>) -> SahaNode {
-        SahaNode { kind: SahaValue::Boolean(v), span: Location { file: self.file.clone(), start: r.start, end: r.end } }
+        SahaNode::boolean(v).with_range(r).with_file(&self.file)
     }
 }
 
@@ -50,12 +53,16 @@ impl SahaStatementNodes {
                 SahaStatement::UnicodeText(s) => out.push(ctx.text(s, Range::default())),
                 SahaStatement::SlotFor(s) => {
                     let mut inner = s.inner.visit(ctx);
-                    destroy_left(&mut out, s.start.left);
-                    destroy_right(&mut inner, s.start.right);
-                    destroy_left(&mut inner, s.end.left);
-                    destroy_right(&mut out, s.end.right);
+                    destroy_left(&mut out, &s.start.left);
+                    destroy_right(&mut inner, &s.start.right);
+                    destroy_left(&mut inner, &s.end.left);
+                    destroy_right(&mut out, &s.end.right);
                 }
-                SahaStatement::SlotExpressionNode(v) => v.visit(ctx),
+                SahaStatement::SlotExpressionNode(slot) => {
+                    destroy_left(&mut out, &slot.left);
+                    out.push(slot.visit(ctx));
+                    // destroy_right(&mut out, slot.right);
+                }
             }
         }
         out
@@ -63,19 +70,16 @@ impl SahaStatementNodes {
 }
 
 impl SlotExpressionNode {
-    pub fn visit(self, ctx: &mut ParserContext) {
-        let out = self.value.visit(ctx);
-        println!("{:#?}", out)
+    pub fn visit(self, ctx: &mut ParserContext) -> SahaNode {
+        self.value.visit(ctx)
     }
 }
 
 impl ValueNode {
-    pub fn visit(self, ctx: &mut ParserContext) {
+    pub fn visit(self, ctx: &mut ParserContext) -> SahaNode {
         match self {
-            ValueNode::IdentifierNode(_) => {}
-            ValueNode::SpecialNode(v) => {
-                println!("{:#?}", v.visit(ctx))
-            }
+            ValueNode::IdentifierNode(v) => ctx.id(v.string, v.position),
+            ValueNode::SpecialNode(v) => v.visit(ctx),
         }
     }
 }
@@ -90,7 +94,7 @@ impl SpecialNode {
     }
 }
 
-pub fn destroy_left(list: &mut Vec<SahaNode>, mode: SlotL) -> Option<()> {
+pub fn destroy_left(list: &mut [SahaNode], mode: &SlotL) -> Option<()> {
     let last = list.last_mut()?.mut_text()?;
     match mode.trim {
         Some('=') => *last = last.trim_end().to_string(),
@@ -102,7 +106,7 @@ pub fn destroy_left(list: &mut Vec<SahaNode>, mode: SlotL) -> Option<()> {
     None
 }
 
-pub fn destroy_right(list: &mut Vec<SahaNode>, mode: SlotR) -> Option<()> {
+pub fn destroy_right(list: &mut [SahaNode], mode: &SlotR) -> Option<()> {
     let first = list.first_mut()?.mut_text()?;
     match mode.trim {
         Some('=') => *first = first.trim_start().to_string(),

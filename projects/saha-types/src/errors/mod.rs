@@ -47,8 +47,6 @@ pub enum SahaErrorKind {
     RuntimeError { message: String },
 }
 
-
-
 impl SahaError {
     pub fn with_span(mut self, start: usize, end: usize) -> Self {
         match self.kind.borrow_mut() {

@@ -5,9 +5,7 @@ use std::{
 
 use diagnostic::FileID;
 
-use voml_collection::Number;
-
-use crate::Location;
+use crate::{Decimal, Location};
 
 mod constructor;
 
@@ -23,19 +21,20 @@ impl Display for SahaNode {
     }
 }
 
+#[repr(u8)]
 #[derive(Debug)]
 pub enum SahaValue {
-    Null,
+    Null = 0,
     Boolean(bool),
     Text(Box<String>),
-    Number(Box<Number>),
-    Identifier(Box<Identifier>),
+    Number(Box<Decimal>),
+    Identifier(Box<String>),
     Vector,
 }
-
-#[derive(Debug)]
-pub struct Identifier {
-    pub name: String,
-}
+// - `{%=`: Destroy all whitespace on the left
+// - `{%-`: Destroy all blank lines on the left
+// - `{% `: Destroy left whitespace, and the first newline encountered
+// - `{%_`: destroy left whitespace, but exclude newlines
+pub enum WhiteSpaceDestroyer {}
 
 impl SahaNode {}

@@ -12,10 +12,8 @@ edition = "2021"
 [dependencies]
 diagnostic = "0.4.1"
 peginator = { version = "0.3.0", optional = true }
+rust_decimal = { version = "1.26.1", features = ["c-repr"] }
 
-[dependencies.voml-collection]
-#version = "0.3.0"
-path = "../voml-collection"
 
 [dev-dependencies]
 
