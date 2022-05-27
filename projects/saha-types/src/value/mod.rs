@@ -8,6 +8,7 @@ use diagnostic::FileID;
 use crate::{Decimal, Location};
 
 mod constructor;
+mod whitespace;
 
 #[derive(Debug)]
 pub struct SahaNode {
@@ -30,11 +31,19 @@ pub enum SahaValue {
     Number(Box<Decimal>),
     Identifier(Box<String>),
     Vector,
+    LeftDestroyer(Destroyer),
+    RightDestroyer(Destroyer),
 }
-// - `{%=`: Destroy all whitespace on the left
-// - `{%-`: Destroy all blank lines on the left
-// - `{% `: Destroy left whitespace, and the first newline encountered
-// - `{%_`: destroy left whitespace, but exclude newlines
-pub enum WhiteSpaceDestroyer {}
+// - `{%=`: Destroy all whitespace
+// - `{%-`: Destroy all blank lines
+// - `{% `: Destroy whitespace, and the first newline encountered
+// - `{%_`: Destroy whitespace
+pub enum Destroyer {
+    Everything,
+    NewlineAll,
+    NewlineOne,
+    OneLine,
+}
+
 
 impl SahaNode {}
