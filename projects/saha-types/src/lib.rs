@@ -2,7 +2,7 @@ pub use diagnostic::FileID;
 
 pub use self::{
     errors::{Location, SahaError, SahaResult, *},
-    value::{SahaNode, SahaValue},
+    value::{SahaNode, SahaValue, SpaceDestroyer},
 };
 pub use rust_decimal::Decimal;
 mod errors;

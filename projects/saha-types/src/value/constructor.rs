@@ -50,6 +50,11 @@ impl SahaNode {
         }
     }
     #[inline]
+    pub fn with_span(mut self, span: Location) -> Self {
+        self.span = span;
+        self
+    }
+    #[inline]
     pub fn with_range(mut self, range: Range<usize>) -> Self {
         self.span.start = range.start;
         self.span.end = range.end;

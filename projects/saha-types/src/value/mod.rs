@@ -31,19 +31,19 @@ pub enum SahaValue {
     Number(Box<Decimal>),
     Identifier(Box<String>),
     Vector,
-    LeftDestroyer(Destroyer),
-    RightDestroyer(Destroyer),
+    LeftDestroyer(SpaceDestroyer),
+    RightDestroyer(SpaceDestroyer),
 }
 // - `{%=`: Destroy all whitespace
 // - `{%-`: Destroy all blank lines
 // - `{% `: Destroy whitespace, and the first newline encountered
 // - `{%_`: Destroy whitespace
-pub enum Destroyer {
+#[derive(Debug)]
+pub enum SpaceDestroyer {
     Everything,
     NewlineAll,
     NewlineOne,
-    OneLine,
+    Nothing,
 }
-
 
 impl SahaNode {}
