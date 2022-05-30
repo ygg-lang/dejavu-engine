@@ -4,9 +4,7 @@ use peginator::PegParser;
 
 use saha_types::{FileID, SahaError, SahaNode, SahaResult, SahaValue, SpaceDestroyer};
 
-use crate::parser::saha::{
-    SahaStatement, SahaStatementNodes, SlotExpressionNode, SlotFor, SlotL, SlotR, SpecialNode, ValueNode,
-};
+use crate::parser::saha::{SahaStatement, SahaStatementNodes, SlotExpressionNode, SlotL, SlotR, SpecialNode, ValueNode};
 
 use self::saha::SahaParser;
 
@@ -37,7 +35,8 @@ impl ParserContext {
 pub fn parse() -> SahaResult {
     let mut ctx = ParserContext::default();
     let out = SahaParser::parse(include_str!("test.saha"))?;
-    out.visit(&mut ctx);
+    let v = out.visit(&mut ctx);
+    println!("{:#?}", v);
     Ok(())
 }
 
@@ -67,7 +66,7 @@ impl SahaStatementNodes {
                 }
             }
         }
-        out
+        SpaceDestroyer::clear(out)
     }
 }
 

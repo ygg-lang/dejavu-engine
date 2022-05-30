@@ -71,11 +71,11 @@ impl SpaceDestroyer {
             SpaceDestroyer::Everything => input.trim_end(),
             SpaceDestroyer::NewlineAll => {
                 let mut line_buffer = 0;
-                for char in input.chars() {
+                for char in input.chars().rev() {
                     if char.is_whitespace() {
                         line_buffer += char.len_utf8();
                         match char {
-                            '\r' | '\n' => break,
+                            '\r' | '\n' => length += line_buffer,
                             _ => continue,
                         }
                     }
@@ -108,7 +108,22 @@ impl SpaceDestroyer {
         let mut length = 0;
         match self {
             SpaceDestroyer::Everything => input.trim_start(),
-            SpaceDestroyer::NewlineAll => input,
+            SpaceDestroyer::NewlineAll => {
+                let mut line_buffer = 0;
+                for char in input.chars() {
+                    if char.is_whitespace() {
+                        line_buffer += char.len_utf8();
+                        match char {
+                            '\r' | '\n' => length += line_buffer,
+                            _ => continue,
+                        }
+                    }
+                    else {
+                        break;
+                    }
+                }
+                &input[0..length]
+            }
             SpaceDestroyer::NewlineOne => {
                 for char in input.chars() {
                     if char.is_whitespace() {

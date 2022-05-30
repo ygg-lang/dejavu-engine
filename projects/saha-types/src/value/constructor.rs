@@ -20,10 +20,10 @@ impl SahaNode {
         }
     }
     pub fn identifier(s: impl Into<String>) -> Self {
-        Self { kind: SahaValue::Identifier(Box::new(s.into())), span: Default::default() }
+        Self { kind: SahaValue::Identifier(s.into()), span: Default::default() }
     }
     pub fn text(s: impl Into<String>) -> Self {
-        Self { kind: SahaValue::Text(Box::new(s.into())), span: Default::default() }
+        Self { kind: SahaValue::Text(s.into()), span: Default::default() }
     }
     pub fn get_text(&self) -> Option<&String> {
         match &self.kind {
