@@ -5,10 +5,11 @@ use std::{
 
 use diagnostic::FileID;
 
-use crate::{Decimal, Location};
+use crate::{Decimal, ForStatement, Location};
 
 mod constructor;
 mod display;
+pub mod for_statement;
 mod whitespace;
 
 #[derive(Debug)]
@@ -29,6 +30,7 @@ pub enum SahaValue {
     Statements(Vec<SahaValue>),
     LeftDestroyer(SpaceDestroyer),
     RightDestroyer(SpaceDestroyer),
+    ForStatement(Box<ForStatement>),
 }
 
 /// - `{%=`: Destroy all whitespace
@@ -37,11 +39,14 @@ pub enum SahaValue {
 /// - `{%_`: Destroy whitespace
 #[derive(Debug)]
 pub enum SpaceDestroyer {
+    /// Destroy all whitespace
     Everything,
+    /// Destroy all blank lines
     NewlineAll,
+    /// Destroy whitespace, and the first newline encountered
     NewlineOne,
+    /// Destroy whitespace
     Nothing,
 }
 
 impl SahaNode {}
-

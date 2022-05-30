@@ -1,10 +1,12 @@
 pub use diagnostic::FileID;
 
+pub use rust_decimal::Decimal;
+
 pub use self::{
     errors::{Location, SahaError, SahaResult, *},
-    value::{SahaNode, SahaValue, SpaceDestroyer},
+    value::{for_statement::ForStatement, SahaNode, SahaValue, SpaceDestroyer},
 };
-pub use rust_decimal::Decimal;
+
 mod errors;
 
 mod value;

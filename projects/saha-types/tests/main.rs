@@ -14,5 +14,5 @@ fn keep_size() {
     assert_eq!(size_of::<u8>(), 1);
     assert_eq!(size_of::<String>(), 24);
     assert_eq!(size_of::<Vec<SahaValue>>(), 24);
-    assert_eq!(size_of::<Location>(), 24);
+    assert_eq!(size_of::<Location>(), 32);
 }

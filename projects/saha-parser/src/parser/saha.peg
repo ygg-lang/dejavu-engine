@@ -4,6 +4,7 @@ SahaParser = parsed:SahaStatementNodes $;
 SahaStatementNodes = { statements:SahaStatement };
 
 SahaStatement =
+	@:Comment |
 	@:SlotFor |
 	@:SlotExpressionNode |
 	@:UnicodeText
@@ -64,10 +65,13 @@ UnicodeText;
 UnicodeSpace;
 
 @no_skip_ws
-Comment = '#' {!'\n' char} '\n';
+Comment = left:CommentL text:CommentText right:CommentR;
 
 @no_skip_ws
-CommentL = "{#" trim:TrimMode;
+CommentText = {!CommentR|char};
 
 @no_skip_ws
-CommentR = trim:TrimMode "#}";
+CommentL = "{#" [trim:TrimMode];
+
+@no_skip_ws
+CommentR = [trim:TrimMode] "#}";
