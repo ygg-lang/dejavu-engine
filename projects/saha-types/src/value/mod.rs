@@ -4,6 +4,7 @@ use std::{
 };
 
 use diagnostic::FileID;
+use serde::{Deserialize, Serialize};
 
 use crate::{Decimal, ForStatement, Location};
 
@@ -12,19 +13,20 @@ mod display;
 pub mod for_statement;
 mod whitespace;
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct SahaNode {
     pub kind: SahaValue,
     pub span: Location,
 }
 
 #[repr(u8)]
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(tag = "type")]
 pub enum SahaValue {
     Null = 0,
     Boolean(bool),
     Text(String),
-    Number(Box<Decimal>),
+    Number(Decimal),
     Identifier(String),
     Vector,
     Statements(Vec<SahaValue>),
@@ -37,7 +39,7 @@ pub enum SahaValue {
 /// - `{%-`: Destroy all blank lines
 /// - `{% `: Destroy whitespace, and the first newline encountered
 /// - `{%_`: Destroy whitespace
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum SpaceDestroyer {
     /// Destroy all whitespace
     Everything,

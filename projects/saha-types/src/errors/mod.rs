@@ -6,6 +6,7 @@ use std::{
 };
 
 use diagnostic::FileID;
+use serde::{Deserialize, Serialize};
 
 mod location;
 
@@ -21,7 +22,7 @@ pub struct SahaError {
     error: Option<Box<dyn Error>>,
 }
 
-#[derive(Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Location {
     pub file: FileID,
     pub start: usize,

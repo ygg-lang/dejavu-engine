@@ -1,3 +1,4 @@
+use rust_decimal::Decimal;
 use saha_types::{Location, SahaNode, SahaValue};
 use std::mem::size_of;
 
@@ -13,6 +14,7 @@ fn keep_size() {
 
     assert_eq!(size_of::<u8>(), 1);
     assert_eq!(size_of::<String>(), 24);
+    assert_eq!(size_of::<Decimal>(), 16);
     assert_eq!(size_of::<Vec<SahaValue>>(), 24);
     assert_eq!(size_of::<Location>(), 32);
 }
