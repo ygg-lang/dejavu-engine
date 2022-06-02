@@ -5,10 +5,13 @@ use peginator::PegParser;
 use saha_types::{FileID, ForStatement, SahaError, SahaNode, SahaResult, SahaValue, SpaceDestroyer};
 
 use crate::parser::saha::{
-    CommentL, SahaStatement, SahaStatementNodes, SlotExpressionNode, SlotFor, SlotL, SlotR, SpecialNode, ValueNode,
+    CommentL, CommentR, SahaStatement, SahaStatementNodes, SlotExpressionNode, SlotFor, SlotL, SlotR, SpecialNode, ValueNode,
 };
 
 use self::saha::SahaParser;
+
+mod value;
+mod whitespace;
 
 #[allow(unused, non_camel_case_types)]
 mod saha;
@@ -34,17 +37,15 @@ impl ParserContext {
     }
 }
 
-pub fn parse() -> SahaResult {
+pub fn parse(input: &str) -> SahaResult<Vec<SahaNode>> {
     let mut ctx = ParserContext::default();
-    let out = SahaParser::parse(&include_str!("test.saha").replace("\r\n", "\n"))?;
-    let v = out.visit(&mut ctx);
-    println!("{:#?}", v);
-    Ok(())
+    let out = SahaParser::parse(&input.replace("\r\n", "\n"))?;
+    Ok(out.visit(&mut ctx))
 }
 
 impl SahaParser {
     pub fn visit(self, ctx: &mut ParserContext) -> Vec<SahaNode> {
-        self.parsed.visit(ctx)
+        SpaceDestroyer::clear(self.parsed.visit(ctx))
     }
 }
 
@@ -53,7 +54,7 @@ impl SahaStatementNodes {
         let mut out = vec![];
         for statement in self.statements {
             match statement {
-                SahaStatement::UnicodeText(s) => out.push(ctx.text(s, Range::default())),
+                SahaStatement::UnicodeText(s) => out.push(ctx.text(s.string, s.position)),
                 SahaStatement::SlotFor(s) => {
                     let l = ctx.left_destroyer(&s.start.left, true);
                     let r = ctx.right_destroyer(&s.end.right, true);
@@ -67,13 +68,13 @@ impl SahaStatementNodes {
                     out.push(ctx.right_destroyer(&right, false));
                 }
                 SahaStatement::Comment(s) => {
-                    out.push(ctx.left_destroyer(&s.left.trim, false));
-                    out.push(value.visit(ctx));
-                    out.push(ctx.right_destroyer(&right, false));
+                    out.push(ctx.left_destroyer(&s.left, false));
+                    out.push(ctx.right_destroyer(&s.right, false));
                 }
             }
         }
-        SpaceDestroyer::clear(out)
+        // Don't break white space, prevent redundant breaks
+        out
     }
 }
 
@@ -97,45 +98,9 @@ impl SlotExpressionNode {
 impl ValueNode {
     pub fn visit(self, ctx: &mut ParserContext) -> SahaNode {
         match self {
-            ValueNode::IdentifierNode(v) => ctx.id(v.string, v.position),
+            ValueNode::IdentifierNode(v) => v.visit(ctx),
             ValueNode::SpecialNode(v) => v.visit(ctx),
+            ValueNode::NumberNode(v) => v.visit(ctx),
         }
-    }
-}
-
-impl SpecialNode {
-    pub fn visit(self, ctx: &mut ParserContext) -> SahaNode {
-        match self.string.as_str() {
-            "true" => ctx.bool(true, self.position),
-            "false" => ctx.bool(true, self.position),
-            _ => ctx.null(self.position),
-        }
-    }
-}
-
-impl ParserContext {
-    pub fn left_destroyer(&self, mode: impl Into<SlotL>, statement: bool) -> SahaNode {
-        SahaNode { kind: SahaValue::LeftDestroyer(SpaceDestroyer::new(mode.into().trim, statement)), span: Default::default() }
-    }
-    pub fn right_destroyer(&self, mode: impl Into<SlotR>, statement: bool) -> SahaNode {
-        SahaNode { kind: SahaValue::RightDestroyer(SpaceDestroyer::new(mode.into().trim, statement)), span: Default::default() }
-    }
-}
-
-impl From<&SlotL> for SlotL {
-    fn from(value: &SlotL) -> Self {
-        value.into()
-    }
-}
-
-impl From<&CommentL> for SlotL {
-    fn from(value: &CommentL) -> Self {
-        SlotL { trim: value.trim }
-    }
-}
-
-impl From<&SlotR> for SlotR {
-    fn from(value: &SlotR) -> Self {
-        value.into()
     }
 }

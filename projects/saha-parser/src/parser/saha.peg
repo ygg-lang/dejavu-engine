@@ -20,6 +20,7 @@ SlotExpressionNode = left:SlotL value:ValueNode right:SlotR;
 
 ValueNode =
 	@:IdentifierNode |
+	@:NumberNode |
 	@:SpecialNode
 ;
 
@@ -57,18 +58,25 @@ XID_CONTINUE = char;
 @no_skip_ws
 Whitespace = {Comment | UnicodeSpace};
 
+@position
+@string
+NumberNode = NumberNodeEx;
+
+@extern(crate::utils::maybe_number)
+NumberNodeEx;
+
+@position
+@string
+UnicodeText = UnicodeTextEx;
 
 @extern(crate::utils::unicode_text)
-UnicodeText;
+UnicodeTextEx;
 
 @extern(crate::utils::unicode_whitespace)
 UnicodeSpace;
 
 @no_skip_ws
-Comment = left:CommentL text:CommentText right:CommentR;
-
-@no_skip_ws
-CommentText = {!CommentR|char};
+Comment = left:CommentL {!CommentR|char}+ right:CommentR;
 
 @no_skip_ws
 CommentL = "{#" [trim:TrimMode];

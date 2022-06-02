@@ -26,5 +26,5 @@ fn te() {
 
 #[test]
 fn test() {
-    parse().unwrap();
+    parse(include_str!("test.saha")).unwrap();
 }

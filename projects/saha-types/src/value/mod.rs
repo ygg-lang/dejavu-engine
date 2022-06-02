@@ -28,17 +28,17 @@ pub enum SahaValue {
     Text(String),
     Number(Decimal),
     Identifier(String),
-    Vector,
+    Vector(Vec<SahaValue>),
     Statements(Vec<SahaValue>),
     LeftDestroyer(SpaceDestroyer),
     RightDestroyer(SpaceDestroyer),
     ForStatement(Box<ForStatement>),
 }
 
-/// - `{%=`: Destroy all whitespace
-/// - `{%-`: Destroy all blank lines
-/// - `{% `: Destroy whitespace, and the first newline encountered
-/// - `{%_`: Destroy whitespace
+/// - `=`: Destroy all whitespace
+/// - `-`: Destroy all blank lines
+/// - `_`: Destroy whitespace, and the first newline encountered
+/// - `!`: Destroy nothing
 #[derive(Debug, Serialize, Deserialize)]
 pub enum SpaceDestroyer {
     /// Destroy all whitespace
@@ -47,7 +47,7 @@ pub enum SpaceDestroyer {
     NewlineAll,
     /// Destroy whitespace, and the first newline encountered
     NewlineOne,
-    /// Destroy whitespace
+    /// Destroy nothing
     Nothing,
 }
 
