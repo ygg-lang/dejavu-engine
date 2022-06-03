@@ -5,23 +5,45 @@ SahaStatementNodes = { statements:SahaStatement };
 
 SahaStatement =
 	@:Comment |
+	@:UnicodeText |
 	@:SlotFor |
-	@:SlotExpressionNode |
-	@:UnicodeText
+	@:SlotIf |
+	@:SlotExpressionNode
 ;
 
-SlotFor = start:SlotForStart inner:SahaStatementNodes end:EndNode;
+
+SlotIf = start:SlotIfStart body:SahaStatementNodes [else:SlotElse empty:SahaStatementNodes] end:SlotEndFor;
+
+SlotIfStart = left:SlotL "if" value:ValueNode right:SlotR;
+
+SlotEndIf = left:SlotL end:EndIf right:SlotR;
+
+@no_skip_ws
+EndIf = 'end' ['-'|'_'] "if";
+
+
+
+
+SlotElse = left:SlotL "else" right:SlotR;
+
+SlotFor = start:SlotForStart body:SahaStatementNodes [else:SlotElse empty:SahaStatementNodes] end:SlotEndFor;
 
 SlotForStart = left:SlotL "for" value:ValueNode "in" value:ValueNode right:SlotR;
 
-SlotElse = left:SlotL "else" right:SlotR;
+SlotEndFor = left:SlotL end:EndFor right:SlotR;
+
+@no_skip_ws
+EndFor = 'end' ['-'|'_'] "for";
+
+
+
 
 SlotExpressionNode = left:SlotL value:ValueNode right:SlotR;
 
 ValueNode =
-	@:IdentifierNode |
+	@:SpecialNode |
 	@:NumberNode |
-	@:SpecialNode
+	@:IdentifierNode
 ;
 
 @no_skip_ws
@@ -30,17 +52,14 @@ SlotL = "{%" [trim:TrimMode];
 @no_skip_ws
 SlotR = [trim:TrimMode] "%}";
 
-EndNode = left:SlotL EndWord right:SlotR;
 
-@no_skip_ws
-EndWord = 'end' ['-'|'_'] ["if" | "for" | "filter"];
 
 @char
 TrimMode = '_' | '-' | '=';
 
 @string
 @position
-SpecialNode = 'null' | 'default' | 'true' | 'false';
+SpecialNode = 'null' | 'true' | 'false';
 
 @string
 @position
@@ -55,8 +74,7 @@ XID_START = char;
 @check(unicode_ident::is_xid_continue)
 XID_CONTINUE = char;
 
-@no_skip_ws
-Whitespace = {Comment | UnicodeSpace};
+
 
 @position
 @string
@@ -71,6 +89,10 @@ UnicodeText = UnicodeTextEx;
 
 @extern(crate::utils::unicode_text)
 UnicodeTextEx;
+
+
+@no_skip_ws
+Whitespace = {UnicodeSpace|Comment}+;
 
 @extern(crate::utils::unicode_whitespace)
 UnicodeSpace;

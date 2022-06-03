@@ -1,11 +1,21 @@
+## Value
+
+{% null %}
+{% true %}
+{% false %}
 
 
-	{%- null -%}
-	{#  comm  #}
-	{%= true =%}
+## For loop
 
 {% for a in v %}
-	{%- null -%}
-	[   none   ]
-	{%= true =%}
+	{%- true -%}
+{% else %}
+	{%= false =%}
 {% end-for %}
+
+
+{% if a %}
+	{%- null -%}
+{% else %}
+	{%= true =%}
+{% end-if %}

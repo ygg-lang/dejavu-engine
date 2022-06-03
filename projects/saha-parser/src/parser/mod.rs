@@ -39,7 +39,9 @@ impl ParserContext {
 
 pub fn parse(input: &str) -> SahaResult<Vec<SahaNode>> {
     let mut ctx = ParserContext::default();
-    let out = SahaParser::parse(&input.replace("\r\n", "\n"))?;
+    let lf = input.replace("\r\n", "\n");
+    println!("{:?}", lf);
+    let out = SahaParser::parse(&lf)?;
     Ok(out.visit(&mut ctx))
 }
 
@@ -71,6 +73,7 @@ impl SahaStatementNodes {
                     out.push(ctx.left_destroyer(&s.left, false));
                     out.push(ctx.right_destroyer(&s.right, false));
                 }
+                SahaStatement::SlotIf(_) => todo!(),
             }
         }
         // Don't break white space, prevent redundant breaks
@@ -82,7 +85,7 @@ impl ParserContext {
     pub fn for_statement(&mut self, s: SlotFor) -> SahaNode {
         let mut out = vec![];
         out.push(self.right_destroyer(&s.start.right, true));
-        out.extend(s.inner.visit(self));
+        out.extend(s.body.visit(self));
         out.push(self.left_destroyer(&s.end.left, true));
         let stmt = ForStatement { body: SpaceDestroyer::clear(out) };
         SahaNode::from(stmt).with_file(&self.file)
