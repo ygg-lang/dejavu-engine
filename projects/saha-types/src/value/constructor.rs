@@ -37,6 +37,9 @@ impl SahaNode {
             _ => None,
         }
     }
+    pub fn number(number: Decimal) -> Self {
+        Self { kind: SahaValue::Number(number), span: Default::default() }
+    }
     pub fn get_number(&self) -> Option<&Decimal> {
         match &self.kind {
             SahaValue::Number(s) => Some(s),

@@ -20,10 +20,7 @@ impl IdentifierNode {
 
 impl NumberNode {
     pub fn visit(self, ctx: &mut ParserContext) -> SahaNode {
-        match Decimal::from_str(&self.string) {
-            Ok(_) => {}
-            Err(_) => {}
-        }
-        SahaNode::null()
+        let dec = Decimal::from_str(&self.string)?;
+        Ok(SahaNode::number(dec).with_range(self.position).with_file(&ctx.file))
     }
 }

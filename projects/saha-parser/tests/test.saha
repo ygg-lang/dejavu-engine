@@ -5,6 +5,14 @@
 {% false %}
 
 
+## If condition
+
+{% if a %}
+	{%- null -%}
+{% else %}
+	{%= true =%}
+{% end-if %}
+
 ## For loop
 
 {% for a in v %}
@@ -14,8 +22,3 @@
 {% end-for %}
 
 
-{% if a %}
-	{%- null -%}
-{% else %}
-	{%= true =%}
-{% end-if %}

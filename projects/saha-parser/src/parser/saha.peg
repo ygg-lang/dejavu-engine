@@ -12,28 +12,29 @@ SahaStatement =
 ;
 
 
-SlotIf = start:SlotIfStart body:SahaStatementNodes [else:SlotElse empty:SahaStatementNodes] end:SlotEndFor;
+SlotIf = start:SlotIfStart body:SahaStatementNodes [else:SlotElse empty:SahaStatementNodes] end:EndIf;
 
 SlotIfStart = left:SlotL "if" value:ValueNode right:SlotR;
+
+SlotElse = left:SlotL "else" right:SlotR;
 
 SlotEndIf = left:SlotL end:EndIf right:SlotR;
 
 @no_skip_ws
-EndIf = 'end' ['-'|'_'] "if";
+EndIf = 'end' [['-'|'_'] "if"];
 
 
 
 
-SlotElse = left:SlotL "else" right:SlotR;
 
 SlotFor = start:SlotForStart body:SahaStatementNodes [else:SlotElse empty:SahaStatementNodes] end:SlotEndFor;
 
-SlotForStart = left:SlotL "for" value:ValueNode "in" value:ValueNode right:SlotR;
+SlotForStart = left:SlotL "for" pattern:ValueNode "in" expression:ValueNode right:SlotR;
 
 SlotEndFor = left:SlotL end:EndFor right:SlotR;
 
 @no_skip_ws
-EndFor = 'end' ['-'|'_'] "for";
+EndFor = 'end' [['-'|'_'] "for"];
 
 
 
@@ -89,13 +90,6 @@ UnicodeText = UnicodeTextEx;
 
 @extern(crate::utils::unicode_text)
 UnicodeTextEx;
-
-
-@no_skip_ws
-Whitespace = {UnicodeSpace|Comment}+;
-
-@extern(crate::utils::unicode_whitespace)
-UnicodeSpace;
 
 @no_skip_ws
 Comment = left:CommentL {!CommentR|char}+ right:CommentR;

@@ -49,6 +49,9 @@ pub enum SahaErrorKind {
 }
 
 impl SahaError {
+    pub fn with_range(self, range: Range<usize>) -> Self {
+        self.with_span(range.start, range.end)
+    }
     pub fn with_span(mut self, start: usize, end: usize) -> Self {
         match self.kind.borrow_mut() {
             SahaErrorKind::IoError { .. } => {}
@@ -56,6 +59,14 @@ impl SahaError {
                 span.start = start;
                 span.end = end;
             }
+            SahaErrorKind::RuntimeError { .. } => {}
+        }
+        self
+    }
+    pub fn with_file(mut self, file: &FileID) -> Self {
+        match self.kind.borrow_mut() {
+            SahaErrorKind::IoError { file: old, .. } => *old = file.clone(),
+            SahaErrorKind::SyntaxError { span, .. } => span.file = file.clone(),
             SahaErrorKind::RuntimeError { .. } => {}
         }
         self

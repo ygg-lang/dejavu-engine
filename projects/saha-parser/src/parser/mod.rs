@@ -40,7 +40,6 @@ impl ParserContext {
 pub fn parse(input: &str) -> SahaResult<Vec<SahaNode>> {
     let mut ctx = ParserContext::default();
     let lf = input.replace("\r\n", "\n");
-    println!("{:?}", lf);
     let out = SahaParser::parse(&lf)?;
     Ok(out.visit(&mut ctx))
 }
