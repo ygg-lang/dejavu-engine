@@ -56,7 +56,7 @@ SlotR = [trim:TrimMode] "%}";
 
 
 @char
-TrimMode = '_' | '-' | '=';
+TrimMode = '_' | '-' | '=' | '!';
 
 @string
 @position

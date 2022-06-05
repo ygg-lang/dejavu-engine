@@ -1,3 +1,5 @@
+use ucd_trie::TrieSetOwned;
+
 pub fn unicode_whitespace(input: &str) -> Result<(&str, usize), &'static str> {
     let mut length = 0;
     for char in input.chars() {

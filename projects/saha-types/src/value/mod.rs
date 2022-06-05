@@ -1,12 +1,13 @@
+use diagnostic::FileID;
 use std::{
     fmt::{Debug, Display, Formatter},
     ops::Range,
 };
 
-use diagnostic::FileID;
+use diagnostic_quick::FileID;
 use serde::{Deserialize, Serialize};
 
-use crate::{Decimal, ForStatement, Location};
+use crate::{Decimal, ForStatement};
 
 mod constructor;
 mod display;
@@ -16,7 +17,8 @@ mod whitespace;
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SahaNode {
     pub kind: SahaValue,
-    pub span: Location,
+    pub span: Range<usize>,
+    pub file: FileID,
 }
 
 #[repr(u8)]

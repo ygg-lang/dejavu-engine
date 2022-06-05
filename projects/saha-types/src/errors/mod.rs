@@ -5,8 +5,7 @@ use std::{
     ops::Range,
 };
 
-pub use diagnostic::Validation::{Failure, Success};
-use diagnostic::{DiagnosticLevel, FileID};
+use diagnostic_quick::{DiagnosticLevel, Failure, FileID, Success};
 use serde::{Deserialize, Serialize};
 
 mod location;
@@ -17,6 +16,7 @@ mod display;
 mod for_peg;
 
 pub type SahaResult<T = ()> = Result<T, SahaError>;
+use std::cmp::{max, min};
 
 pub struct SahaError {
     kind: Box<SahaErrorKind>,
