@@ -1,7 +1,4 @@
 use super::*;
-use crate::parser::saha::{IdentifierNode, NumberNode};
-use saha_types::Decimal;
-use std::str::FromStr;
 
 impl SpecialNode {
     pub fn visit(self, ctx: &mut ParserContext) -> SahaNode {
@@ -20,7 +17,14 @@ impl IdentifierNode {
 
 impl NumberNode {
     pub fn visit(self, ctx: &mut ParserContext) -> SahaNode {
-        let dec = Decimal::from_str(&self.string)?;
-        Ok(SahaNode::number(dec).with_range(self.position).with_file(&ctx.file))
+        let o = match Decimal::from_str(&self.string) {
+            Ok(o) => o,
+            Err(e) => {
+                let error = SahaError::from(e).with_range(self.position.clone()).with_file(&ctx.file);
+                ctx.errors.push(error);
+                Decimal::zero()
+            }
+        };
+        SahaNode::number(o).with_range(self.position).with_file(&ctx.file)
     }
 }

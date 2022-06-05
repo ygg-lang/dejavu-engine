@@ -1,4 +1,5 @@
 use super::*;
+use diagnostic::Diagnostic;
 
 impl Debug for SahaError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
@@ -20,6 +21,18 @@ impl Display for SahaErrorKind {
 
 impl Debug for Location {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{file}{start}..{end}", file = self.file, start = self.start, end = self.end)
+        write!(f, "{file}{start}..{end}", file = self.file, start = self.range, end = self.end)
+    }
+}
+
+impl SahaError {
+    pub fn as_diagnostic(&self) -> Diagnostic {
+        let mut out = Diagnostic::new(self.level);
+        match &*self.kind {
+            SahaErrorKind::IoError { message, file: _ } => out.message = message.to_string(),
+            SahaErrorKind::SyntaxError { message, span } => out = out.with_primary(span.file),
+            SahaErrorKind::RuntimeError { message } => out.message = message.to_string(),
+        }
+        out
     }
 }

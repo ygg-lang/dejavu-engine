@@ -59,7 +59,7 @@ impl SahaNode {
     }
     #[inline]
     pub fn with_range(mut self, range: Range<usize>) -> Self {
-        self.span.start = range.start;
+        self.span.range = range.start;
         self.span.end = range.end;
         self
     }

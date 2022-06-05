@@ -5,7 +5,8 @@ use std::{
     ops::Range,
 };
 
-use diagnostic::FileID;
+pub use diagnostic::Validation::{Failure, Success};
+use diagnostic::{DiagnosticLevel, FileID};
 use serde::{Deserialize, Serialize};
 
 mod location;
@@ -19,25 +20,27 @@ pub type SahaResult<T = ()> = Result<T, SahaError>;
 
 pub struct SahaError {
     kind: Box<SahaErrorKind>,
+    level: DiagnosticLevel,
     error: Option<Box<dyn Error>>,
 }
+
+pub type Validation<T> = diagnostic::Validation<T, SahaError>;
 
 #[derive(Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Location {
     pub file: FileID,
-    pub start: usize,
-    pub end: usize,
+    pub range: Range<usize>,
 }
 
 impl Default for Location {
     fn default() -> Self {
-        Self { file: Default::default(), start: 0, end: 0 }
+        Self { file: Default::default(), range: Range { start: 0, end: 0 } }
     }
 }
 
 impl From<SahaErrorKind> for SahaError {
     fn from(value: SahaErrorKind) -> Self {
-        Self { kind: Box::new(value), error: None }
+        Self { kind: Box::new(value), level: Default::default(), error: None }
     }
 }
 
@@ -56,8 +59,8 @@ impl SahaError {
         match self.kind.borrow_mut() {
             SahaErrorKind::IoError { .. } => {}
             SahaErrorKind::SyntaxError { span, .. } => {
-                span.start = start;
-                span.end = end;
+                span.range.start = start;
+                span.range.end = end;
             }
             SahaErrorKind::RuntimeError { .. } => {}
         }

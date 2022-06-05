@@ -1,11 +1,14 @@
-use std::ops::Range;
+use std::{ops::Range, str::FromStr};
 
 use peginator::PegParser;
 
-use saha_types::{FileID, ForStatement, SahaError, SahaNode, SahaResult, SahaValue, SpaceDestroyer};
+use saha_types::{
+    Decimal, Failure, FileID, ForStatement, SahaError, SahaNode, SahaValue, SpaceDestroyer, Success, Validation, Zero,
+};
 
 use crate::parser::saha::{
-    CommentL, CommentR, SahaStatement, SahaStatementNodes, SlotExpressionNode, SlotFor, SlotL, SlotR, SpecialNode, ValueNode,
+    CommentL, CommentR, IdentifierNode, NumberNode, SahaStatement, SahaStatementNodes, SlotExpressionNode, SlotFor, SlotL,
+    SlotR, SpecialNode, ValueNode,
 };
 
 use self::saha::SahaParser;
@@ -37,11 +40,16 @@ impl ParserContext {
     }
 }
 
-pub fn parse(input: &str) -> SahaResult<Vec<SahaNode>> {
+pub fn parse(input: &str) -> Validation<Vec<SahaNode>> {
     let mut ctx = ParserContext::default();
     let lf = input.replace("\r\n", "\n");
-    let out = SahaParser::parse(&lf)?;
-    Ok(out.visit(&mut ctx))
+    match SahaParser::parse(&lf) {
+        Ok(s) => {
+            let value = s.visit(&mut ctx);
+            Success { value, diagnostics: ctx.errors }
+        }
+        Err(e) => Failure { fatal: SahaError::from(e), diagnostics: vec![] },
+    }
 }
 
 impl SahaParser {
