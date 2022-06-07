@@ -1,4 +1,4 @@
-pub use diagnostic_quick::FileID;
+pub use diagnostic_quick::{Failure, FileID, QError, QResult, Success, Validation};
 pub use rust_decimal::Decimal;
 
 pub use num::Zero;

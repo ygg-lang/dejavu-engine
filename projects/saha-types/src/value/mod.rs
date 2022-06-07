@@ -1,10 +1,9 @@
-use diagnostic::FileID;
+use diagnostic_quick::FileID;
 use std::{
     fmt::{Debug, Display, Formatter},
     ops::Range,
 };
 
-use diagnostic_quick::FileID;
 use serde::{Deserialize, Serialize};
 
 use crate::{Decimal, ForStatement};

@@ -3,7 +3,7 @@ use std::{ops::Range, str::FromStr};
 use peginator::PegParser;
 
 use saha_types::{
-    Decimal, Failure, FileID, ForStatement, SahaError, SahaNode, SahaValue, SpaceDestroyer, Success, Validation, Zero,
+    Decimal, Failure, FileID, ForStatement, QError, SahaNode, SahaValue, SpaceDestroyer, Success, Validation, Zero,
 };
 
 use crate::parser::saha::{
@@ -22,7 +22,7 @@ mod saha;
 #[derive(Default)]
 pub struct ParserContext {
     file: FileID,
-    errors: Vec<SahaError>,
+    errors: Vec<QError>,
 }
 
 impl ParserContext {
@@ -48,7 +48,7 @@ pub fn parse(input: &str) -> Validation<Vec<SahaNode>> {
             let value = s.visit(&mut ctx);
             Success { value, diagnostics: ctx.errors }
         }
-        Err(e) => Failure { fatal: SahaError::from(e), diagnostics: vec![] },
+        Err(e) => Failure { fatal: QError::from(e), diagnostics: vec![] },
     }
 }
 

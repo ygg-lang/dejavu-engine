@@ -2,12 +2,12 @@ use peginator::ParseError;
 use rust_decimal::Error;
 use std::ops::Range;
 
-use crate::{Location, SahaError, SahaErrorKind};
+use crate::{Location, QError, QErrorKind};
 
-impl From<ParseError> for SahaError {
+impl From<ParseError> for QError {
     fn from(value: ParseError) -> Self {
-        SahaError {
-            kind: Box::new(SahaErrorKind::SyntaxError {
+        QError {
+            kind: Box::new(QErrorKind::SyntaxError {
                 message: value.specifics.to_string(),
                 span: Location { file: Default::default(), range: Range { start: value.position, end: value.position } },
             }),
@@ -17,10 +17,10 @@ impl From<ParseError> for SahaError {
     }
 }
 
-impl From<Error> for SahaError {
+impl From<Error> for QError {
     fn from(value: Error) -> Self {
-        SahaError {
-            kind: Box::new(SahaErrorKind::SyntaxError { message: value.to_string(), span: Location::default() }),
+        QError {
+            kind: Box::new(QErrorKind::SyntaxError { message: value.to_string(), span: Location::default() }),
             level: Default::default(),
             error: Some(Box::new(value)),
         }

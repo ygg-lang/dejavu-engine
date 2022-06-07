@@ -20,7 +20,7 @@ impl NumberNode {
         let o = match Decimal::from_str(&self.string) {
             Ok(o) => o,
             Err(e) => {
-                let error = SahaError::from(e).with_range(self.position.clone()).with_file(&ctx.file);
+                let error = QError::from(e).with_range(self.position.clone()).with_file(&ctx.file);
                 ctx.errors.push(error);
                 Decimal::zero()
             }
