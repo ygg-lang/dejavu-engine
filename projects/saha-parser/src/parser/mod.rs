@@ -1,4 +1,4 @@
-use std::{ops::Range, str::FromStr};
+use std::ops::Range;
 
 use peginator::PegParser;
 
@@ -27,16 +27,13 @@ pub struct ParserContext {
 
 impl ParserContext {
     pub fn id(&self, s: String, r: Range<usize>) -> SahaNode {
-        SahaNode::identifier(s).with_range(r).with_file(&self.file)
-    }
-    pub fn text(&self, s: String, r: Range<usize>) -> SahaNode {
-        SahaNode::text(s).with_range(r).with_file(&self.file)
+        SahaNode::identifier(s).with_range(&r).with_file(&self.file)
     }
     pub fn null(&self, r: Range<usize>) -> SahaNode {
-        SahaNode::null().with_range(r).with_file(&self.file)
+        SahaNode::null().with_range(&r).with_file(&self.file)
     }
     pub fn bool(&self, v: bool, r: Range<usize>) -> SahaNode {
-        SahaNode::boolean(v).with_range(r).with_file(&self.file)
+        SahaNode::boolean(v).with_range(&r).with_file(&self.file)
     }
 }
 
@@ -63,7 +60,7 @@ impl SahaStatementNodes {
         let mut out = vec![];
         for statement in self.statements {
             match statement {
-                SahaStatement::UnicodeText(s) => out.push(ctx.text(s.string, s.position)),
+                SahaStatement::UnicodeText(s) => out.push(s.visit(ctx)),
                 SahaStatement::SlotFor(s) => {
                     let l = ctx.left_destroyer(&s.start.left, true);
                     let r = ctx.right_destroyer(&s.end.right, true);
@@ -71,15 +68,11 @@ impl SahaStatementNodes {
                     out.push(ctx.for_statement(s));
                     out.push(r);
                 }
-                SahaStatement::SlotExpressionNode(SlotExpressionNode { left, value, right }) => {
-                    out.push(ctx.left_destroyer(&left, false));
-                    out.push(value.visit(ctx));
-                    out.push(ctx.right_destroyer(&right, false));
-                }
                 SahaStatement::Comment(s) => {
                     out.push(ctx.left_destroyer(&s.left, false));
                     out.push(ctx.right_destroyer(&s.right, false));
                 }
+                SahaStatement::SlotExpressionNode(s) => s.visit(ctx, &mut out),
                 SahaStatement::SlotIf(_) => todo!(),
             }
         }
@@ -100,8 +93,12 @@ impl ParserContext {
 }
 
 impl SlotExpressionNode {
-    pub fn visit(self, ctx: &mut ParserContext) -> SahaNode {
-        self.value.visit(ctx)
+    pub fn visit(self, ctx: &mut ParserContext, out: &mut Vec<SahaNode>) {
+        let l = ctx.left_destroyer(&self.left, false);
+        let r = ctx.right_destroyer(&self.right, false);
+        out.push(l);
+        out.push(self.value.visit(ctx));
+        out.push(r);
     }
 }
 

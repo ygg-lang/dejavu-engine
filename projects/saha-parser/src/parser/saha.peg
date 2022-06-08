@@ -1,14 +1,15 @@
 @export
 SahaParser = parsed:SahaStatementNodes $;
 
+@no_skip_ws
 SahaStatementNodes = { statements:SahaStatement };
 
 SahaStatement =
-	@:Comment |
-	@:UnicodeText |
 	@:SlotFor |
 	@:SlotIf |
-	@:SlotExpressionNode
+	@:SlotExpressionNode |
+	@:Comment |
+	@:UnicodeText
 ;
 
 
@@ -76,13 +77,12 @@ XID_START = char;
 XID_CONTINUE = char;
 
 
-
 @position
 @string
-NumberNode = NumberNodeEx;
-
-@extern(crate::utils::maybe_number)
-NumberNodeEx;
+NumberNode =
+	{'0'..'9'}+ '.' {'0'..'9'}+ [('**'|'e'|'E') ['+'|'-'] {'0'..'9'}+] |
+	{'0'..'9'}+
+	;
 
 @position
 @string

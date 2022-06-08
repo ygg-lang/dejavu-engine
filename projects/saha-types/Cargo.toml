@@ -11,11 +11,15 @@ edition = "2021"
 
 [dependencies]
 #diagnostic = "0.4.1"
-diagnostic-quick = { git = "https://github.com/oovm/diagnostic-rs", rev = "af7e5e51" }
 serde = { version = "1.0.147", features = ["derive"] }
 peginator = { version = "0.3.0", optional = true }
 rust_decimal = { version = "1.26.1", features = ["serde"] }
 num = "0.4.0"
+
+[dependencies.diagnostic-quick]
+git = "https://github.com/oovm/diagnostic-rs"
+rev = "d6e51385"
+features = ["peginator"]
 
 
 [dev-dependencies]

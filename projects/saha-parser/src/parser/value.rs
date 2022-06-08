@@ -1,4 +1,12 @@
 use super::*;
+use crate::parser::saha::UnicodeText;
+
+impl UnicodeText {
+    pub fn visit(self, ctx: &mut ParserContext) -> SahaNode {
+        SahaNode::text(self.string).with_range(&self.position).with_file(&ctx.file);
+        panic!()
+    }
+}
 
 impl SpecialNode {
     pub fn visit(self, ctx: &mut ParserContext) -> SahaNode {
@@ -9,6 +17,7 @@ impl SpecialNode {
         }
     }
 }
+
 impl IdentifierNode {
     pub fn visit(self, ctx: &mut ParserContext) -> SahaNode {
         ctx.id(self.string, self.position)
@@ -17,14 +26,15 @@ impl IdentifierNode {
 
 impl NumberNode {
     pub fn visit(self, ctx: &mut ParserContext) -> SahaNode {
-        let o = match Decimal::from_str(&self.string) {
+        let sci = self.string.replace("**", "e");
+        let o = match Decimal::from_scientific(&sci) {
             Ok(o) => o,
             Err(e) => {
-                let error = QError::from(e).with_range(self.position.clone()).with_file(&ctx.file);
+                let error = QError::from(e).with_range(&self.position).with_file(&ctx.file);
                 ctx.errors.push(error);
                 Decimal::zero()
             }
         };
-        SahaNode::number(o).with_range(self.position).with_file(&ctx.file)
+        SahaNode::number(o).with_range(&self.position).with_file(&ctx.file)
     }
 }

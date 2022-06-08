@@ -38,7 +38,7 @@ impl SpaceDestroyer {
                         SahaValue::LeftDestroyer(ws) => match ws.trim_end(text) {
                             // drop node
                             "" => {}
-                            str => out.push(SahaNode::text(str).with_range(s.span).with_file(&s.file)),
+                            str => out.push(SahaNode::text(str).with_range(&s.span).with_file(&s.file)),
                         },
                         _ => out.push(s),
                     },
@@ -53,7 +53,7 @@ impl SpaceDestroyer {
                                 match s.trim_start(text) {
                                     // drop
                                     "" => {}
-                                    str => out.push(SahaNode::text(str).with_range(next.span).with_file(&next.file)),
+                                    str => out.push(SahaNode::text(str).with_range(&next.span).with_file(&next.file)),
                                 }
                             }
                             _ => out.push(next),

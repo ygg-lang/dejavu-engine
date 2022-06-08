@@ -2,16 +2,26 @@ use super::*;
 
 impl ParserContext {
     pub fn left_destroyer(&self, mode: impl Into<SlotL>, statement: bool) -> SahaNode {
-        SahaNode { kind: SahaValue::LeftDestroyer(SpaceDestroyer::new(mode.into().trim, statement)), span: Default::default() }
+        let l = mode.into();
+        SahaNode {
+            kind: SahaValue::LeftDestroyer(SpaceDestroyer::new(l.trim, statement)),
+            span: Default::default(),
+            file: self.file.clone(),
+        }
     }
     pub fn right_destroyer(&self, mode: impl Into<SlotR>, statement: bool) -> SahaNode {
-        SahaNode { kind: SahaValue::RightDestroyer(SpaceDestroyer::new(mode.into().trim, statement)), span: Default::default() }
+        let r = mode.into();
+        SahaNode {
+            kind: SahaValue::RightDestroyer(SpaceDestroyer::new(r.trim, statement)),
+            span: Default::default(),
+            file: self.file.clone(),
+        }
     }
 }
 
 impl From<&SlotL> for SlotL {
     fn from(value: &SlotL) -> Self {
-        value.into()
+        value.clone()
     }
 }
 
@@ -23,7 +33,7 @@ impl From<&CommentL> for SlotL {
 
 impl From<&SlotR> for SlotR {
     fn from(value: &SlotR) -> Self {
-        value.into()
+        value.clone()
     }
 }
 impl From<&CommentR> for SlotR {

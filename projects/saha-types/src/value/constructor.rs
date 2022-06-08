@@ -53,8 +53,8 @@ impl SahaNode {
         }
     }
     #[inline]
-    pub fn with_range(mut self, range: Range<usize>) -> Self {
-        self.span = range;
+    pub fn with_range(mut self, range: &Range<usize>) -> Self {
+        self.span = range.clone();
         self
     }
     #[inline]
