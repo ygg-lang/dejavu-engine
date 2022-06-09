@@ -6,24 +6,26 @@ use saha_types::Decimal;
 
 #[test]
 fn test() {
-    parse(include_str!("test.saha")).unwrap();
+    let mut vm = SahaVM::default();
+
+    parse(include_str!("test.saha"), &Default::default()).unwrap();
 }
 
 #[test]
 fn test_null() {
-    parse("{% null %}").unwrap();
+    parse("{% null %}", &Default::default()).unwrap();
 }
 
 #[test]
 fn test_boolean() {
-    parse("{% true %}").unwrap();
-    parse("{% false %}").unwrap();
+    parse("{% true %}", &Default::default()).unwrap();
+    parse("{% false %}", &Default::default()).unwrap();
 }
 
 #[test]
 fn test_number() {
     Decimal::from_str("0").unwrap();
-    parse("{% 0 %}").unwrap();
+    parse("{% 0 %}", &Default::default()).unwrap();
 }
 
 #[test]

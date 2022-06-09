@@ -19,7 +19,6 @@ mod whitespace;
 #[allow(unused, non_camel_case_types)]
 mod saha;
 
-#[derive(Default)]
 pub struct ParserContext {
     file: FileID,
     errors: Vec<QError>,
@@ -37,15 +36,17 @@ impl ParserContext {
     }
 }
 
-pub fn parse(input: &str) -> Validation<Vec<SahaNode>> {
-    let mut ctx = ParserContext::default();
-    let lf = input.replace("\r\n", "\n");
-    match SahaParser::parse(&lf) {
+pub fn parse(input: &str, file: &FileID) -> Validation<Vec<SahaNode>> {
+    let mut ctx = ParserContext { file: file.clone(), errors: vec![] };
+    if input.contains('\r') {
+        ctx.errors.push(QError::syntax_error("CRLF"))
+    }
+    match SahaParser::parse(input) {
         Ok(s) => {
             let value = s.visit(&mut ctx);
             Success { value, diagnostics: ctx.errors }
         }
-        Err(e) => Failure { fatal: QError::from(e), diagnostics: vec![] },
+        Err(e) => Failure { fatal: QError::from(e), diagnostics: ctx.errors },
     }
 }
 
