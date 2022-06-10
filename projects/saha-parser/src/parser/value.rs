@@ -3,8 +3,7 @@ use crate::parser::saha::UnicodeText;
 
 impl UnicodeText {
     pub fn visit(self, ctx: &mut ParserContext) -> SahaNode {
-        SahaNode::text(self.string).with_range(&self.position).with_file(&ctx.file);
-        panic!()
+        SahaNode::text(self.string).with_range(&self.position).with_file(&ctx.file)
     }
 }
 

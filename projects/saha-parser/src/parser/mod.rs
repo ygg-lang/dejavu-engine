@@ -13,6 +13,7 @@ use crate::parser::saha::{
 
 use self::saha::SahaParser;
 
+mod condition;
 mod value;
 mod whitespace;
 
@@ -46,7 +47,7 @@ pub fn parse(input: &str, file: &FileID) -> Validation<Vec<SahaNode>> {
             let value = s.visit(&mut ctx);
             Success { value, diagnostics: ctx.errors }
         }
-        Err(e) => Failure { fatal: QError::from(e), diagnostics: ctx.errors },
+        Err(e) => Failure { fatal: QError::from(e).with_file(file), diagnostics: ctx.errors },
     }
 }
 
@@ -74,7 +75,7 @@ impl SahaStatementNodes {
                     out.push(ctx.right_destroyer(&s.right, false));
                 }
                 SahaStatement::SlotExpressionNode(s) => s.visit(ctx, &mut out),
-                SahaStatement::SlotIf(_) => todo!(),
+                SahaStatement::SlotIf(s) => s.visit(ctx, &mut out),
             }
         }
         // Don't break white space, prevent redundant breaks

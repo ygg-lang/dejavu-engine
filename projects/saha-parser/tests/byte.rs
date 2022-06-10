@@ -1,14 +1,22 @@
 use std::str::FromStr;
+
 use ucd_trie::TrieSetOwned;
 
 use saha_parser::parse;
-use saha_types::Decimal;
+use saha_types::{Decimal, Failure, SahaCompiler, Success};
 
 #[test]
 fn test() {
-    let mut vm = SahaVM::default();
-
-    parse(include_str!("test.saha"), &Default::default()).unwrap();
+    let mut vm = SahaCompiler::default();
+    let file = vm.add_file("tests/test.saha").unwrap();
+    let text = vm.get_text(&file).unwrap();
+    match parse(text, &file) {
+        Success { value: _, diagnostics } => vm.print_errors(&diagnostics).unwrap(),
+        Failure { fatal, diagnostics } => {
+            vm.print_errors(&diagnostics).unwrap();
+            vm.print_errors(&[fatal]).unwrap()
+        }
+    }
 }
 
 #[test]

@@ -5,15 +5,15 @@ SahaParser = parsed:SahaStatementNodes $;
 SahaStatementNodes = { statements:SahaStatement };
 
 SahaStatement =
+	@:SlotExpressionNode |
 	@:SlotFor |
 	@:SlotIf |
-	@:SlotExpressionNode |
 	@:Comment |
 	@:UnicodeText
 ;
 
 
-SlotIf = start:SlotIfStart body:SahaStatementNodes [else:SlotElse empty:SahaStatementNodes] end:EndIf;
+SlotIf = start:SlotIfStart body:SahaStatementNodes [else:SlotElse empty:SahaStatementNodes] end:SlotEndIf;
 
 SlotIfStart = left:SlotL "if" value:ValueNode right:SlotR;
 
@@ -22,7 +22,7 @@ SlotElse = left:SlotL "else" right:SlotR;
 SlotEndIf = left:SlotL end:EndIf right:SlotR;
 
 @no_skip_ws
-EndIf = 'end' [['-'|'_'] "if"];
+EndIf = 'end' ['-' "if"];
 
 
 
@@ -35,10 +35,7 @@ SlotForStart = left:SlotL "for" pattern:ValueNode "in" expression:ValueNode righ
 SlotEndFor = left:SlotL end:EndFor right:SlotR;
 
 @no_skip_ws
-EndFor = 'end' [['-'|'_'] "for"];
-
-
-
+EndFor = 'end' ['-' "for"];
 
 SlotExpressionNode = left:SlotL value:ValueNode right:SlotR;
 
