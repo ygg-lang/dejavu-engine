@@ -3,7 +3,7 @@ use std::ops::Range;
 use peginator::PegParser;
 
 use saha_types::{
-    Decimal, Failure, FileID, ForStatement, QError, SahaNode, SahaValue, SpaceDestroyer, Success, Validation, Zero,
+    ASTKind, Decimal, Failure, FileID, ForStatement, QError, SahaNode, SpaceDestroyer, Success, Validation, Zero,
 };
 
 use crate::parser::saha::{
@@ -18,7 +18,7 @@ mod value;
 mod whitespace;
 
 #[allow(unused, non_camel_case_types)]
-mod saha;
+pub(crate) mod saha;
 
 pub struct ParserContext {
     file: FileID,

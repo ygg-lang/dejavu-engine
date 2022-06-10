@@ -7,6 +7,6 @@ pub struct ForStatement {
 
 impl From<ForStatement> for SahaNode {
     fn from(value: ForStatement) -> Self {
-        SahaNode { kind: SahaValue::ForStatement(Box::new(value)), span: Default::default(), file: Default::default() }
+        SahaNode { kind: ASTKind::ForStatement(Box::new(value)), span: Default::default(), file: Default::default() }
     }
 }

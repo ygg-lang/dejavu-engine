@@ -63,7 +63,7 @@ SpecialNode = 'null' | 'true' | 'false';
 @string
 @position
 @no_skip_ws
-IdentifierNode = (XID_START | '_') {XID_CONTINUE};
+IdentifierNode = (XID_START | '_' | '-') {XID_CONTINUE | '-'};
 
 @char
 @check(unicode_ident::is_xid_start)
@@ -83,10 +83,7 @@ NumberNode =
 
 @position
 @string
-UnicodeText = UnicodeTextEx;
-
-@extern(crate::utils::unicode_text)
-UnicodeTextEx;
+UnicodeText = {!("{%" | "{#") char}+;
 
 @no_skip_ws
 Comment = left:CommentL {!CommentR|char}+ right:CommentR;

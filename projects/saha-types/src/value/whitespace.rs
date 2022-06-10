@@ -33,9 +33,9 @@ impl SpaceDestroyer {
         let mut iter = list.into_iter().peekable();
         while let Some(s) = iter.next() {
             match &s.kind {
-                SahaValue::Text(text) => match iter.peek() {
+                ASTKind::Text(text) => match iter.peek() {
                     Some(next) => match &next.kind {
-                        SahaValue::LeftDestroyer(ws) => match ws.trim_end(text) {
+                        ASTKind::LeftDestroyer(ws) => match ws.trim_end(text) {
                             // drop node
                             "" => {}
                             str => out.push(SahaNode::text(str).with_range(&s.span).with_file(&s.file)),
@@ -45,11 +45,11 @@ impl SpaceDestroyer {
                     None => out.push(s),
                 },
                 // drop node
-                SahaValue::LeftDestroyer(_) => {}
-                SahaValue::RightDestroyer(s) => {
+                ASTKind::LeftDestroyer(_) => {}
+                ASTKind::RightDestroyer(s) => {
                     if let Some(next) = iter.next() {
                         match &next.kind {
-                            SahaValue::Text(text) => {
+                            ASTKind::Text(text) => {
                                 match s.trim_start(text) {
                                     // drop
                                     "" => {}

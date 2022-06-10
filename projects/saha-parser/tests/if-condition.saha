@@ -1,0 +1,24 @@
+## Value
+
+{% null %}
+{% true %}
+{% false %}
+
+
+## If condition
+
+{% if a %}
+	{%- null -%}
+{% else %}
+	{%= true =%}
+{% end-if %}
+
+## For loop
+
+{% for a in v %}
+	{%- true -%}
+{% else %}
+	{%= false =%}
+{% end-for %}
+
+

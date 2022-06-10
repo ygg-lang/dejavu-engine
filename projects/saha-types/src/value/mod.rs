@@ -13,9 +13,9 @@ mod display;
 pub mod for_statement;
 mod whitespace;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Serialize, Deserialize)]
 pub struct SahaNode {
-    pub kind: SahaValue,
+    pub kind: ASTKind,
     pub span: Range<usize>,
     pub file: FileID,
 }
@@ -23,14 +23,14 @@ pub struct SahaNode {
 #[repr(u8)]
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(tag = "type")]
-pub enum SahaValue {
+pub enum ASTKind {
     Null = 0,
     Boolean(bool),
     Text(String),
     Number(Decimal),
     Identifier(String),
-    Vector(Vec<SahaValue>),
-    Statements(Vec<SahaValue>),
+    Vector(Vec<SahaNode>),
+    Statements(Vec<SahaNode>),
     LeftDestroyer(SpaceDestroyer),
     RightDestroyer(SpaceDestroyer),
     ForStatement(Box<ForStatement>),

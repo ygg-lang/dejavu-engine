@@ -4,7 +4,7 @@ impl ParserContext {
     pub fn left_destroyer(&self, mode: impl Into<SlotL>, statement: bool) -> SahaNode {
         let l = mode.into();
         SahaNode {
-            kind: SahaValue::LeftDestroyer(SpaceDestroyer::new(l.trim, statement)),
+            kind: ASTKind::LeftDestroyer(SpaceDestroyer::new(l.trim, statement)),
             span: Default::default(),
             file: self.file.clone(),
         }
@@ -12,7 +12,7 @@ impl ParserContext {
     pub fn right_destroyer(&self, mode: impl Into<SlotR>, statement: bool) -> SahaNode {
         let r = mode.into();
         SahaNode {
-            kind: SahaValue::RightDestroyer(SpaceDestroyer::new(r.trim, statement)),
+            kind: ASTKind::RightDestroyer(SpaceDestroyer::new(r.trim, statement)),
             span: Default::default(),
             file: self.file.clone(),
         }
