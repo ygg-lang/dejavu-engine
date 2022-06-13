@@ -5,7 +5,7 @@ impl ParserContext {
         let l = mode.into();
         SahaNode {
             kind: ASTKind::LeftDestroyer(SpaceDestroyer::new(l.trim, statement)),
-            span: Default::default(),
+            span: l.position,
             file: self.file.clone(),
         }
     }
@@ -13,7 +13,7 @@ impl ParserContext {
         let r = mode.into();
         SahaNode {
             kind: ASTKind::RightDestroyer(SpaceDestroyer::new(r.trim, statement)),
-            span: Default::default(),
+            span: r.position,
             file: self.file.clone(),
         }
     }
@@ -27,7 +27,7 @@ impl From<&SlotL> for SlotL {
 
 impl From<&CommentL> for SlotL {
     fn from(value: &CommentL) -> Self {
-        SlotL { trim: value.trim }
+        SlotL { trim: value.trim, position: value.position.clone() }
     }
 }
 
@@ -38,6 +38,6 @@ impl From<&SlotR> for SlotR {
 }
 impl From<&CommentR> for SlotR {
     fn from(value: &CommentR) -> Self {
-        SlotR { trim: value.trim }
+        SlotR { trim: value.trim, position: value.position.clone() }
     }
 }

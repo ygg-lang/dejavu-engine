@@ -6,14 +6,42 @@ impl Debug for SahaNode {
     }
 }
 
-impl Display for SahaNode {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        Display::fmt(&self.kind, f)
-    }
-}
-
 impl Display for ASTKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         Debug::fmt(self, f)
+    }
+}
+
+impl Debug for ASTKind {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ASTKind::Null => f.write_str("null"),
+            ASTKind::Boolean(v) => match v {
+                true => f.write_str("true"),
+                false => f.write_str("false"),
+            },
+            ASTKind::Text(v) => f.debug_tuple("Text").field(v).finish(),
+            ASTKind::Number(v) => {
+                write!(f, "{v}")
+            }
+            ASTKind::Identifier(v) => {
+                f.debug_tuple("Identifier").field(v).finish()
+            }
+            ASTKind::Vector(_) => {
+                todo!()
+            }
+            ASTKind::Statements(_) => {
+                todo!()
+            }
+            ASTKind::LeftDestroyer(v) => {
+                write!(f, "{{%{v}")
+            }
+            ASTKind::RightDestroyer(v) => {
+                write!(f, "{v}%}}")
+            }
+            ASTKind::ForStatement(_) => {
+                todo!()
+            }
+        }
     }
 }

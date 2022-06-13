@@ -1,4 +1,4 @@
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use diagnostic_quick::{print_errors, QError, QResult, TextStorage};
 use serde::{Deserialize, Serialize};
@@ -7,25 +7,25 @@ use crate::FileID;
 
 pub mod render;
 
-pub struct SahaCompiler {
+pub struct SahaVM {
+    root: PathBuf,
     /// `Dict<RelativePath, Cache>`
     store: TextStorage,
 }
 
-impl Default for SahaCompiler {
-    fn default() -> Self {
+impl SahaVM {
+    pub fn new(workspace: &Path) -> QResult<SahaVM> {
         let mut store = TextStorage::default();
         store.force_lf();
-        Self { store }
+        let root = workspace.canonicalize()?;
+        Ok(Self { root, store })
     }
-}
 
-impl SahaCompiler {
     pub fn get_text(&mut self, id: &FileID) -> QResult<&str> {
         Ok(self.store.get_text(id)?)
     }
-    pub fn add_file<P: AsRef<Path>>(&mut self, path: P) -> QResult<FileID> {
-        let absolute = path.as_ref().canonicalize()?;
+    pub fn add_file(&mut self, path: &Path) -> QResult<FileID> {
+        let absolute = path.canonicalize()?;
         Ok(self.store.file(absolute)?)
     }
     pub fn print_errors(&self, errors: &[QError]) -> QResult {

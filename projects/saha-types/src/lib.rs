@@ -3,7 +3,7 @@ pub use num::Zero;
 pub use rust_decimal::Decimal;
 
 pub use self::{
-    compiler::{render::SahaRender, SahaCompiler},
+    compiler::{render::SahaRenderer, SahaVM},
     value::{for_statement::ForStatement, ASTKind, SahaNode, SpaceDestroyer},
 };
 

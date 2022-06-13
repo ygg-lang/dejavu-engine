@@ -16,5 +16,4 @@ fn keep_size() {
     assert_eq!(size_of::<String>(), 24);
     assert_eq!(size_of::<Decimal>(), 16);
     assert_eq!(size_of::<Vec<ASTKind>>(), 24);
-    assert_eq!(size_of::<Location>(), 32);
 }

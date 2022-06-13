@@ -11,6 +11,7 @@ use crate::{Decimal, ForStatement};
 mod constructor;
 mod display;
 pub mod for_statement;
+mod ser;
 mod whitespace;
 
 #[derive(Serialize, Deserialize)]
@@ -21,7 +22,7 @@ pub struct SahaNode {
 }
 
 #[repr(u8)]
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Serialize, Deserialize)]
 #[serde(tag = "type")]
 pub enum ASTKind {
     Null = 0,

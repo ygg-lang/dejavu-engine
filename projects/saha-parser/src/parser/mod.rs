@@ -14,6 +14,7 @@ use crate::parser::saha::{
 use self::saha::SahaParser;
 
 mod condition;
+mod expression;
 mod value;
 mod whitespace;
 
@@ -99,7 +100,7 @@ impl SlotExpressionNode {
         let l = ctx.left_destroyer(&self.left, false);
         let r = ctx.right_destroyer(&self.right, false);
         out.push(l);
-        out.push(self.value.visit(ctx));
+        // out.push(self.value.visit(ctx));
         out.push(r);
     }
 }

@@ -30,7 +30,7 @@ features = ["peginator"]
 [dev-dependencies]
 
 [build-dependencies]
-peginator = "0.3.0"
+peginator = "0.4.0"
 
 [features]
 default = []

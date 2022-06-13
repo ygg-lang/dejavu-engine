@@ -12,32 +12,40 @@ SahaStatement =
 	@:UnicodeText
 ;
 
-
+@no_skip_ws
 SlotIf = start:SlotIfStart body:SahaStatementNodes [else:SlotElse empty:SahaStatementNodes] end:SlotEndIf;
 
 SlotIfStart = left:SlotL "if" value:ValueNode right:SlotR;
 
 SlotElse = left:SlotL "else" right:SlotR;
 
-SlotEndIf = left:SlotL end:EndIf right:SlotR;
+SlotEndIf = left:SlotL EndIf right:SlotR;
 
 @no_skip_ws
-EndIf = 'end' ['-' "if"];
+EndIf = 'end' [['-'|'_'] "if"];
 
 
 
 
-
+@no_skip_ws
 SlotFor = start:SlotForStart body:SahaStatementNodes [else:SlotElse empty:SahaStatementNodes] end:SlotEndFor;
 
 SlotForStart = left:SlotL "for" pattern:ValueNode "in" expression:ValueNode right:SlotR;
 
-SlotEndFor = left:SlotL end:EndFor right:SlotR;
+SlotEndFor = left:SlotL EndFor right:SlotR;
 
 @no_skip_ws
-EndFor = 'end' ['-' "for"];
+EndFor = 'end' [['-'|'_'] "for"];
 
-SlotExpressionNode = left:SlotL value:ValueNode right:SlotR;
+@check(crate::utils::check_slot_expression)
+SlotExpressionNode = left:SlotL e:ExpressionNode right:SlotR;
+
+ExpressionNode = head:ValueNode {infix:ExpressionNodeInfix};
+
+ExpressionNodeInfix = op:Infix value:ValueNode;
+
+@string
+Infix = "+";
 
 ValueNode =
 	@:SpecialNode |
@@ -46,9 +54,11 @@ ValueNode =
 ;
 
 @no_skip_ws
+@position
 SlotL = "{%" [trim:TrimMode];
 
 @no_skip_ws
+@position
 SlotR = [trim:TrimMode] "%}";
 
 
@@ -77,8 +87,8 @@ XID_CONTINUE = char;
 @position
 @string
 NumberNode =
-	{'0'..'9'}+ '.' {'0'..'9'}+ [('**'|'e'|'E') ['+'|'-'] {'0'..'9'}+] |
-	{'0'..'9'}+
+	{'0'..'9'}+ ['.' {'0'..'9'}+] [('**'|'e'|'E') ['+'|'-'] {'0'..'9'}+] |
+	'.' {'0'..'9'}+
 	;
 
 @position
@@ -89,7 +99,9 @@ UnicodeText = {!("{%" | "{#") char}+;
 Comment = left:CommentL {!CommentR|char}+ right:CommentR;
 
 @no_skip_ws
+@position
 CommentL = "{#" [trim:TrimMode];
 
 @no_skip_ws
+@position
 CommentR = [trim:TrimMode] "#}";

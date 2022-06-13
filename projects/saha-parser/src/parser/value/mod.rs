@@ -1,5 +1,6 @@
-use super::*;
 use crate::parser::saha::UnicodeText;
+
+use super::*;
 
 impl UnicodeText {
     pub fn visit(self, ctx: &mut ParserContext) -> SahaNode {
@@ -26,7 +27,8 @@ impl IdentifierNode {
 impl NumberNode {
     pub fn visit(self, ctx: &mut ParserContext) -> SahaNode {
         let sci = self.string.replace("**", "e");
-        let o = match Decimal::from_scientific(&sci) {
+        let result = if sci.contains('e') { Decimal::from_scientific(&sci) } else { Decimal::from_str_exact(&sci) };
+        let o = match result {
             Ok(o) => o,
             Err(e) => {
                 let error = QError::from(e).with_range(&self.position).with_file(&ctx.file);
