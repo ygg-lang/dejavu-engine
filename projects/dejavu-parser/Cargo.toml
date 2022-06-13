@@ -23,7 +23,7 @@ ucd-trie = "0.1.5"
 #serde-hjson = { version = "0.9", optional = true }
 
 [dependencies.saha-types]
-path = "../saha-types"
+path = "../dejavu-engine"
 features = ["peginator"]
 
 

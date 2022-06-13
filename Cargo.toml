@@ -1,7 +1,7 @@
 [workspace]
 members = ["projects/*"]
 default-members = [
-    "projects/saha-types",
+    "projects/dejavu-engine",
 ]
 exclude = [
     "projects/.DS_Store",

@@ -11,7 +11,7 @@ use crate::{Decimal, ForStatement};
 mod constructor;
 mod display;
 pub mod for_statement;
-mod ser;
+pub mod ser;
 mod whitespace;
 
 #[derive(Serialize, Deserialize)]

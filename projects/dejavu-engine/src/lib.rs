@@ -4,7 +4,7 @@ pub use rust_decimal::Decimal;
 
 pub use self::{
     compiler::{render::SahaRenderer, SahaVM},
-    value::{for_statement::ForStatement, ASTKind, SahaNode, SpaceDestroyer},
+    value::{for_statement::ForStatement, ASTKind, SahaNode, SpaceDestroyer, ser::SahaSerializer},
 };
 
 // mod errors;
