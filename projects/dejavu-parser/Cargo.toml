@@ -1,5 +1,5 @@
 [package]
-name = "saha-parser"
+name = "dejavu-parser"
 version = "0.1.0"
 authors = ["192607617@qq.com"]
 description = "External function system for arc"
@@ -23,7 +23,7 @@ ucd-trie = "0.1.5"
 #serde-hjson = { version = "0.9", optional = true }
 
 [dependencies.saha-types]
-path = "../dejavu-engine"
+path = "../dejavu-types"
 features = ["peginator"]
 
 

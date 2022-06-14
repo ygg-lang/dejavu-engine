@@ -1,28 +1,40 @@
 [package]
-name = "saha-types"
-version = "0.0.0"
-authors = ["Aster <192607617@qq.com>"]
-description = "..."
-repository = "https://github.com/oovm/sub_projects"
-documentation = "https://docs.rs/sub_projects"
-readme = "Readme.md"
+name = "dejavu-engine"
+version = "0.1.0"
+authors = ["192607617@qq.com"]
+description = "DejaVu shared types and runtime"
 license = "MPL-2.0"
-edition = "2021"
+readme = "Readme.md"
+repository = "https://github.com/doki-land/arc-rs"
+exclude = ["/tests/*"]
+edition = "2018"
 
 [dependencies]
-#diagnostic = "0.4.1"
-serde = { version = "1.0.147", features = ["derive"] }
-peginator = { version = "0.3.0", optional = true }
-rust_decimal = { version = "1.26.1", features = ["serde"] }
-num = "0.4.0"
+peginator = "0.3.0"
+unicode-ident = "1.0.5"
+ucd-trie = "0.1.5"
+#arc-rs = "0.5"
+#serde = "1.0"
+#serde_json = { version = "1.0", optional = true }
+#toml = { version = "0.5", optional = true }
+## toml_edit = "*"
+#yaml-rust = { version = "0.4", optional = true }
+## serde_yaml = "*"
+#serde-hjson = { version = "0.9", optional = true }
 
-[dependencies.diagnostic-quick]
-git = "https://github.com/oovm/diagnostic-rs"
-rev = "527707f5"
-features = ["peginator", "rust_decimal"]
+[dependencies.saha-types]
+path = "../dejavu-types"
+features = ["peginator"]
 
 
 [dev-dependencies]
 
+[build-dependencies]
+peginator = "0.4.0"
+
 [features]
 default = []
+
+#json = ["serde_json", "serde_json/preserve_order"]
+#yaml = ["yaml-rust"]
+#hjson = ["serde-hjson"]
