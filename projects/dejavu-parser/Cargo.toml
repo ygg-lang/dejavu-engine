@@ -22,7 +22,7 @@ ucd-trie = "0.1.5"
 ## serde_yaml = "*"
 #serde-hjson = { version = "0.9", optional = true }
 
-[dependencies.saha-types]
+[dependencies.dejavu-types]
 path = "../dejavu-types"
 features = ["peginator"]
 
