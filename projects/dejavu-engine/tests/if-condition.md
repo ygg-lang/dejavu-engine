@@ -1,3 +1,5 @@
+{% target crates::IO %}
+
 ## If condition
 
 {% if a %}

@@ -1,6 +1,13 @@
 pub extern crate anyhow;
 
-mod escaper;
-mod traits;
+pub use self::{
+    escaper::{
+        utils::{escape, TemplateDisplay},
+        Escaper, PlainText, XmlEscaper,
+    },
+    traits::Template,
+};
 
-pub use self::traits::Template;
+mod escaper;
+mod for_3rd;
+mod traits;
