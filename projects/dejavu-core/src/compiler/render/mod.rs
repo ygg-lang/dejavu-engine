@@ -22,7 +22,7 @@ impl SahaRenderer {
     where
         V: Serialize,
     {
-        input.serialize(Content::None)?
+        input.serialize(Content::None)?;
 
         let data = Content::deserialize(input)?;
     }

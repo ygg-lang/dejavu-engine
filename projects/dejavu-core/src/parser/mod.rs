@@ -1,14 +1,14 @@
+use diagnostic_quick::{Failure, FileID, QError, Success, Validation};
 use std::ops::Range;
 
 use peginator::PegParser;
 
-use saha_types::{
-    ASTKind, Decimal, Failure, FileID, ForStatement, QError, SahaNode, SpaceDestroyer, Success, Validation, Zero,
-};
-
-use crate::parser::saha::{
-    CommentL, CommentR, IdentifierNode, NumberNode, SahaStatement, SahaStatementNodes, SlotExpressionNode, SlotFor, SlotL,
-    SlotR, SpecialNode, ValueNode,
+use crate::{
+    parser::saha::{
+        CommentL, CommentR, IdentifierNode, NumberNode, SahaStatement, SahaStatementNodes, SlotExpressionNode, SlotFor, SlotL,
+        SlotR, SpecialNode, ValueNode,
+    },
+    value::{for_statement::ForStatement, SahaNode, SpaceDestroyer},
 };
 
 use self::saha::SahaParser;

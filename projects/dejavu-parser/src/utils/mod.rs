@@ -1,4 +1,4 @@
-use crate::parser::saha::{SlotExpressionNode, ValueNode};
+use crate::{SlotExpressionNode, ValueNode};
 
 pub fn unicode_text(input: &str) -> Result<(&str, usize), &'static str> {
     let mut length = 0;

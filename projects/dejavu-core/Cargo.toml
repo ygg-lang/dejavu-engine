@@ -1,0 +1,34 @@
+[package]
+name = "dejavu-core"
+version = "0.1.0"
+authors = ["192607617@qq.com"]
+description = "Error Handling, Parser and Compiler of DejaVu Language"
+license = "MPL-2.0"
+readme = "Readme.md"
+repository = "https://github.com/doki-land/arc-rs"
+exclude = ["/tests/*"]
+edition = "2018"
+
+[dependencies]
+peginator = "0.4.0"
+serde = { version = "1.0.147", features = ["derive"] }
+
+
+
+[dependencies.dejavu-parser]
+#version = "0.0.0"
+path = "../dejavu-parser"
+
+[dependencies.diagnostic-quick]
+git = "https://github.com/oovm/diagnostic-rs"
+rev = "527707f5"
+features = ["peginator", "rust_decimal"]
+
+[dev-dependencies]
+
+[features]
+default = []
+
+#json = ["serde_json", "serde_json/preserve_order"]
+#yaml = ["yaml-rust"]
+#hjson = ["serde-hjson"]

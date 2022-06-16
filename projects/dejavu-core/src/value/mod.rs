@@ -6,7 +6,7 @@ use std::{
 
 use serde::{Deserialize, Serialize};
 
-use crate::{Decimal, ForStatement};
+use crate::value::for_statement::ForStatement;
 
 mod constructor;
 mod display;

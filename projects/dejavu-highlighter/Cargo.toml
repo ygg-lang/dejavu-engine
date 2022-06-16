@@ -1,5 +1,5 @@
 [package]
-name = "dejavu-bootstrap"
+name = "dejavu-highlighter"
 version = "0.0.0"
 authors = ["Aster <192607617@qq.com>"]
 description = "..."
@@ -10,10 +10,6 @@ license = "MPL-2.0"
 edition = "2021"
 
 [dependencies]
-
-[dependencies.dejavu-engine]
-#version = "0.1.0"
-path = "../dejavu-engine"
 
 [dev-dependencies]
 
