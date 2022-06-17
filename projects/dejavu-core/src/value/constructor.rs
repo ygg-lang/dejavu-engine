@@ -1,3 +1,4 @@
+use rust_decimal::Decimal;
 use super::*;
 
 impl SahaNode {

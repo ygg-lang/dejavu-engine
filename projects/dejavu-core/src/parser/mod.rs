@@ -2,24 +2,14 @@ use diagnostic_quick::{Failure, FileID, QError, Success, Validation};
 use std::ops::Range;
 
 use peginator::PegParser;
-
-use crate::{
-    parser::saha::{
-        CommentL, CommentR, IdentifierNode, NumberNode, SahaStatement, SahaStatementNodes, SlotExpressionNode, SlotFor, SlotL,
-        SlotR, SpecialNode, ValueNode,
-    },
-    value::{for_statement::ForStatement, SahaNode, SpaceDestroyer},
-};
-
-use self::saha::SahaParser;
+use dejavu_parser::{SahaParser, SahaStatement, SahaStatementNodes, SlotExpressionNode, ValueNode};
+use crate::value::{SahaNode, SpaceDestroyer};
+use crate::value::for_statement::ForStatement;
 
 mod condition;
 mod expression;
 mod value;
 mod whitespace;
-
-#[allow(unused, non_camel_case_types)]
-pub(crate) mod saha;
 
 pub struct ParserContext {
     file: FileID,

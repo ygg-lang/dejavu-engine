@@ -13,8 +13,6 @@ edition = "2018"
 peginator = "0.4.0"
 serde = { version = "1.0.147", features = ["derive"] }
 
-
-
 [dependencies.dejavu-parser]
 #version = "0.0.0"
 path = "../dejavu-parser"
@@ -22,7 +20,7 @@ path = "../dejavu-parser"
 [dependencies.diagnostic-quick]
 git = "https://github.com/oovm/diagnostic-rs"
 rev = "527707f5"
-features = ["peginator", "rust_decimal"]
+features = ["peginator"]
 
 [dev-dependencies]
 

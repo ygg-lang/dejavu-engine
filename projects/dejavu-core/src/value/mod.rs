@@ -28,7 +28,7 @@ pub enum ASTKind {
     Null = 0,
     Boolean(bool),
     Text(String),
-    Number(Decimal),
+    Number(String),
     Identifier(String),
     Vector(Vec<SahaNode>),
     Statements(Vec<SahaNode>),

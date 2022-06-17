@@ -1,5 +1,4 @@
-use crate::parser::saha::UnicodeText;
-
+use dejavu_parser::UnicodeText;
 use super::*;
 
 impl UnicodeText {

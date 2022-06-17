@@ -1,3 +1,5 @@
+use dejavu_parser::{CommentL, CommentR, SlotL, SlotR};
+use crate::value::ASTKind;
 use super::*;
 
 impl ParserContext {
