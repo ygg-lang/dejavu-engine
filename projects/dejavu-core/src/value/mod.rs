@@ -13,6 +13,7 @@ mod display;
 pub mod for_statement;
 pub mod ser;
 mod whitespace;
+mod convert;
 
 #[derive(Serialize, Deserialize)]
 pub struct SahaNode {
@@ -28,7 +29,8 @@ pub enum ASTKind {
     Null = 0,
     Boolean(bool),
     Text(String),
-    Number(String),
+    Integer(i128),
+    Decimal(f64),
     Identifier(String),
     Vector(Vec<SahaNode>),
     Statements(Vec<SahaNode>),

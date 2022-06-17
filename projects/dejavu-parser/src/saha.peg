@@ -48,7 +48,7 @@ ExpressionNodeInfix = op:Infix value:ValueNode;
 Infix = "+";
 
 ValueNode =
-	@:SpecialNode |
+	@:BooleanNode |
 	@:NumberNode |
 	@:IdentifierNode
 ;
@@ -68,7 +68,7 @@ TrimMode = '_' | '-' | '=' | '!';
 
 @string
 @position
-SpecialNode = 'null' | 'true' | 'false';
+BooleanNode = 'true' | 'false';
 
 @string
 @position

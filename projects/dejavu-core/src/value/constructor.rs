@@ -1,4 +1,7 @@
-use rust_decimal::Decimal;
+use std::str::FromStr;
+
+use diagnostic_quick::{QError, QResult};
+
 use super::*;
 
 impl SahaNode {
@@ -38,20 +41,16 @@ impl SahaNode {
             _ => None,
         }
     }
-    pub fn number(number: Decimal) -> Self {
-        Self { kind: ASTKind::Number(number), span: Default::default(), file: Default::default() }
+    pub fn integer(number: &str) -> QResult<Self> {
+        let int = i128::from_str(number)?;
+        Ok(Self { kind: ASTKind::Integer(int), span: Default::default(), file: Default::default() })
     }
-    pub fn get_number(&self) -> Option<&Decimal> {
-        match &self.kind {
-            ASTKind::Number(s) => Some(s),
-            _ => None,
+    pub fn decimal(number: &str) -> QResult<Self> {
+        let fp = f64::from_str(number)?;
+        if !fp.is_subnormal() { 
+            Err(QError::syntax_error(format!("`{number}` is not a normal float number")))?
         }
-    }
-    pub fn mut_number(&mut self) -> Option<&mut Decimal> {
-        match &mut self.kind {
-            ASTKind::Number(s) => Some(s),
-            _ => None,
-        }
+        Ok(Self { kind: ASTKind::Decimal(fp), span: Default::default(), file: Default::default() })
     }
     #[inline]
     pub fn with_range(mut self, range: &Range<usize>) -> Self {

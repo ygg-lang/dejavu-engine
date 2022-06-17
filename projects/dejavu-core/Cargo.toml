@@ -20,7 +20,7 @@ path = "../dejavu-parser"
 [dependencies.diagnostic-quick]
 git = "https://github.com/oovm/diagnostic-rs"
 rev = "527707f5"
-features = ["peginator"]
+features = ["peginator", "rust_decimal"]
 
 [dev-dependencies]
 

@@ -24,9 +24,7 @@ impl Debug for ASTKind {
             ASTKind::Number(v) => {
                 write!(f, "{v}")
             }
-            ASTKind::Identifier(v) => {
-                f.debug_tuple("Identifier").field(v).finish()
-            }
+            ASTKind::Identifier(v) => f.debug_tuple("Identifier").field(v).finish(),
             ASTKind::Vector(_) => {
                 todo!()
             }

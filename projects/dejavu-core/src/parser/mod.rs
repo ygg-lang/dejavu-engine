@@ -1,13 +1,15 @@
-use diagnostic_quick::{Failure, FileID, QError, Success, Validation};
 use std::ops::Range;
 
+use diagnostic_quick::{Failure, FileID, QError, QErrorKind, Success, Validation};
 use peginator::PegParser;
+
 use dejavu_parser::{SahaParser, SahaStatement, SahaStatementNodes, SlotExpressionNode, ValueNode};
-use crate::value::{SahaNode, SpaceDestroyer};
-use crate::value::for_statement::ForStatement;
+
+use crate::value::{for_statement::ForStatement, SahaNode, SpaceDestroyer};
 
 mod condition;
 mod expression;
+mod slots;
 mod value;
 mod whitespace;
 
@@ -17,14 +19,8 @@ pub struct ParserContext {
 }
 
 impl ParserContext {
-    pub fn id(&self, s: String, r: Range<usize>) -> SahaNode {
-        SahaNode::identifier(s).with_range(&r).with_file(&self.file)
-    }
-    pub fn null(&self, r: Range<usize>) -> SahaNode {
-        SahaNode::null().with_range(&r).with_file(&self.file)
-    }
-    pub fn bool(&self, v: bool, r: Range<usize>) -> SahaNode {
-        SahaNode::boolean(v).with_range(&r).with_file(&self.file)
+    pub fn custom_error(&mut self, message: impl Into<String>) {
+        self.errors.push(QError { error: Box::new(QErrorKind::Custom(message)), level: Default::default(), source: None });
     }
 }
 
@@ -39,68 +35,5 @@ pub fn parse(input: &str, file: &FileID) -> Validation<Vec<SahaNode>> {
             Success { value, diagnostics: ctx.errors }
         }
         Err(e) => Failure { fatal: QError::from(e).with_file(file), diagnostics: ctx.errors },
-    }
-}
-
-impl SahaParser {
-    pub fn visit(self, ctx: &mut ParserContext) -> Vec<SahaNode> {
-        SpaceDestroyer::clear(self.parsed.visit(ctx))
-    }
-}
-
-impl SahaStatementNodes {
-    pub fn visit(self, ctx: &mut ParserContext) -> Vec<SahaNode> {
-        let mut out = vec![];
-        for statement in self.statements {
-            match statement {
-                SahaStatement::UnicodeText(s) => out.push(s.visit(ctx)),
-                SahaStatement::SlotFor(s) => {
-                    let l = ctx.left_destroyer(&s.start.left, true);
-                    let r = ctx.right_destroyer(&s.end.right, true);
-                    out.push(l);
-                    out.push(ctx.for_statement(s));
-                    out.push(r);
-                }
-                SahaStatement::Comment(s) => {
-                    out.push(ctx.left_destroyer(&s.left, false));
-                    out.push(ctx.right_destroyer(&s.right, false));
-                }
-                SahaStatement::SlotExpressionNode(s) => s.visit(ctx, &mut out),
-                SahaStatement::SlotIf(s) => s.visit(ctx, &mut out),
-            }
-        }
-        // Don't break white space, prevent redundant breaks
-        out
-    }
-}
-
-impl ParserContext {
-    pub fn for_statement(&mut self, s: SlotFor) -> SahaNode {
-        let mut out = vec![];
-        out.push(self.right_destroyer(&s.start.right, true));
-        out.extend(s.body.visit(self));
-        out.push(self.left_destroyer(&s.end.left, true));
-        let stmt = ForStatement { body: SpaceDestroyer::clear(out) };
-        SahaNode::from(stmt).with_file(&self.file)
-    }
-}
-
-impl SlotExpressionNode {
-    pub fn visit(self, ctx: &mut ParserContext, out: &mut Vec<SahaNode>) {
-        let l = ctx.left_destroyer(&self.left, false);
-        let r = ctx.right_destroyer(&self.right, false);
-        out.push(l);
-        // out.push(self.value.visit(ctx));
-        out.push(r);
-    }
-}
-
-impl ValueNode {
-    pub fn visit(self, ctx: &mut ParserContext) -> SahaNode {
-        match self {
-            ValueNode::IdentifierNode(v) => v.visit(ctx),
-            ValueNode::SpecialNode(v) => v.visit(ctx),
-            ValueNode::NumberNode(v) => v.visit(ctx),
-        }
     }
 }
