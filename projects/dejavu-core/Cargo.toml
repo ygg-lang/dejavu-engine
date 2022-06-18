@@ -10,6 +10,7 @@ exclude = ["/tests/*"]
 edition = "2018"
 
 [dependencies]
+pratt = "0.4.0"
 peginator = "0.4.0"
 serde = { version = "1.0.147", features = ["derive"] }
 
@@ -18,8 +19,9 @@ serde = { version = "1.0.147", features = ["derive"] }
 path = "../dejavu-parser"
 
 [dependencies.diagnostic-quick]
-git = "https://github.com/oovm/diagnostic-rs"
-rev = "527707f5"
+#git = "https://github.com/oovm/diagnostic-rs"
+#rev = "527707f5"
+version = "0.1.1"
 features = ["peginator", "rust_decimal"]
 
 [dev-dependencies]

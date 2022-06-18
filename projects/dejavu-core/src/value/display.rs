@@ -21,7 +21,10 @@ impl Debug for ASTKind {
                 false => f.write_str("false"),
             },
             ASTKind::Text(v) => f.debug_tuple("Text").field(v).finish(),
-            ASTKind::Number(v) => {
+            ASTKind::Integer(v) => {
+                write!(f, "{v}")
+            }
+            ASTKind::Decimal(v) => {
                 write!(f, "{v}")
             }
             ASTKind::Identifier(v) => f.debug_tuple("Identifier").field(v).finish(),

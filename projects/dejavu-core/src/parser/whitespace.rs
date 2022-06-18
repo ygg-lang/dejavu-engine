@@ -1,6 +1,6 @@
-use dejavu_parser::{CommentL, CommentR, SlotL, SlotR};
-use crate::value::ASTKind;
 use super::*;
+use crate::value::ASTKind;
+use dejavu_parser::{SlotL, SlotR};
 
 impl ParserContext {
     pub fn left_destroyer(&self, mode: impl Into<SlotL>, statement: bool) -> SahaNode {
@@ -18,28 +18,5 @@ impl ParserContext {
             span: r.position,
             file: self.file.clone(),
         }
-    }
-}
-
-impl From<&SlotL> for SlotL {
-    fn from(value: &SlotL) -> Self {
-        value.clone()
-    }
-}
-
-impl From<&CommentL> for SlotL {
-    fn from(value: &CommentL) -> Self {
-        SlotL { trim: value.trim, position: value.position.clone() }
-    }
-}
-
-impl From<&SlotR> for SlotR {
-    fn from(value: &SlotR) -> Self {
-        value.clone()
-    }
-}
-impl From<&CommentR> for SlotR {
-    fn from(value: &CommentR) -> Self {
-        SlotR { trim: value.trim, position: value.position.clone() }
     }
 }

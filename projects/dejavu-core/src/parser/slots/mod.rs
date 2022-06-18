@@ -1,56 +1,36 @@
+use dejavu_parser::SlotFor;
+
 use super::*;
 
-
-impl SahaParser {
-    pub fn visit(self, ctx: &mut ParserContext) -> Vec<SahaNode> {
-        SpaceDestroyer::clear(self.parsed.visit(ctx))
+impl ParserContext {
+    #[inline]
+    pub(super) fn parse_root(&mut self, root: SahaParser) -> Vec<SahaNode> {
+        SpaceDestroyer::clear(self.parse_statements(root.parsed))
     }
-}
-
-impl SahaStatementNodes {
-    pub fn visit(self, ctx: &mut ParserContext) -> Vec<SahaNode> {
+    pub(super) fn parse_statements(&mut self, nodes: SahaStatementNodes) -> Vec<SahaNode> {
         let mut out = vec![];
-        for statement in self.statements {
+        for statement in nodes.statements {
             match statement {
-                SahaStatement::UnicodeText(s) => out.push(s.visit(ctx)),
+                SahaStatement::UnicodeText(s) => out.push(self.parse_text(s)),
                 SahaStatement::SlotFor(s) => {
-                    let l = ctx.left_destroyer(&s.start.left, true);
-                    let r = ctx.right_destroyer(&s.end.right, true);
-                    out.push(l);
-                    out.push(ctx.for_statement(s));
-                    out.push(r);
+                    self.parse_for_slot(s, &mut out);
                 }
                 SahaStatement::Comment(s) => {
-                    out.push(ctx.left_destroyer(&s.left, false));
-                    out.push(ctx.right_destroyer(&s.right, false));
+                    out.push(self.left_destroyer(&s.left, false));
+                    out.push(self.right_destroyer(&s.right, false));
                 }
-                SahaStatement::SlotExpressionNode(s) => s.visit(ctx, &mut out),
-                SahaStatement::SlotIf(s) => s.visit(ctx, &mut out),
+                SahaStatement::SlotExpressionNode(s) => self.parse_slot(s, &mut out),
+                SahaStatement::SlotIf(s) => self.parse_if_slot(s, &mut out),
             }
         }
         // Don't break white space, prevent redundant breaks
         out
     }
-}
-
-impl ParserContext {
-    pub fn for_statement(&mut self, s: SlotFor) -> SahaNode {
-        let mut out = vec![];
-        out.push(self.right_destroyer(&s.start.right, true));
-        out.extend(s.body.visit(self));
-        out.push(self.left_destroyer(&s.end.left, true));
-        let stmt = ForStatement { body: SpaceDestroyer::clear(out) };
-        SahaNode::from(stmt).with_file(&self.file)
-    }
-}
-
-impl SlotExpressionNode {
-    pub fn visit(self, ctx: &mut ParserContext, out: &mut Vec<SahaNode>) {
-        let l = ctx.left_destroyer(&self.left, false);
-        let r = ctx.right_destroyer(&self.right, false);
+    pub(super) fn parse_slot(&mut self, slot: SlotExpressionNode, out: &mut Vec<SahaNode>) {
+        let l = self.left_destroyer(&slot.left, true);
+        let r = self.right_destroyer(&slot.right, true);
         out.push(l);
-        // out.push(self.value.visit(ctx));
+        out.push(self.parse_expression(slot.e));
         out.push(r);
     }
 }
-
