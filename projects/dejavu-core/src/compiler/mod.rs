@@ -7,21 +7,21 @@ use crate::FileID;
 
 pub mod render;
 
-pub struct SahaVM {
+pub struct DejavuWorkspace {
     root: PathBuf,
     /// `Dict<RelativePath, Cache>`
     store: TextStorage,
 }
 
-impl SahaVM {
-    pub fn new(workspace: &Path) -> QResult<SahaVM> {
+impl DejavuWorkspace {
+    pub fn new(workspace: &Path) -> QResult<DejavuWorkspace> {
         let mut store = TextStorage::default();
         store.force_lf();
         let root = workspace.canonicalize()?;
         Ok(Self { root, store })
     }
 
-    pub fn get_text(&mut self, id: &FileID) -> QResult<&str> {
+    pub fn get_text(&self, id: &FileID) -> QResult<&str> {
         Ok(self.store.get_text(id)?)
     }
     pub fn add_file(&mut self, path: &Path) -> QResult<FileID> {

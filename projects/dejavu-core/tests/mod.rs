@@ -1,34 +1,32 @@
+use std::{env::current_dir, path::PathBuf};
+
+use diagnostic_quick::QError;
+
+use dejavu_core::DejavuWorkspace;
+
 #[test]
 fn ready() {
     println!("it works!")
 }
 
-// #[test]
-// fn test() {
-//     let here = current_dir().unwrap();
-//     let mut vm = SahaVM::new(&here).unwrap();
-//     let mut errors = vec![];
-//     let _ = test_file("tests/literal.md", &mut vm, &mut errors);
-//     let _ = test_file("tests/for-loop.md", &mut vm, &mut errors);
-//     vm.print_errors(&errors).unwrap()
-// }
+#[test]
+fn test() {
+    let here = current_dir().unwrap();
+    let mut vm = DejavuWorkspace::new(&here).unwrap();
+    let mut errors = vec![];
+    test_file("tests/basic.md.djv", &mut vm, &mut errors);
+    // let _ = test_file("tests/for-loop.md", &mut vm, &mut errors);
+    vm.print_errors(&errors).unwrap()
+}
 
-// #[track_caller]
-// fn test_file(path: &str, vm: &mut SahaVM, errors: &mut Vec<QError>) -> Vec<SahaNode> {
-//     let file = vm.add_file(&PathBuf::from(path)).unwrap();
-//     let text = vm.get_text(&file).unwrap();
-//     match parse(text, &file) {
-//         Success { value, diagnostics } => {
-//             errors.extend(diagnostics);
-//             value
-//         }
-//         Failure { fatal, diagnostics } => {
-//             errors.extend(diagnostics);
-//             errors.push(fatal);
-//             vec![]
-//         }
-//     }
-// }
+#[track_caller]
+fn test_file(path: &str, vm: &mut DejavuWorkspace, errors: &mut Vec<QError>) {
+    let file = vm.add_file(&PathBuf::from(path)).unwrap();
+    match vm.compile(&file) {
+        Ok(o) => errors.extend(o),
+        Err(e) => errors.push(e),
+    }
+}
 //
 // #[test]
 // fn test_number() {

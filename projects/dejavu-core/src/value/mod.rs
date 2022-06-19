@@ -1,19 +1,20 @@
-use diagnostic_quick::FileID;
 use std::{
-    fmt::{Debug, Display, Formatter},
+    fmt::{Debug, Display, Formatter, Write},
     ops::Range,
 };
 
+use diagnostic_quick::FileID;
 use serde::{Deserialize, Serialize};
 
 use crate::value::for_statement::ForStatement;
 
 mod constructor;
+mod convert;
 mod display;
 pub mod for_statement;
 pub mod ser;
 mod whitespace;
-mod convert;
+mod write_rust;
 
 #[derive(Serialize, Deserialize)]
 pub struct SahaNode {
@@ -39,9 +40,12 @@ pub enum ASTKind {
     ForStatement(Box<ForStatement>),
 }
 
+/// Space destroyer, destroy space by need
+///
 /// - `=`: Destroy all whitespace
-/// - `-`: Destroy all blank lines
-/// - `_`: Destroy whitespace, and the first newline encountered
+/// - `~`: Destroy all blank lines
+/// - `-`: Destroy whitespace, and the first newline encountered
+/// - `_`: Destroy whitespace, stop at first newline encountered
 /// - `!`: Destroy nothing
 #[derive(Debug, Serialize, Deserialize)]
 pub enum SpaceDestroyer {
@@ -49,8 +53,10 @@ pub enum SpaceDestroyer {
     Everything,
     /// Destroy all blank lines
     NewlineAll,
-    /// Destroy whitespace, and the first newline encountered
+    /// Destroy whitespace and the first newline encountered
     NewlineOne,
+    /// Destroy all whitespace, stop at first newline encountered
+    WhiteSpaceOnly,
     /// Destroy nothing
     Nothing,
 }

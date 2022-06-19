@@ -1,4 +1,3 @@
-use std::fmt::Write;
 
 use super::*;
 
@@ -6,8 +5,9 @@ impl Display for SpaceDestroyer {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             SpaceDestroyer::Everything => f.write_char('='),
-            SpaceDestroyer::NewlineAll => f.write_char('-'),
-            SpaceDestroyer::NewlineOne => f.write_char('_'),
+            SpaceDestroyer::NewlineAll => f.write_char('~'),
+            SpaceDestroyer::NewlineOne => f.write_char('-'),
+            SpaceDestroyer::WhiteSpaceOnly => f.write_char('_'),
             SpaceDestroyer::Nothing => f.write_char('!'),
         }
     }
@@ -17,7 +17,8 @@ impl SpaceDestroyer {
     pub fn new(c: Option<char>, statement: bool) -> Self {
         match c {
             Some('=') => SpaceDestroyer::Everything,
-            Some('-') => SpaceDestroyer::NewlineAll,
+            Some('~') => SpaceDestroyer::NewlineAll,
+            Some('-') => SpaceDestroyer::NewlineOne,
             Some('_') => SpaceDestroyer::NewlineOne,
             Some('!') => SpaceDestroyer::Nothing,
             _ if statement => SpaceDestroyer::NewlineOne,
@@ -100,6 +101,9 @@ impl SpaceDestroyer {
                 }
                 &input[0..length]
             }
+            SpaceDestroyer::WhiteSpaceOnly => {
+                todo!()
+            }
             SpaceDestroyer::Nothing => input,
         }
     }
@@ -138,6 +142,9 @@ impl SpaceDestroyer {
                     }
                 }
                 &input[length..all]
+            }
+            SpaceDestroyer::WhiteSpaceOnly => {
+                todo!()
             }
             SpaceDestroyer::Nothing => input,
         }

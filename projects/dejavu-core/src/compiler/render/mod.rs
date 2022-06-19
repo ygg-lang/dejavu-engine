@@ -1,29 +1,36 @@
-use serde::__private::de::Content;
-use std::collections::BTreeMap;
+use diagnostic_quick::Validation;
 
-use crate::SahaNode;
+use crate::parse;
 
 use super::*;
 
-#[derive(Serialize, Deserialize)]
-pub struct SahaRenderer {
-    defines: BTreeMap<String, Vec<SahaNode>>,
-    functions: BTreeMap<String, Vec<SahaNode>>,
+pub struct Compiler<'i> {
+    config: &'i DejavuWorkspace,
+    errors: Vec<QError>,
+    output: PathBuf,
 }
 
-impl SahaVM {
-    pub fn as_renderer(&self) -> SahaRenderer {
-        SahaRenderer { defines: Default::default(), functions: Default::default() }
+impl DejavuWorkspace {
+    pub fn compile_all(&self) -> Validation<String> {
+        todo!()
+    }
+    pub fn compile(&self, file: &FileID) -> QResult<Vec<QError>> {
+        let mut c = Compiler { config: self, errors: vec![], output: Default::default() };
+        c.compile(file)?;
+        Ok(c.errors)
     }
 }
 
-impl SahaRenderer {
-    pub fn try_render<V>(&self, input: V)
-    where
-        V: Serialize,
-    {
-        input.serialize(Content::None)?;
-
-        let data = Content::deserialize(input)?;
+impl Compiler<'_> {
+    pub fn compile(&mut self, id: &FileID) -> QResult {
+        let text = self.config.get_text(id)?;
+        let nodes = parse(text, id).result(|e| self.errors.push(e))?;
+        for node in nodes {
+            println!("{:o}", node);
+        }
+        Ok(())
+    }
+    pub fn analyze(&mut self, id: &FileID) -> QResult<String> {
+        todo!()
     }
 }
