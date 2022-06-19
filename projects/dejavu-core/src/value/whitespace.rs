@@ -1,4 +1,3 @@
-
 use super::*;
 
 impl Display for SpaceDestroyer {
@@ -29,7 +28,7 @@ impl SpaceDestroyer {
 
 impl SpaceDestroyer {
     /// Clear all space destroyer
-    pub fn clear(list: Vec<SahaNode>) -> Vec<SahaNode> {
+    pub fn clear(list: Vec<DjvNode>) -> Vec<DjvNode> {
         let mut out = Vec::with_capacity(list.len());
         let mut iter = list.into_iter().peekable();
         while let Some(s) = iter.next() {
@@ -39,7 +38,7 @@ impl SpaceDestroyer {
                         ASTKind::LeftDestroyer(ws) => match ws.trim_end(text) {
                             // drop node
                             "" => {}
-                            str => out.push(SahaNode::text(str).with_range(&s.span).with_file(&s.file)),
+                            str => out.push(DjvNode::text(str).with_range(&s.span).with_file(&s.file)),
                         },
                         _ => out.push(s),
                     },
@@ -54,7 +53,7 @@ impl SpaceDestroyer {
                                 match s.trim_start(text) {
                                     // drop
                                     "" => {}
-                                    str => out.push(SahaNode::text(str).with_range(&next.span).with_file(&next.file)),
+                                    str => out.push(DjvNode::text(str).with_range(&next.span).with_file(&next.file)),
                                 }
                             }
                             _ => out.push(next),

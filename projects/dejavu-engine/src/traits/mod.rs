@@ -2,7 +2,7 @@ use core::fmt::{Display, Write};
 
 mod escaper;
 
-pub trait Template: Display {
+pub trait Template {
     /// Provides a conservative estimate of the expanded length of the rendered template
     const SIZE_HINT: usize;
     /// The MIME type (Content-Type) of the data that gets rendered by this Template
@@ -16,7 +16,7 @@ pub trait Template: Display {
         Ok(buf)
     }
     /// Renders the template to the given `writer` fmt buffer
-    fn render_into<W: Write + ?Sized>(&self, writer: &mut W) -> anyhow::Result<()>;
+    fn render_into<W: Write + ?Sized>(&self, fmt: &mut W) -> anyhow::Result<()>;
 }
 
 #[test]

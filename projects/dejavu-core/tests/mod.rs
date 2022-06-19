@@ -1,4 +1,4 @@
-use std::{env::current_dir, path::PathBuf};
+use std::env::current_dir;
 
 use diagnostic_quick::QError;
 
@@ -14,14 +14,14 @@ fn test() {
     let here = current_dir().unwrap();
     let mut vm = DejavuWorkspace::new(&here).unwrap();
     let mut errors = vec![];
-    test_file("tests/basic.md.djv", &mut vm, &mut errors);
+    test_file("tests/basic.rs.djv", &mut vm, &mut errors);
     // let _ = test_file("tests/for-loop.md", &mut vm, &mut errors);
     vm.print_errors(&errors).unwrap()
 }
 
 #[track_caller]
 fn test_file(path: &str, vm: &mut DejavuWorkspace, errors: &mut Vec<QError>) {
-    let file = vm.add_file(&PathBuf::from(path)).unwrap();
+    let file = vm.add_file(path).unwrap();
     match vm.compile(&file) {
         Ok(o) => errors.extend(o),
         Err(e) => errors.push(e),

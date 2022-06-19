@@ -1,13 +1,11 @@
-use dejavu_parser::SlotFor;
-
 use super::*;
 
 impl ParserContext {
     #[inline]
-    pub(super) fn parse_root(&mut self, root: SahaParser) -> Vec<SahaNode> {
+    pub(super) fn parse_root(&mut self, root: SahaParser) -> Vec<DjvNode> {
         SpaceDestroyer::clear(self.parse_statements(root.parsed))
     }
-    pub(super) fn parse_statements(&mut self, nodes: SahaStatementNodes) -> Vec<SahaNode> {
+    pub(super) fn parse_statements(&mut self, nodes: SahaStatementNodes) -> Vec<DjvNode> {
         let mut out = vec![];
         for statement in nodes.statements {
             match statement {
@@ -26,7 +24,7 @@ impl ParserContext {
         // Don't break white space, prevent redundant breaks
         out
     }
-    pub(super) fn parse_slot(&mut self, slot: SlotExpressionNode, out: &mut Vec<SahaNode>) {
+    pub(super) fn parse_slot(&mut self, slot: SlotExpressionNode, out: &mut Vec<DjvNode>) {
         let l = self.left_destroyer(&slot.left, true);
         let r = self.right_destroyer(&slot.right, true);
         out.push(l);

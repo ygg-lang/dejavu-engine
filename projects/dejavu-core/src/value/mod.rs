@@ -17,7 +17,7 @@ mod whitespace;
 mod write_rust;
 
 #[derive(Serialize, Deserialize)]
-pub struct SahaNode {
+pub struct DjvNode {
     pub kind: ASTKind,
     pub span: Range<usize>,
     pub file: FileID,
@@ -33,8 +33,8 @@ pub enum ASTKind {
     Integer(i128),
     Decimal(f64),
     Identifier(String),
-    Vector(Vec<SahaNode>),
-    Statements(Vec<SahaNode>),
+    Vector(Vec<DjvNode>),
+    Statements(Vec<DjvNode>),
     LeftDestroyer(SpaceDestroyer),
     RightDestroyer(SpaceDestroyer),
     ForStatement(Box<ForStatement>),
@@ -61,4 +61,4 @@ pub enum SpaceDestroyer {
     Nothing,
 }
 
-impl SahaNode {}
+impl DjvNode {}

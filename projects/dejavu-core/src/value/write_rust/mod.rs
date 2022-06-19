@@ -1,8 +1,8 @@
 use std::fmt::{Formatter, Octal, Result};
 
-use crate::{value::ASTKind, SahaNode};
+use crate::{value::ASTKind, DjvNode};
 
-impl Octal for SahaNode {
+impl Octal for DjvNode {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match &self.kind {
             ASTKind::Null => {

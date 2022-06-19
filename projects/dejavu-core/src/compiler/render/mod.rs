@@ -1,6 +1,8 @@
+use std::{fs::File, io::Write};
+
 use diagnostic_quick::Validation;
 
-use crate::parse;
+use crate::{parse, DjvNode};
 
 use super::*;
 
@@ -25,12 +27,17 @@ impl Compiler<'_> {
     pub fn compile(&mut self, id: &FileID) -> QResult {
         let text = self.config.get_text(id)?;
         let nodes = parse(text, id).result(|e| self.errors.push(e))?;
+        self.analyze(id, &nodes)?;
+        let mut output = File::create(&self.output)?;
         for node in nodes {
-            println!("{:o}", node);
+            write!(output, "{:o}", node)?;
         }
         Ok(())
     }
-    pub fn analyze(&mut self, id: &FileID) -> QResult<String> {
-        todo!()
+    pub fn analyze(&mut self, id: &FileID, nodes: &[DjvNode]) -> QResult {
+        let _ = nodes;
+        let path: &Path = id.as_ref();
+        self.output = path.with_extension("");
+        Ok(())
     }
 }

@@ -1,6 +1,6 @@
 use super::*;
 
-impl Debug for SahaNode {
+impl Debug for DjvNode {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("Node").field("kind", &self.kind).field("span", &self.span).finish()
     }

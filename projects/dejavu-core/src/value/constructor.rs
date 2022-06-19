@@ -4,7 +4,7 @@ use diagnostic_quick::{QError, QResult};
 
 use super::*;
 
-impl SahaNode {
+impl DjvNode {
     pub fn null() -> Self {
         Self { kind: ASTKind::Null, span: Default::default(), file: Default::default() }
     }
@@ -47,7 +47,7 @@ impl SahaNode {
     }
     pub fn decimal(number: &str) -> QResult<Self> {
         let fp = f64::from_str(number)?;
-        if !fp.is_subnormal() { 
+        if !fp.is_subnormal() {
             Err(QError::syntax_error(format!("`{number}` is not a normal float number")))?
         }
         Ok(Self { kind: ASTKind::Decimal(fp), span: Default::default(), file: Default::default() })

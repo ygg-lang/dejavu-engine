@@ -6,7 +6,7 @@ use dejavu_parser::{
     UnicodeText, ValueNode,
 };
 
-use crate::value::{SahaNode, SpaceDestroyer};
+use crate::value::{DjvNode, SpaceDestroyer};
 
 mod condition;
 mod expression;
@@ -29,7 +29,7 @@ impl ParserContext {
     }
 }
 
-pub fn parse(input: &str, file: &FileID) -> Validation<Vec<SahaNode>> {
+pub fn parse(input: &str, file: &FileID) -> Validation<Vec<DjvNode>> {
     let mut ctx = ParserContext { file: file.clone(), errors: vec![] };
     if input.contains('\r') {
         ctx.errors.push(QError::syntax_error("CR (\\r) is not allowed in the input"));

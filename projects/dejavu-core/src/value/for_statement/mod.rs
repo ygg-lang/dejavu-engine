@@ -2,11 +2,11 @@ use super::*;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ForStatement {
-    pub body: Vec<SahaNode>,
+    pub body: Vec<DjvNode>,
 }
 
-impl From<ForStatement> for SahaNode {
+impl From<ForStatement> for DjvNode {
     fn from(value: ForStatement) -> Self {
-        SahaNode { kind: ASTKind::ForStatement(Box::new(value)), span: Default::default(), file: Default::default() }
+        DjvNode { kind: ASTKind::ForStatement(Box::new(value)), span: Default::default(), file: Default::default() }
     }
 }
