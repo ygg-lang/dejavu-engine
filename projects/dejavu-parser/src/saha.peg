@@ -41,7 +41,7 @@ EndFor = "end" ['-' "for"];
 SlotExpressionNode = left:SlotL e:ExpressionNode right:SlotR;
 
 ExpressionNode = head:TermNode {infix:ExpressionNodeInfix};
-ExpressionNodeInfix = op:Infix value:TermNode;
+ExpressionNodeInfix = op:InfixOp value:TermNode;
 
 
 TermNode = {prefix:Prefix} term:ValueNode {suffix:Suffix};
@@ -50,12 +50,12 @@ TermNode = {prefix:Prefix} term:ValueNode {suffix:Suffix};
 Prefix = "&" | "+" | "-" | "*";
 
 @string
-Infix = "+" | "-" | "==" | "<=" | "<" | ">=" | ">";
+InfixOp = "+" | "-" | "==" | "<=" | "<" | ">=" | ">";
 
-Suffix = @:SuffixOperator | @:DotCall;
+Suffix = @:SuffixOp | @:DotCall;
 
 @string
-SuffixOperator = "!";
+SuffixOp = "!";
 
 DotCall = '.' call:IdentifierNode [FunctionArgs];
 

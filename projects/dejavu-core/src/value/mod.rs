@@ -3,6 +3,7 @@ use std::{
     ops::Range,
 };
 
+use crate::BinaryExpression;
 use diagnostic_quick::FileID;
 use serde::{Deserialize, Serialize};
 
@@ -11,6 +12,7 @@ use crate::value::for_statement::ForStatement;
 mod constructor;
 mod convert;
 mod display;
+pub mod expression;
 pub mod for_statement;
 pub mod ser;
 mod whitespace;
@@ -38,6 +40,7 @@ pub enum ASTKind {
     LeftDestroyer(SpaceDestroyer),
     RightDestroyer(SpaceDestroyer),
     ForStatement(Box<ForStatement>),
+    Binary(Box<BinaryExpression>),
 }
 
 /// Space destroyer, destroy space by need

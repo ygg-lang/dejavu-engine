@@ -20,9 +20,5 @@ pub fn check_slot_expression(slot: &SlotExpressionNode) -> bool {
     if !slot.e.infix.is_empty() {
         return true;
     }
-    let id = match &slot.e.head {
-        ValueNode::IdentifierNode(v) => v.string.as_str(),
-        _ => return true,
-    };
-    !matches!(id, "else" | "end" | "endfor" | "end-for" | "end_for" | "endif" | "end-if" | "end_if")
+    slot.e.head.is_normal_slot()
 }
