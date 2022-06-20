@@ -4,6 +4,8 @@ use diagnostic_quick::QError;
 
 use dejavu_core::DejavuWorkspace;
 
+mod hello;
+
 #[test]
 fn ready() {
     println!("it works!")
@@ -14,7 +16,7 @@ fn test() {
     let here = current_dir().unwrap();
     let mut vm = DejavuWorkspace::new(&here).unwrap();
     let mut errors = vec![];
-    test_file("tests/basic.rs.djv", &mut vm, &mut errors);
+    test_file("tests/hello/basic.rs.djv", &mut vm, &mut errors);
     // let _ = test_file("tests/for-loop.md", &mut vm, &mut errors);
     vm.print_errors(&errors).unwrap()
 }

@@ -8,11 +8,14 @@ impl Octal for DjvNode {
             ASTKind::Null => {
                 todo!()
             }
-            ASTKind::Boolean(_) => {
-                todo!()
-            }
+            ASTKind::Boolean(v) => write!(f, r#"fmt.write_str("{v}")?;"#)?,
             ASTKind::Text(v) => {
-                write!(f, "f.write_str({v:?})")
+                match v.chars().count() {
+                    // drop
+                    0 => {}
+                    1 => unsafe { write!(f, "fmt.write_char({c:?})?;", c = v.chars().next().unwrap_unchecked())? },
+                    _ => write!(f, "fmt.write_str({v:?})?;")?,
+                }
             }
             ASTKind::Integer(_) => {
                 todo!()
@@ -39,5 +42,6 @@ impl Octal for DjvNode {
                 todo!()
             }
         }
+        Ok(())
     }
 }

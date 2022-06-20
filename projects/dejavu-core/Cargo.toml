@@ -24,7 +24,10 @@ path = "../dejavu-parser"
 version = "0.2.0"
 features = ["peginator", "rust_decimal"]
 
-[dev-dependencies]
+[dev-dependencies.dejavu-engine]
+#version = "0.1.0"
+path = "../dejavu-engine"
+
 
 [features]
 default = []

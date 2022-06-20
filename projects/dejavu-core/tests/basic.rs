@@ -1,1 +1,0 @@
-f.write_str("nothing")
