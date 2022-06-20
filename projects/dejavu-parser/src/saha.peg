@@ -35,17 +35,33 @@ SlotForStart = left:SlotL "for" pattern:ValueNode "in" expression:ValueNode righ
 SlotEndFor = left:SlotL EndFor right:SlotR;
 
 @no_skip_ws
-EndFor = 'end' [['-'|'_'] "for"];
+EndFor = "end" ['-' "for"];
 
 @check(crate::utils::check_slot_expression)
 SlotExpressionNode = left:SlotL e:ExpressionNode right:SlotR;
 
-ExpressionNode = head:ValueNode {infix:ExpressionNodeInfix};
+ExpressionNode = head:TermNode {infix:ExpressionNodeInfix};
+ExpressionNodeInfix = op:Infix value:TermNode;
 
-ExpressionNodeInfix = op:Infix value:ValueNode;
+
+TermNode = {prefix:Prefix} term:ValueNode {suffix:Suffix};
 
 @string
-Infix = "+";
+Prefix = "&" | "+" | "-" | "*";
+
+@string
+Infix = "+" | "-" | "==" | "<=" | "<" | ">=" | ">";
+
+Suffix = @:SuffixOperator | @:DotCall;
+
+@string
+SuffixOperator = "!";
+
+DotCall = '.' call:IdentifierNode [FunctionArgs];
+
+
+FunctionArgs = '(' args:ExpressionNode {[','] args:ExpressionNode}  [','] ')';
+
 
 ValueNode =
 	@:BooleanNode |

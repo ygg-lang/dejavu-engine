@@ -17,9 +17,10 @@ impl Octal for DjvNode {
                     _ => write!(f, "fmt.write_str({v:?})?;")?,
                 }
             }
-            ASTKind::Integer(_) => {
-                todo!()
-            }
+            ASTKind::Integer(v) => match *v {
+                i if (0..=9).contains(&i) => write!(f, r#"fmt.write_char('{v}')?;"#)?,
+                _ => write!(f, r#"fmt.write_str("{v}")?;"#)?,
+            },
             ASTKind::Decimal(_) => {
                 todo!()
             }
