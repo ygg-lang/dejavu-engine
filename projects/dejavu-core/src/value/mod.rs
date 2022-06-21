@@ -1,6 +1,8 @@
+use diagnostic_quick::{QError, QResult};
 use std::{
     fmt::{Debug, Display, Formatter, Write},
     ops::Range,
+    str::FromStr,
 };
 
 use crate::BinaryExpression;

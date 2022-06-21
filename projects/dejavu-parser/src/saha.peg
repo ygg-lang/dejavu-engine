@@ -40,6 +40,7 @@ EndFor = "end" ['-' "for"];
 @check(crate::utils::check_slot_expression)
 SlotExpressionNode = left:SlotL e:ExpressionNode right:SlotR;
 
+@position
 ExpressionNode = head:TermNode {infix:ExpressionNodeInfix};
 ExpressionNodeInfix = op:InfixOp value:TermNode;
 

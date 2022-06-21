@@ -11,3 +11,9 @@ impl From<f64> for DjvNode {
         DjvNode { kind: ASTKind::Decimal(value), span: Default::default(), file: Default::default() }
     }
 }
+
+impl From<&str> for DjvNode {
+    fn from(value: &str) -> Self {
+        DjvNode { kind: ASTKind::Text(value.to_string()), span: Default::default(), file: Default::default() }
+    }
+}

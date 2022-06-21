@@ -42,6 +42,9 @@ impl Octal for DjvNode {
             ASTKind::ForStatement(_) => {
                 todo!()
             }
+            ASTKind::Binary(_) => {
+                todo!()
+            }
         }
         Ok(())
     }

@@ -43,6 +43,9 @@ impl Debug for ASTKind {
             ASTKind::ForStatement(_) => {
                 todo!()
             }
+            ASTKind::Binary(_) => {
+                todo!()
+            }
         }
     }
 }
