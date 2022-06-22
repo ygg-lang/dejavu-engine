@@ -1,7 +1,9 @@
 ## If condition
 
-{% if a %}
-{%- null -%}
+
+
+{% if i == 1 %}
+{% i %} quick brown fox jumps over the lazy dog!
 {% else %}
-{%= true =%}
-{% end-if %}
+{% i %} quick brown foxes jump over the lazy dog!
+{% end %}

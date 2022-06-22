@@ -80,7 +80,7 @@ where
             },
             _ => unreachable!(),
         };
-        Ok(BinaryExpression { operator, left: lhs, right: rhs }.into())
+        Ok(BinaryExpression { binary: operator, lhs: lhs, rhs: rhs }.into())
     }
 
     fn prefix(&mut self, _tree: TokenStream, _rhs: DjvNode) -> QResult<DjvNode> {

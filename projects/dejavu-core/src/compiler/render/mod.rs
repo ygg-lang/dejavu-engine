@@ -6,6 +6,10 @@ use crate::{parse, DjvNode};
 
 use super::*;
 
+mod write_nodes;
+
+use write_nodes::NodeWriter;
+
 pub struct Compiler<'i> {
     config: &'i DejavuWorkspace,
     errors: Vec<QError>,
@@ -47,7 +51,7 @@ impl Template for crate::hello::HelloTemplate {
         )?;
 
         for node in nodes {
-            write!(output, "{:o}", node)?;
+            NodeWriter { writer: &mut output, node: &node, is_root: true }.write_nodes()?;
         }
         output.write_all(
             r#"

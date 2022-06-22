@@ -1,4 +1,4 @@
-use core::fmt::{Display, Write};
+use core::fmt::Write;
 
 mod escaper;
 

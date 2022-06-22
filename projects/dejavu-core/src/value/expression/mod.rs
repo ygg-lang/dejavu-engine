@@ -2,11 +2,21 @@ use pratt::{Associativity, Precedence};
 
 use super::*;
 
+mod unary;
+mod binary;
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BinaryExpression {
-    pub operator: BinaryOperator,
-    pub left: DjvNode,
-    pub right: DjvNode,
+    pub binary: BinaryOperator,
+    pub lhs: DjvNode,
+    pub rhs: DjvNode,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UnaryExpression {
+    pub operator: UnaryOperator,
+    pub lhs: DjvNode,
+    pub rhs: DjvNode,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -25,36 +35,14 @@ pub enum BinaryOperator {
     Assign,
 }
 
-impl BinaryOperator {
-    pub fn as_precedence(&self) -> Precedence {
-        let o = match self {
-            BinaryOperator::Addition => 10,
-            BinaryOperator::Subtraction => 10,
-            BinaryOperator::Multiplication => 20,
-            BinaryOperator::Division => 20,
-            BinaryOperator::Power => 20,
-            BinaryOperator::Assign => 5,
-        };
-        Precedence(o)
-    }
-    pub fn as_associativity(&self) -> Associativity {
-        match self {
-            BinaryOperator::Addition => Associativity::Left,
-            BinaryOperator::Subtraction => Associativity::Left,
-            BinaryOperator::Multiplication => Associativity::Left,
-            BinaryOperator::Division => Associativity::Left,
-            BinaryOperator::Power => Associativity::Right,
-            BinaryOperator::Assign => Associativity::Neither,
-        }
-    }
+#[derive(Debug, Serialize, Deserialize)]
+pub enum UnaryOperator {
+    Not,      // !
+    Negative, // -
+    Try,      // ?
 }
 
-#[derive(Debug)]
-pub enum UnOp {
-    Not, // !
-    Neg, // -
-    Try, // ?
-}
+
 
 impl From<BinaryExpression> for DjvNode {
     fn from(value: BinaryExpression) -> Self {

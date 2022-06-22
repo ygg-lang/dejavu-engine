@@ -13,16 +13,18 @@ SahaStatement =
 ;
 
 @no_skip_ws
-SlotIf = start:SlotIfStart body:SahaStatementNodes [else:SlotElse empty:SahaStatementNodes] end:SlotEndIf;
+SlotIf = start:SlotIfStart body:SahaStatementNodes {else_if:SlotElseIf} [else:SlotElse] end:SlotEndIf;
 
-SlotIfStart = left:SlotL "if" value:ValueNode right:SlotR;
+SlotIfStart = left:SlotL "if" cond:ExpressionNode right:SlotR;
 
-SlotElse = left:SlotL "else" right:SlotR;
+SlotElseIf = left:SlotL ("else" "if" | "else-if") cond:ExpressionNode right:SlotR statements:SahaStatementNodes;
+
+SlotElse = left:SlotL "else" right:SlotR statements:SahaStatementNodes;
 
 SlotEndIf = left:SlotL EndIf right:SlotR;
 
 @no_skip_ws
-EndIf = 'end' [['-'|'_'] "if"];
+EndIf = "end" ['-' "if"];
 
 
 
@@ -44,11 +46,11 @@ SlotExpressionNode = left:SlotL e:ExpressionNode right:SlotR;
 ExpressionNode = head:TermNode {infix:ExpressionNodeInfix};
 ExpressionNodeInfix = op:InfixOp value:TermNode;
 
-
-TermNode = {prefix:Prefix} term:ValueNode {suffix:Suffix};
+@position
+TermNode = {prefix:PrefixOp} term:ValueNode {suffix:Suffix};
 
 @string
-Prefix = "&" | "+" | "-" | "*";
+PrefixOp = "&" | "+" | "-" | "*";
 
 @string
 InfixOp = "+" | "-" | "==" | "<=" | "<" | ">=" | ">";
