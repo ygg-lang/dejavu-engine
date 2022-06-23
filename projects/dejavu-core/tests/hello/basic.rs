@@ -10,7 +10,7 @@ impl Template for crate::hello::HelloTemplate {
     const EXTENSION: &'static str = "html";
 
     fn render_into<W: Write + ?Sized>(&self, fmt: &mut W) -> Result<()> {
-        if true {}
+        
         Ok(())
     }
 }
