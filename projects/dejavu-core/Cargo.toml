@@ -15,6 +15,7 @@ peginator = "0.4.0"
 serde = { version = "1.0.148", features = ["derive"] }
 globset = "0.4.9"
 walkdir = "2.3.2"
+itertools = "0.10.5"
 
 [dependencies.dejavu-parser]
 #version = "0.0.0"

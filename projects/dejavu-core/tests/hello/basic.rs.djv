@@ -1,9 +1,8 @@
-nothing {% true %}, nothing {% false %}.
 
 
 
-{% if i == 1 %}
-{% i %} quick brown fox jumps over the lazy dog!
-{% else %}
-{% i %} quick brown foxes jump over the lazy dog!
+{% if i == 0 %}
+no quick brown fox jumps over the lazy dog!
+{% else-if i == 1 %}
+1 quick brown foxes jump over the lazy dog!
 {% end %}

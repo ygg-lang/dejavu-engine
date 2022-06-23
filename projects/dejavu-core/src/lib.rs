@@ -6,7 +6,8 @@ pub use self::{
     value::{
         atomic::{Identifier, Namespace},
         expression::{BinaryExpression, BinaryOperator},
-        DjvNode, SpaceDestroyer,
+        for_statement::{ForStatement, IfStatement},
+        DjvKind, DjvNode, SpaceDestroyer,
     },
 };
 

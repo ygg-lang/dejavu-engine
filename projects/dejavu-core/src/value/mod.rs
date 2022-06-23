@@ -1,16 +1,15 @@
-use diagnostic_quick::{QError, QResult};
+use crate::{BinaryExpression, IfStatement, Namespace};
+use diagnostic_quick::{FileID, QError, QResult};
+use serde::{Deserialize, Serialize};
 use std::{
     fmt::{Debug, Display, Formatter, Write},
     ops::Range,
     str::FromStr,
 };
 
-use crate::BinaryExpression;
-use diagnostic_quick::FileID;
-use serde::{Deserialize, Serialize};
-
 use crate::value::for_statement::ForStatement;
 
+pub mod atomic;
 mod constructor;
 mod convert;
 mod display;
@@ -19,11 +18,10 @@ pub mod for_statement;
 pub mod ser;
 mod whitespace;
 mod write_rust;
-pub mod atomic;
 
 #[derive(Serialize, Deserialize)]
 pub struct DjvNode {
-    pub kind: ASTKind,
+    pub kind: DjvKind,
     pub span: Range<usize>,
     pub file: FileID,
 }
@@ -31,17 +29,18 @@ pub struct DjvNode {
 #[repr(u8)]
 #[derive(Serialize, Deserialize)]
 #[serde(tag = "type")]
-pub enum ASTKind {
+pub enum DjvKind {
     Null = 0,
     Boolean(bool),
     Text(String),
     Integer(i128),
     Decimal(f64),
-    Identifier(Vec<String>),
+    Namespace(Namespace),
     Vector(Vec<DjvNode>),
     Statements(Vec<DjvNode>),
     LeftDestroyer(SpaceDestroyer),
     RightDestroyer(SpaceDestroyer),
+    IfStatement(Box<IfStatement>),
     ForStatement(Box<ForStatement>),
     Binary(Box<BinaryExpression>),
 }

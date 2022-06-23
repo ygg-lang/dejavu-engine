@@ -46,7 +46,7 @@ pub enum UnaryOperator {
 
 impl From<BinaryExpression> for DjvNode {
     fn from(value: BinaryExpression) -> Self {
-        DjvNode { kind: ASTKind::Binary(Box::new(value)), span: Default::default(), file: Default::default() }
+        DjvNode { kind: DjvKind::Binary(Box::new(value)), span: Default::default(), file: Default::default() }
     }
 }
 

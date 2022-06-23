@@ -2,13 +2,13 @@ use std::{fs::File, io::Write};
 
 use diagnostic_quick::Validation;
 
+use write_nodes::NodeWriter;
+
 use crate::{parse, DjvNode};
 
 use super::*;
 
 mod write_nodes;
-
-use write_nodes::NodeWriter;
 
 pub struct Compiler<'i> {
     config: &'i DejavuWorkspace,
@@ -51,7 +51,8 @@ impl Template for crate::hello::HelloTemplate {
         )?;
 
         for node in nodes {
-            NodeWriter { writer: &mut output, node: &node, depth: true }.write_nodes()?;
+            NodeWriter { writer: &mut output, node: &node, depth: 0, predefined_identifiers: &["None".to_string()] }
+                .write_nodes()?;
         }
         output.write_all(
             r#"

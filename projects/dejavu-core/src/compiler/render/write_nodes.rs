@@ -1,31 +1,34 @@
-use std::{fmt::Octal, io::Write};
+use std::io::{Result, Write};
 
-use crate::{value::ASTKind, DjvNode};
+use itertools::Itertools;
+
+use crate::{value::DjvKind, DjvNode, Identifier, IfStatement, Namespace};
 
 pub struct NodeWriter<'i, W: Write> {
     pub writer: &'i mut W,
     pub node: &'i DjvNode,
     pub depth: u8,
+    pub predefined_identifiers: &'i [String],
 }
 
 impl<'i, W: Write> Write for NodeWriter<'i, W> {
-    fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+    fn write(&mut self, buf: &[u8]) -> Result<usize> {
         self.writer.write(buf)
     }
 
-    fn flush(&mut self) -> std::io::Result<()> {
+    fn flush(&mut self) -> Result<()> {
         self.writer.flush()
     }
 }
 
 impl<'i, W: Write> NodeWriter<'i, W> {
-    pub fn write_nodes(&mut self) -> std::io::Result<()> {
+    pub fn write_nodes(&mut self) -> Result<()> {
         match &self.node.kind {
-            ASTKind::Null => {
+            DjvKind::Null => {
                 todo!()
             }
-            ASTKind::Boolean(v) => write!(self, r#"fmt.write_str("{v}")?;"#)?,
-            ASTKind::Text(v) => {
+            DjvKind::Boolean(v) => write!(self, r#"fmt.write_str("{v}")?;"#)?,
+            DjvKind::Text(v) => {
                 match v.chars().count() {
                     // drop
                     0 => {}
@@ -33,36 +36,62 @@ impl<'i, W: Write> NodeWriter<'i, W> {
                     _ => write!(self, "fmt.write_str({v:?})?;")?,
                 }
             }
-            ASTKind::Integer(v) => match *v {
+            DjvKind::Integer(v) => match *v {
                 i if (0..=9).contains(&i) => write!(self, r#"fmt.write_char('{v}')?;"#)?,
                 _ => write!(self, r#"fmt.write_str("{v}")?;"#)?,
             },
-            ASTKind::Decimal(_) => {
+            DjvKind::Decimal(_) => {
                 todo!()
             }
-            ASTKind::Identifier(v) => match self.depth {
-                true => write!(self, "fmt.write_fmt(format_args!(\"{{{v}}}\", {v} = &self.{v}))?;")?,
-                false => write!(self, "fmt.write_fmt(format_args!(\"{{{v}}}\", {v} = {v}))?;")?,
-            },
-            ASTKind::Vector(_) => {
+            DjvKind::Namespace(v) => v.write_nodes(self, self.depth == 0)?,
+            DjvKind::Vector(_) => {
                 todo!()
             }
-            ASTKind::Statements(_) => {
+            DjvKind::Statements(_) => {
                 todo!()
             }
-            ASTKind::LeftDestroyer(_) => {
+            DjvKind::LeftDestroyer(_) => {
                 todo!()
             }
-            ASTKind::RightDestroyer(_) => {
+            DjvKind::RightDestroyer(_) => {
                 todo!()
             }
-            ASTKind::ForStatement(_) => {
+            DjvKind::ForStatement(_) => {
                 todo!()
             }
-            ASTKind::Binary(_) => {
+            DjvKind::IfStatement(v) => v.write_nodes(self, self.depth + 1)?,
+            DjvKind::Binary(_) => {
                 todo!()
             }
         }
         Ok(())
+    }
+}
+
+impl Namespace {
+    fn write_nodes<W: Write>(&self, w: &mut NodeWriter<W>, is_root: bool) -> Result<()> {
+        match self.path.len() {
+            1 => unsafe { self.path.get_unchecked(0).write_nodes(w, is_root) },
+            _ => {
+                let name = self.path.iter().map(|v| v.name.as_str()).join("::");
+                write!(w, r#"fmt.write_str("{{}}", {name})?;"#)
+            }
+        }
+    }
+}
+
+impl Identifier {
+    fn write_nodes<W: Write>(&self, w: &mut NodeWriter<W>, is_root: bool) -> Result<()> {
+        match w.predefined_identifiers.contains(&self.name) {
+            true => write!(w, r#"fmt.write_str("{{}}", {name})?;"#, name = self.name),
+            false if is_root => write!(w, r#"fmt.write_str("{{}}", self.{name})?;"#, name = self.name),
+            false => write!(w, r#"fmt.write_str("{{}}", {name})?;"#, name = self.name),
+        }
+    }
+}
+
+impl IfStatement {
+    fn write_nodes<W: Write>(&self, w: &mut NodeWriter<W>, depth: u8) -> Result<()> {
+        write!(w, "if true {{}}")
     }
 }

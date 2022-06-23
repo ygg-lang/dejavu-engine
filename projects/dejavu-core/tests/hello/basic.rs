@@ -1,3 +1,5 @@
+
+        
 use core::fmt::Write;
 
 use dejavu_engine::{Result, Template};
@@ -8,11 +10,8 @@ impl Template for crate::hello::HelloTemplate {
     const EXTENSION: &'static str = "html";
 
     fn render_into<W: Write + ?Sized>(&self, fmt: &mut W) -> Result<()> {
-        fmt.write_str("true")?;
-        fmt.write_str(", nothing")?;
-        fmt.write_str("false")?;
-        fmt.write_char('.')?;
-        fmt.write_fmt(format_args!("{item}", item = &self.item))?;
+        if true {}
         Ok(())
     }
 }
+        

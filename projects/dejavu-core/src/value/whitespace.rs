@@ -33,9 +33,9 @@ impl SpaceDestroyer {
         let mut iter = list.into_iter().peekable();
         while let Some(s) = iter.next() {
             match &s.kind {
-                ASTKind::Text(text) => match iter.peek() {
+                DjvKind::Text(text) => match iter.peek() {
                     Some(next) => match &next.kind {
-                        ASTKind::LeftDestroyer(ws) => match ws.trim_end(text) {
+                        DjvKind::LeftDestroyer(ws) => match ws.trim_end(text) {
                             // drop node
                             "" => {}
                             str => out.push(DjvNode::text(str).with_range(&s.span).with_file(&s.file)),
@@ -45,11 +45,11 @@ impl SpaceDestroyer {
                     None => out.push(s),
                 },
                 // drop node
-                ASTKind::LeftDestroyer(_) => {}
-                ASTKind::RightDestroyer(s) => {
+                DjvKind::LeftDestroyer(_) => {}
+                DjvKind::RightDestroyer(s) => {
                     if let Some(next) = iter.next() {
                         match &next.kind {
-                            ASTKind::Text(text) => {
+                            DjvKind::Text(text) => {
                                 match s.trim_start(text) {
                                     // drop
                                     "" => {}

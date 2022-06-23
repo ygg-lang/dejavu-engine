@@ -5,26 +5,24 @@ SahaParser = parsed:SahaStatementNodes $;
 SahaStatementNodes = { statements:SahaStatement };
 
 SahaStatement =
-	@:SlotExpressionNode |
 	@:SlotFor |
 	@:SlotIf |
-	@:Comment |
 	@:UnicodeText
 ;
 
+@position
 @no_skip_ws
 SlotIf = start:SlotIfStart body:SahaStatementNodes {else_if:SlotElseIf} [else:SlotElse] end:SlotEndIf;
 
 SlotIfStart = left:SlotL "if" cond:ExpressionNode right:SlotR;
 
-SlotElseIf = left:SlotL ("else" "if" | "else-if") cond:ExpressionNode right:SlotR statements:SahaStatementNodes;
+SlotElseIf = left:SlotL ("else" "if" | "else-if") cond:ExpressionNode right:SlotR body:SahaStatementNodes;
 
-SlotElse = left:SlotL "else" right:SlotR statements:SahaStatementNodes;
+SlotElse = left:SlotL "else" right:SlotR body:SahaStatementNodes;
 
 SlotEndIf = left:SlotL EndIf right:SlotR;
 
-@no_skip_ws
-EndIf = "end" ['-' "if"];
+EndIf = "end-if" | "endif" | "end";
 
 
 
@@ -67,6 +65,7 @@ FunctionArgs = '(' args:ExpressionNode {[','] args:ExpressionNode}  [','] ')';
 
 
 ValueNode =
+	@:BooleanNode |
 	@:DecimalNode |
 	@:IntegerNode |
 	@:NamespaceNode
@@ -99,10 +98,13 @@ XID_START = char;
 @check(unicode_ident::is_xid_continue)
 XID_CONTINUE = char;
 
+@string
+@position
+BooleanNode = "true" | "false";
+
 @position
 @string
 IntegerNode = {'0'..'9'}+ ;
-
 
 @position
 @string

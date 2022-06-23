@@ -51,6 +51,6 @@ impl NamespaceNode {
 
 impl IdentifierNode {
     fn is_normal_name(&self) -> bool {
-        !matches!(self.string.as_str(), "else" | "end" | "endfor" | "end-for" | "end-if" | "end-if")
+        !matches!(self.string.as_str(), "else" | "end" | "endfor" | "end-for" | "endif" | "end-if")
     }
 }

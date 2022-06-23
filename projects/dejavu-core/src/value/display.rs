@@ -6,44 +6,47 @@ impl Debug for DjvNode {
     }
 }
 
-impl Display for ASTKind {
+impl Display for DjvKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         Debug::fmt(self, f)
     }
 }
 
-impl Debug for ASTKind {
+impl Debug for DjvKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            ASTKind::Null => f.write_str("null"),
-            ASTKind::Boolean(v) => match v {
+            DjvKind::Null => f.write_str("null"),
+            DjvKind::Boolean(v) => match v {
                 true => f.write_str("true"),
                 false => f.write_str("false"),
             },
-            ASTKind::Text(v) => f.debug_tuple("Text").field(v).finish(),
-            ASTKind::Integer(v) => {
+            DjvKind::Text(v) => f.debug_tuple("Text").field(v).finish(),
+            DjvKind::Integer(v) => {
                 write!(f, "{v}")
             }
-            ASTKind::Decimal(v) => {
+            DjvKind::Decimal(v) => {
                 write!(f, "{v}")
             }
-            ASTKind::Identifier(v) => f.debug_tuple("Identifier").field(v).finish(),
-            ASTKind::Vector(_) => {
+            DjvKind::Namespace(v) => f.debug_tuple("Identifier").field(v).finish(),
+            DjvKind::Vector(_) => {
                 todo!()
             }
-            ASTKind::Statements(_) => {
+            DjvKind::Statements(_) => {
                 todo!()
             }
-            ASTKind::LeftDestroyer(v) => {
+            DjvKind::LeftDestroyer(v) => {
                 write!(f, "{{%{v}")
             }
-            ASTKind::RightDestroyer(v) => {
+            DjvKind::RightDestroyer(v) => {
                 write!(f, "{v}%}}")
             }
-            ASTKind::ForStatement(_) => {
+            DjvKind::ForStatement(_) => {
                 todo!()
             }
-            ASTKind::Binary(_) => {
+            DjvKind::Binary(_) => {
+                todo!()
+            }
+            DjvKind::IfStatement(_) => {
                 todo!()
             }
         }
