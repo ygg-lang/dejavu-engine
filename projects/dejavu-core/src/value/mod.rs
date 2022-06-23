@@ -19,6 +19,7 @@ pub mod for_statement;
 pub mod ser;
 mod whitespace;
 mod write_rust;
+pub mod atomic;
 
 #[derive(Serialize, Deserialize)]
 pub struct DjvNode {
@@ -36,7 +37,7 @@ pub enum ASTKind {
     Text(String),
     Integer(i128),
     Decimal(f64),
-    Identifier(String),
+    Identifier(Vec<String>),
     Vector(Vec<DjvNode>),
     Statements(Vec<DjvNode>),
     LeftDestroyer(SpaceDestroyer),

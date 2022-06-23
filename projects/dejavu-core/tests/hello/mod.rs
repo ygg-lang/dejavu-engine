@@ -2,6 +2,7 @@ mod basic;
 
 pub struct HelloTemplate {
     name: String,
+    item: String,
     users: Vec<User>,
 }
 

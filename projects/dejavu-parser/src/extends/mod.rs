@@ -1,4 +1,4 @@
-use crate::{CommentL, CommentR, SlotL, SlotR, TermNode, ValueNode};
+use crate::{CommentL, CommentR, IdentifierNode, NamespaceNode, SlotL, SlotR, TermNode, ValueNode};
 
 impl From<&SlotL> for SlotL {
     fn from(value: &SlotL) -> Self {
@@ -30,10 +30,27 @@ impl TermNode {
         if self.prefix.is_empty() || self.suffix.is_empty() {
             return true;
         }
-        let id = match &self.term {
-            ValueNode::IdentifierNode(v) => v.string.as_str(),
-            _ => return true,
-        };
-        !matches!(id, "else" | "end" | "end-for" | "end-if")
+        match &self.term {
+            ValueNode::NamespaceNode(v) => v.is_normal_name(),
+            _ => true,
+        }
+    }
+}
+
+impl NamespaceNode {
+    pub fn is_empty(&self) -> bool {
+        self.path.is_empty()
+    }
+    fn is_normal_name(&self) -> bool {
+        if self.path.len() != 1 {
+            return true;
+        }
+        unsafe { self.path.get_unchecked(0).is_normal_name() }
+    }
+}
+
+impl IdentifierNode {
+    fn is_normal_name(&self) -> bool {
+        !matches!(self.string.as_str(), "else" | "end" | "endfor" | "end-for" | "end-if" | "end-if")
     }
 }

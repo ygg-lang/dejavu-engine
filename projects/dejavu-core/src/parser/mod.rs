@@ -2,8 +2,7 @@ use diagnostic_quick::{Failure, FileID, QError, QErrorKind, Success, Validation}
 use peginator::PegParser;
 
 use dejavu_parser::{
-    BooleanNode, ExpressionNode, IdentifierNode, NumberNode, SahaParser, SahaStatement, SahaStatementNodes, SlotExpressionNode,
-    UnicodeText, ValueNode,
+    ExpressionNode, IdentifierNode, SahaParser, SahaStatement, SahaStatementNodes, SlotExpressionNode, UnicodeText, ValueNode,
 };
 
 use crate::value::{DjvNode, SpaceDestroyer};

@@ -4,6 +4,7 @@ pub use self::{
     compiler::DejavuWorkspace,
     parser::parse,
     value::{
+        atomic::{Identifier, Namespace},
         expression::{BinaryExpression, BinaryOperator},
         DjvNode, SpaceDestroyer,
     },

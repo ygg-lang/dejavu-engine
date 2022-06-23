@@ -67,9 +67,9 @@ FunctionArgs = '(' args:ExpressionNode {[','] args:ExpressionNode}  [','] ')';
 
 
 ValueNode =
-	@:BooleanNode |
-	@:NumberNode |
-	@:IdentifierNode
+	@:DecimalNode |
+	@:IntegerNode |
+	@:NamespaceNode
 ;
 
 @no_skip_ws
@@ -80,14 +80,11 @@ SlotL = "{%" [trim:TrimMode];
 @position
 SlotR = [trim:TrimMode] "%}";
 
-
-
 @char
-TrimMode = '_' | '-' | '=' | '!';
+TrimMode = '_' | '-' | '~' | '=' | '!';
 
-@string
 @position
-BooleanNode = 'true' | 'false';
+NamespaceNode = path:IdentifierNode ['::' path:IdentifierNode];
 
 @string
 @position
@@ -102,10 +99,14 @@ XID_START = char;
 @check(unicode_ident::is_xid_continue)
 XID_CONTINUE = char;
 
+@position
+@string
+IntegerNode = {'0'..'9'}+ ;
+
 
 @position
 @string
-NumberNode =
+DecimalNode =
 	{'0'..'9'}+ ['.' {'0'..'9'}+] [('**'|'e'|'E') ['+'|'-'] {'0'..'9'}+] |
 	'.' {'0'..'9'}+
 	;

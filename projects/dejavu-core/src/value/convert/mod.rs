@@ -1,5 +1,11 @@
 use crate::value::{ASTKind, DjvNode};
 
+impl From<bool> for DjvNode {
+    fn from(value: bool) -> Self {
+        DjvNode { kind: ASTKind::Boolean(value), span: Default::default(), file: Default::default() }
+    }
+}
+
 impl From<u8> for DjvNode {
     fn from(value: u8) -> Self {
         DjvNode { kind: ASTKind::Integer(value as i128), span: Default::default(), file: Default::default() }

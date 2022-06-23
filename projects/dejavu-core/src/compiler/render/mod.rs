@@ -51,7 +51,7 @@ impl Template for crate::hello::HelloTemplate {
         )?;
 
         for node in nodes {
-            NodeWriter { writer: &mut output, node: &node, is_root: true }.write_nodes()?;
+            NodeWriter { writer: &mut output, node: &node, depth: true }.write_nodes()?;
         }
         output.write_all(
             r#"

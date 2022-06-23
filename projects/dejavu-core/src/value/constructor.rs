@@ -23,8 +23,8 @@ impl DjvNode {
             _ => None,
         }
     }
-    pub fn identifier(s: impl Into<String>) -> Self {
-        Self { kind: ASTKind::Identifier(s.into()), span: Default::default(), file: Default::default() }
+    pub fn identifier(s: Vec<String>) -> Self {
+        Self { kind: ASTKind::Identifier(s), span: Default::default(), file: Default::default() }
     }
     pub fn text(s: impl Into<String>) -> Self {
         Self { kind: ASTKind::Text(s.into()), span: Default::default(), file: Default::default() }

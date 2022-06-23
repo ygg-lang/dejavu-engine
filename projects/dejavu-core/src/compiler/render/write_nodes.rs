@@ -5,7 +5,7 @@ use crate::{value::ASTKind, DjvNode};
 pub struct NodeWriter<'i, W: Write> {
     pub writer: &'i mut W,
     pub node: &'i DjvNode,
-    pub is_root: bool,
+    pub depth: u8,
 }
 
 impl<'i, W: Write> Write for NodeWriter<'i, W> {
@@ -40,9 +40,10 @@ impl<'i, W: Write> NodeWriter<'i, W> {
             ASTKind::Decimal(_) => {
                 todo!()
             }
-            ASTKind::Identifier(_) => {
-                todo!()
-            }
+            ASTKind::Identifier(v) => match self.depth {
+                true => write!(self, "fmt.write_fmt(format_args!(\"{{{v}}}\", {v} = &self.{v}))?;")?,
+                false => write!(self, "fmt.write_fmt(format_args!(\"{{{v}}}\", {v} = {v}))?;")?,
+            },
             ASTKind::Vector(_) => {
                 todo!()
             }

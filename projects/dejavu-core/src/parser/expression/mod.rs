@@ -26,11 +26,7 @@ impl ParserContext {
         }
     }
     pub(super) fn parse_term(&mut self, value: TermNode) -> DjvNode {
-        match value.term {
-            ValueNode::IdentifierNode(v) => self.parse_identifier(v),
-            ValueNode::NumberNode(v) => self.parse_integer(v),
-            ValueNode::BooleanNode(v) => self.parse_boolean(v),
-        }
+        self.parse_value(value.term)
     }
 }
 
