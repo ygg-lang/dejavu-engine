@@ -26,11 +26,11 @@ EndIf = "end-if" | "endif" | "end";
 
 
 
-
+@position
 @no_skip_ws
-SlotFor = start:SlotForStart body:SahaStatementNodes [else:SlotElse empty:SahaStatementNodes] end:SlotEndFor;
+SlotFor = start:SlotForStart body:SahaStatementNodes [else:SlotElse] end:SlotEndFor;
 
-SlotForStart = left:SlotL "for" pattern:ValueNode "in" expression:ValueNode right:SlotR;
+SlotForStart = left:SlotL "for" pattern:ValueNode "in" expression:ExpressionNode right:SlotR;
 
 SlotEndFor = left:SlotL EndFor right:SlotR;
 

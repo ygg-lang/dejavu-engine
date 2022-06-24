@@ -2,7 +2,7 @@ use std::io::{Result, Write};
 
 use itertools::Itertools;
 
-use crate::{value::DjvKind, DjvNode, Identifier, IfStatement, Namespace};
+use crate::{value::DjvKind, DjvNode, ForStatement, Identifier, IfStatement, Namespace};
 
 pub struct NodeWriter<'i, W: Write> {
     pub writer: &'i mut W,
@@ -56,10 +56,9 @@ impl<'i, W: Write> NodeWriter<'i, W> {
             DjvKind::RightDestroyer(_) => {
                 todo!()
             }
-            DjvKind::ForStatement(_) => {
-                todo!()
-            }
+
             DjvKind::IfStatement(v) => v.write_nodes(self, self.depth + 1)?,
+            DjvKind::ForStatement(v) => v.write_nodes(self, self.depth + 1)?,
             DjvKind::Binary(_) => {
                 todo!()
             }
@@ -93,5 +92,16 @@ impl Identifier {
 impl IfStatement {
     fn write_nodes<W: Write>(&self, w: &mut NodeWriter<W>, depth: u8) -> Result<()> {
         write!(w, "if true {{}}")
+    }
+}
+
+impl ForStatement {
+    fn write_nodes<W: Write>(&self, w: &mut NodeWriter<W>, depth: u8) -> Result<()> {
+        if self.backpack.is_empty() {
+            write!(w, "for {} in {} {{}}", self.identifier.name, self.expression)
+        }
+        else {
+            write!(w, "for {} in {} {{}}", self.identifier.name, self.expression)
+        }
     }
 }
