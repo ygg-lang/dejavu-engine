@@ -1,11 +1,18 @@
+mod display;
+
 use super::*;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Namespace {
     pub path: Vec<Identifier>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
+pub struct DjvPattern {
+    pub symbols: Vec<Identifier>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Identifier {
     pub name: String,
     pub span: Range<usize>,
@@ -18,14 +25,4 @@ impl Namespace {
     }
 }
 
-impl Debug for Namespace {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        for (idx, id) in self.path.iter().enumerate() {
-            if idx != 0 {
-                f.write_str("::")?
-            }
-            f.write_str(&id.name)?;
-        }
-        Ok(())
-    }
-}
+

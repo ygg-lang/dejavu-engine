@@ -1,29 +1,39 @@
-use std::io::{Result, Write};
+use std::fmt::{Arguments, Display, Octal, Result, Write};
 
 use itertools::Itertools;
 
-use crate::{value::DjvKind, DjvNode, ForStatement, Identifier, IfStatement, Namespace};
+use crate::{
+    DjvNode,
+    ForStatement, Identifier, IfStatement, Namespace, value::{DjvKind, for_statement::DjvPattern},
+};
 
 pub struct NodeWriter<'i, W: Write> {
     pub writer: &'i mut W,
-    pub node: &'i DjvNode,
     pub depth: u8,
     pub predefined_identifiers: &'i [String],
 }
 
 impl<'i, W: Write> Write for NodeWriter<'i, W> {
-    fn write(&mut self, buf: &[u8]) -> Result<usize> {
-        self.writer.write(buf)
+    fn write_str(&mut self, s: &str) -> std::fmt::Result {
+        self.writer.write_str(s)
     }
 
-    fn flush(&mut self) -> Result<()> {
-        self.writer.flush()
+    fn write_char(&mut self, c: char) -> std::fmt::Result {
+        self.writer.write_char(c)
+    }
+
+    fn write_fmt(&mut self, args: Arguments<'_>) -> std::fmt::Result {
+        self.writer.write_fmt(args)
     }
 }
 
 impl<'i, W: Write> NodeWriter<'i, W> {
-    pub fn write_nodes(&mut self) -> Result<()> {
-        match &self.node.kind {
+
+}
+
+impl DjvNode {
+   pub(super) fn write_nodes<W: Write>(&self, w: &mut NodeWriter<W>) -> Result {
+        match &self.kind {
             DjvKind::Null => {
                 todo!()
             }
@@ -63,14 +73,13 @@ impl<'i, W: Write> NodeWriter<'i, W> {
                 todo!()
             }
         }
-        Ok(())
     }
 }
 
 impl Namespace {
-    fn write_nodes<W: Write>(&self, w: &mut NodeWriter<W>, is_root: bool) -> Result<()> {
+    fn write_nodes<W: Write>(&self, w: &mut NodeWriter<W>) -> Result {
         match self.path.len() {
-            1 => unsafe { self.path.get_unchecked(0).write_nodes(w, is_root) },
+            1 => unsafe { self.path.get_unchecked(0).write_nodes(w, w.depth ==0) },
             _ => {
                 let name = self.path.iter().map(|v| v.name.as_str()).join("::");
                 write!(w, r#"fmt.write_str("{{}}", {name})?;"#)
@@ -80,7 +89,7 @@ impl Namespace {
 }
 
 impl Identifier {
-    fn write_nodes<W: Write>(&self, w: &mut NodeWriter<W>, is_root: bool) -> Result<()> {
+    fn write_nodes<W: Write>(&self, w: &mut NodeWriter<W>, is_root: bool) -> Result {
         match w.predefined_identifiers.contains(&self.name) {
             true => write!(w, r#"fmt.write_str("{{}}", {name})?;"#, name = self.name),
             false if is_root => write!(w, r#"fmt.write_str("{{}}", self.{name})?;"#, name = self.name),
@@ -90,18 +99,26 @@ impl Identifier {
 }
 
 impl IfStatement {
-    fn write_nodes<W: Write>(&self, w: &mut NodeWriter<W>, depth: u8) -> Result<()> {
+    fn write_nodes<W: Write>(&self, w: &mut NodeWriter<W>) -> Result {
         write!(w, "if true {{}}")
     }
 }
 
 impl ForStatement {
-    fn write_nodes<W: Write>(&self, w: &mut NodeWriter<W>, depth: u8) -> Result<()> {
+    fn write_nodes<W: Write>(&self, w: &mut NodeWriter<W>) -> Result {
         if self.backpack.is_empty() {
-            write!(w, "for {} in {} {{}}", self.identifier.name, self.expression)
+            self.write_pattern(w, depth)?;
         }
         else {
-            write!(w, "for {} in {} {{}}", self.identifier.name, self.expression)
+            self.write_pattern(w, depth)?;
         }
+        Ok(())
+    }
+    fn write_pattern<W: Write>(&self, w: &mut NodeWriter<W>) -> Result {
+        write!(w, "for {} in ", self.pattern)?;
+        self.iterable.w
+
+        Ok(())
     }
 }
+

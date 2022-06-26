@@ -1,4 +1,4 @@
-use std::{fs::File, io::Write};
+use std::{fmt::Write, fs::File, io::Write as _};
 
 use diagnostic_quick::Validation;
 
@@ -32,8 +32,8 @@ impl Compiler<'_> {
         let text = self.config.get_text(id)?;
         let nodes = parse(text, id).result(|e| self.errors.push(e))?;
         self.analyze(id, &nodes)?;
-        let mut output = File::create(&self.output)?;
-        output.write_all(
+        let mut output = String::new();
+        output.write_str(
             r#"
         
 use core::fmt::Write;
@@ -46,22 +46,22 @@ impl Template for crate::hello::HelloTemplate {
     const EXTENSION: &'static str = "html";
 
     fn render_into<W: Write + ?Sized>(&self, fmt: &mut W) -> Result<()> {
-        "#
-            .as_bytes(),
+        "#,
         )?;
 
         for node in nodes {
-            NodeWriter { writer: &mut output, node: &node, depth: 0, predefined_identifiers: &["None".to_string()] }
-                .write_nodes()?;
+            let mut w = NodeWriter { writer: &mut output, depth: 0, predefined_identifiers: &["None".to_string()] };
+            node.write_nodes(&mut w)?;
         }
-        output.write_all(
+        output.write_str(
             r#"
         Ok(())
     }
 }
-        "#
-            .as_bytes(),
+        "#,
         )?;
+        let mut file = File::create(&self.output)?;
+        file.write_all(output.as_bytes())?;
         Ok(())
     }
 

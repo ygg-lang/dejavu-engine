@@ -1,15 +1,14 @@
+use crate::Identifier;
 use super::*;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ForStatement {
-    pub pattern: DjvNode,
+    pub pattern: DjvPattern,
     pub iterable: DjvNode,
     pub body: Vec<DjvNode>,
     pub backpack: Vec<DjvNode>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct DjvPattern {}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct IfStatement {
