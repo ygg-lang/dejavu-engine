@@ -1,11 +1,8 @@
-use std::fmt::{Arguments, Display, Octal, Result, Write};
+use std::fmt::{Arguments, Result, Write};
 
 use itertools::Itertools;
 
-use crate::{
-    DjvNode,
-    ForStatement, Identifier, IfStatement, Namespace, value::{DjvKind, for_statement::DjvPattern},
-};
+use crate::{value::DjvKind, DjvNode, ForStatement, Identifier, IfStatement, Namespace};
 
 pub struct NodeWriter<'i, W: Write> {
     pub writer: &'i mut W,
@@ -27,33 +24,31 @@ impl<'i, W: Write> Write for NodeWriter<'i, W> {
     }
 }
 
-impl<'i, W: Write> NodeWriter<'i, W> {
-
-}
+impl<'i, W: Write> NodeWriter<'i, W> {}
 
 impl DjvNode {
-   pub(super) fn write_nodes<W: Write>(&self, w: &mut NodeWriter<W>) -> Result {
+    pub(super) fn write_nodes<W: Write>(&self, w: &mut NodeWriter<W>) -> std::fmt::Result {
         match &self.kind {
             DjvKind::Null => {
                 todo!()
             }
-            DjvKind::Boolean(v) => write!(self, r#"fmt.write_str("{v}")?;"#)?,
+            DjvKind::Boolean(v) => write!(w, r#"fmt.write_str("{v}")?;"#)?,
             DjvKind::Text(v) => {
                 match v.chars().count() {
                     // drop
                     0 => {}
-                    1 => unsafe { write!(self, "fmt.write_char({c:?})?;", c = v.chars().next().unwrap_unchecked())? },
-                    _ => write!(self, "fmt.write_str({v:?})?;")?,
+                    1 => unsafe { write!(w, "fmt.write_char({c:?})?;", c = v.chars().next().unwrap_unchecked())? },
+                    _ => write!(w, "fmt.write_str({v:?})?;")?,
                 }
             }
             DjvKind::Integer(v) => match *v {
-                i if (0..=9).contains(&i) => write!(self, r#"fmt.write_char('{v}')?;"#)?,
-                _ => write!(self, r#"fmt.write_str("{v}")?;"#)?,
+                i if (0..=9).contains(&i) => write!(w, r#"fmt.write_char('{v}')?;"#)?,
+                _ => write!(w, r#"fmt.write_str("{v}")?;"#)?,
             },
             DjvKind::Decimal(_) => {
                 todo!()
             }
-            DjvKind::Namespace(v) => v.write_nodes(self, self.depth == 0)?,
+            DjvKind::Namespace(v) => v.write_nodes(w)?,
             DjvKind::Vector(_) => {
                 todo!()
             }
@@ -67,19 +62,20 @@ impl DjvNode {
                 todo!()
             }
 
-            DjvKind::IfStatement(v) => v.write_nodes(self, self.depth + 1)?,
-            DjvKind::ForStatement(v) => v.write_nodes(self, self.depth + 1)?,
+            DjvKind::IfStatement(v) => v.write_nodes(w)?,
+            DjvKind::ForStatement(v) => v.write_nodes(w)?,
             DjvKind::Binary(_) => {
                 todo!()
             }
         }
+        Ok(())
     }
 }
 
 impl Namespace {
     fn write_nodes<W: Write>(&self, w: &mut NodeWriter<W>) -> Result {
         match self.path.len() {
-            1 => unsafe { self.path.get_unchecked(0).write_nodes(w, w.depth ==0) },
+            1 => unsafe { self.path.get_unchecked(0).write_nodes(w, w.depth == 0) },
             _ => {
                 let name = self.path.iter().map(|v| v.name.as_str()).join("::");
                 write!(w, r#"fmt.write_str("{{}}", {name})?;"#)
@@ -107,18 +103,19 @@ impl IfStatement {
 impl ForStatement {
     fn write_nodes<W: Write>(&self, w: &mut NodeWriter<W>) -> Result {
         if self.backpack.is_empty() {
-            self.write_pattern(w, depth)?;
+            w.depth += 1;
+            self.write_pattern(w)?;
         }
         else {
-            self.write_pattern(w, depth)?;
+            w.depth += 1;
+            self.write_pattern(w)?;
         }
         Ok(())
     }
     fn write_pattern<W: Write>(&self, w: &mut NodeWriter<W>) -> Result {
         write!(w, "for {} in ", self.pattern)?;
-        self.iterable.w
+        // self.iterable.w
 
         Ok(())
     }
 }
-

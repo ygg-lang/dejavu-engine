@@ -3,7 +3,7 @@
 
 - surrounded by parentheses `{#` and `#}`
 
-```dejavu
+```saha
 {% filter comment %}
 
 comment block
@@ -15,7 +15,7 @@ comment block
 
 ## Whitespace Control
 
-**DejaVu Supports `LF` only!**
+**Saha Supports `LF` only!**
 
 - `{%=`: Destroy all whitespace on the left
 - `{%-`: Destroy all blank lines on the left

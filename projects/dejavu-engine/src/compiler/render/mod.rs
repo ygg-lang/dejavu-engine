@@ -17,9 +17,6 @@ pub struct Compiler<'i> {
 }
 
 impl DejavuWorkspace {
-    pub fn compile_all(&self) -> Validation<String> {
-        todo!()
-    }
     pub fn compile(&self, file: &FileID) -> QResult<Vec<QError>> {
         let mut c = Compiler { config: self, errors: vec![], output: Default::default() };
         c.compile(file)?;

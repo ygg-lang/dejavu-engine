@@ -1,4 +1,3 @@
-use crate::Identifier;
 use super::*;
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -8,7 +7,6 @@ pub struct ForStatement {
     pub body: Vec<DjvNode>,
     pub backpack: Vec<DjvNode>,
 }
-
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct IfStatement {
@@ -26,15 +24,15 @@ impl ForStatement {
     /// Creates a new for statement from the given `pattern` and `iterable` object.
     ///
     /// The rust compiler checks the validity of iterators
-    pub fn new(pattern: DjvNode, iterable: DjvNode) -> Self {
+    pub fn new(pattern: DjvPattern, iterable: DjvNode) -> Self {
         Self { pattern, iterable, body: vec![], backpack: vec![] }
     }
     /// Set the body of the for statement, activate all [`SpaceDestroyer`].
-    pub fn set_body(mut self, body: Vec<DjvNode>) {
+    pub fn set_body(&mut self, body: Vec<DjvNode>) {
         self.body = SpaceDestroyer::clear(body)
     }
     /// Set the else backpack of the for statement, activate all [`SpaceDestroyer`].
-    pub fn set_backpack(mut self, backpack: Vec<DjvNode>) {
+    pub fn set_backpack(&mut self, backpack: Vec<DjvNode>) {
         self.backpack = SpaceDestroyer::clear(backpack)
     }
     pub fn as_node(self, span: &Range<usize>, file: &FileID) -> DjvNode {

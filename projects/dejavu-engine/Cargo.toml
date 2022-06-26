@@ -2,7 +2,7 @@
 name = "dejavu-engine"
 version = "0.1.0"
 authors = ["192607617@qq.com"]
-description = "DejaVu shared types and runtime"
+description = "Error Handling, Parser and Compiler of DejaVu Language"
 license = "MPL-2.0"
 readme = "Readme.md"
 repository = "https://github.com/doki-land/arc-rs"
@@ -10,13 +10,31 @@ exclude = ["/tests/*"]
 edition = "2018"
 
 [dependencies]
-serde_json = { version = "1.0.89", optional = true }
-anyhow = "1.0.66"
+pratt = "0.4.0"
+peginator = "0.4.0"
+serde = { version = "1.0.148", features = ["derive"] }
+globset = "0.4.9"
+walkdir = "2.3.2"
+itertools = "0.10.5"
 
-[dev-dependencies]
+[dependencies.dejavu-parser]
+#version = "0.0.0"
+path = "../dejavu-parser"
+
+[dependencies.diagnostic-quick]
+#git = "https://github.com/oovm/diagnostic-rs"
+#rev = "527707f5"
+version = "0.2.1"
+features = ["peginator", "rust_decimal", "globset", "walkdir"]
+
+[dev-dependencies.dejavu-runtime]
+#version = "0.1.0"
+path = "../dejavu-runtime"
+
 
 [features]
 default = []
-json = ["serde_json", "serde_json/preserve_order"]
+
+#json = ["serde_json", "serde_json/preserve_order"]
 #yaml = ["yaml-rust"]
 #hjson = ["serde-hjson"]

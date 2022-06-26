@@ -1,6 +1,8 @@
 use dejavu_parser::{SlotFor, SlotIf};
 
-use crate::{parser::ParserContext, value::for_statement::IfConditional, DjvNode, ForStatement, IfStatement, SpaceDestroyer};
+use crate::{
+    parser::ParserContext, value::for_statement::IfConditional, DjvNode, DjvPattern, ForStatement, IfStatement, SpaceDestroyer,
+};
 
 impl ParserContext {
     pub fn parse_if_slot(&mut self, s: SlotIf, outter: &mut Vec<DjvNode>) {
@@ -51,8 +53,8 @@ impl ParserContext {
 impl ParserContext {
     pub fn parse_for_slot(&mut self, slots: SlotFor, outter: &mut Vec<DjvNode>) {
         outter.push(self.left_destroyer(&slots.start.left, true));
-
-        let mut node = ForStatement::new(self.parse_value(slots.start.pattern), self.parse_expression(slots.start.expression));
+        let pat = DjvPattern { symbols: vec![] };
+        let mut node = ForStatement::new(pat, self.parse_expression(slots.start.expression));
         let mut body = vec![];
         let mut backpack = vec![];
         body.push(self.right_destroyer(&slots.start.right, true));
@@ -72,7 +74,7 @@ impl ParserContext {
         }
         node.set_body(body);
         node.set_backpack(backpack);
-        outter.push(node.as_node(&self.position, &self.file));
+        outter.push(node.as_node(&slots.position, &self.file));
         outter.push(self.right_destroyer(&slots.end.right, true));
     }
 }

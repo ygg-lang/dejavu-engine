@@ -11,11 +11,17 @@ edition = "2021"
 
 [dependencies]
 
-[dependencies.dejavu-engine]
+[dependencies.dejavu-runtime]
 #version = "0.1.0"
-path = "../dejavu-engine"
+path = "../dejavu-runtime"
 
 [dev-dependencies]
+
+[build-dependencies]
+
+[build-dependencies.dejavu-engine]
+#version = "0.1.0"
+path = "../dejavu-engine"
 
 [features]
 default = []
