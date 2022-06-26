@@ -1,5 +1,6 @@
-use peginator::buildscript::Compile;
 use std::env::current_dir;
+
+use peginator_codegen::Compile;
 
 fn main() {
     let path = current_dir().unwrap();

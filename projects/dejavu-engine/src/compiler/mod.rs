@@ -1,12 +1,14 @@
 use std::{
     env::current_dir,
+    mem::take,
     path::{Path, PathBuf},
 };
 
-use crate::compiler::config::WorkspaceConfig;
 use diagnostic_quick::{print_errors, QError, QResult, TextStorage};
+use globset::{Glob, GlobSetBuilder};
+use walkdir::WalkDir;
 
-use crate::FileID;
+use crate::{compiler::config::WorkspaceConfig, FileID};
 
 pub mod config;
 pub mod render;
@@ -15,6 +17,7 @@ pub struct DejavuWorkspace {
     config: WorkspaceConfig,
     /// `Dict<RelativePath, Cache>`
     store: TextStorage,
+    error: Vec<QError>,
 }
 
 impl DejavuWorkspace {
@@ -31,12 +34,12 @@ impl DejavuWorkspace {
         // The directory with cargo.toml
         let dir = current_dir()?;
         let mut vm = DejavuWorkspace::new(&dir)?;
-        vm.config.root
-
-        vm.reload_config()?;
-
-        let errors = vm.compile_all();
-        vm.print_errors(&errors)?;
+        let config_path = vm.config.default_path();
+        if config_path.exists() {
+            vm.reload_config(&config_path)?;
+        }
+        let err = vm.compile_all();
+        vm.print_errors(&err)?;
         Ok(())
     }
 
@@ -51,20 +54,44 @@ impl DejavuWorkspace {
     /// # Examples
     ///
     /// ```
-    ///
+    /// use dejavu_engine::DejavuWorkspace;
     /// ```
     pub fn new(workspace: &Path) -> QResult<DejavuWorkspace> {
         let mut store = TextStorage::default();
         store.force_lf();
-        let mut config = WorkspaceConfig::new(workspace.canonicalize()?);
-        Ok(Self { config: WorkspaceConfig::new(workspace.canonicalize()?), store })
+        Ok(Self { config: WorkspaceConfig::new(workspace.canonicalize()?), store, error: vec![] })
     }
     pub fn reload_config(&mut self, path: &Path) -> QResult {
         self.config.reload_from(path)
     }
+    pub fn compile_all(&mut self) -> Vec<QError> {
+        match self.try_compile_all() {
+            Ok(_) => take(&mut self.error),
 
-    pub fn compile_all(&self) -> Vec<QError> {
-        todo!()
+            Err(e) => {
+                vec![e]
+            }
+        }
+    }
+
+    pub fn try_compile_all(&mut self) -> QResult {
+        let glob = self.config.glob_pattern()?;
+        let mut files = vec![];
+        for entry in WalkDir::new(&self.config.root) {
+            let entry = entry?;
+            if !glob.is_match(entry.path()) {
+                continue;
+            }
+            let file = self.store.file(entry.path())?;
+            files.push(file);
+        }
+        for file in files {
+            match self.compile(&file) {
+                Ok(o) => self.error.extend(o),
+                Err(e) => self.error.push(e),
+            }
+        }
+        Ok(())
     }
 }
 
@@ -76,6 +103,10 @@ impl DejavuWorkspace {
         let absolute = path.as_ref().canonicalize()?;
         Ok(self.store.file(absolute)?)
     }
+    pub fn take_errors(&mut self) -> Vec<QError> {
+        take(&mut self.error)
+    }
+
     pub fn print_errors(&self, errors: &[QError]) -> QResult {
         print_errors(&self.store, errors)
     }

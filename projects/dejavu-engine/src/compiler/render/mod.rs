@@ -1,7 +1,5 @@
 use std::{fmt::Write, fs::File, io::Write as _};
 
-use diagnostic_quick::Validation;
-
 use write_nodes::NodeWriter;
 
 use crate::{parse, DjvNode};
