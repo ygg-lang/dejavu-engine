@@ -7,6 +7,7 @@ SahaStatementNodes = { statements:SahaStatement };
 SahaStatement =
 	@:SlotFor |
 	@:SlotIf |
+	@:SlotExpressionNode |
 	@:UnicodeText
 ;
 
@@ -116,6 +117,20 @@ DecimalNode =
 @position
 @string
 UnicodeText = {!("{%" | "{#") char}+;
+
+@no_skip_ws
+StringLiteral =
+    '"' {!'"' body:StringItem } '"' |
+    "'" {!"'" body:StringItem } "'" ;
+
+@no_skip_ws
+StringItem =
+	@:EscapeUnicode |
+	@:EscapeOther   ;
+
+EscapeOther = '\\' @:char;
+
+EscapeUnicode = '\\' 'u';
 
 @no_skip_ws
 Comment = left:CommentL {!CommentR|char}+ right:CommentR;

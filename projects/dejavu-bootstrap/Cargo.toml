@@ -15,13 +15,15 @@ edition = "2021"
 #version = "0.1.0"
 path = "../dejavu-runtime"
 
-[dev-dependencies]
+[dev-dependencies.dejavu-engine]
+#version = "0.1.0"
+path = "../dejavu-engine"
 
 [build-dependencies]
 
-[build-dependencies.dejavu-engine]
+#[build-dependencies.dejavu-engine]
 #version = "0.1.0"
-path = "../dejavu-engine"
+#path = "../dejavu-engine"
 
 [features]
 default = []

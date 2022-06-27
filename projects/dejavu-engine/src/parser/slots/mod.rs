@@ -10,12 +10,11 @@ impl ParserContext {
         for statement in nodes.statements {
             match statement {
                 SahaStatement::UnicodeText(s) => out.push(self.parse_text(s)),
-
                 // SahaStatement::Comment(s) => {
                 //     out.push(self.left_destroyer(&s.left, false));
                 //     out.push(self.right_destroyer(&s.right, false));
                 // }
-                // SahaStatement::SlotExpressionNode(s) => self.parse_slot(s, &mut out),
+                SahaStatement::SlotExpressionNode(s) => self.parse_slot(s, &mut out),
                 SahaStatement::SlotIf(s) => self.parse_if_slot(s, &mut out),
                 SahaStatement::SlotFor(s) => self.parse_for_slot(s, &mut out),
             }

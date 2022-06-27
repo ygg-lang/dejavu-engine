@@ -20,7 +20,7 @@ impl ParserContext {
         match ExprParser.parse(&mut ts.into_iter()) {
             Ok(o) => o,
             Err(error) => {
-                println!("Error: {:?}", error);
+                println!("parse_expression: {:?}", error);
                 DjvNode::from("").with_range(&e.position).with_file(&self.file)
             }
         }

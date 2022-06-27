@@ -27,7 +27,7 @@ impl From<&CommentR> for SlotR {
 impl TermNode {
     /// 不要把 end 节点解析为 identifier
     pub(crate) fn is_normal_slot(&self) -> bool {
-        if self.prefix.is_empty() || self.suffix.is_empty() {
+        if !self.prefix.is_empty() || !self.suffix.is_empty() {
             return true;
         }
         match &self.term {

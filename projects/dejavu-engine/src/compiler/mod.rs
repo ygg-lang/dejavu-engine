@@ -2,6 +2,7 @@ use std::{
     env::current_dir,
     mem::take,
     path::{Path, PathBuf},
+    process::{Command, ExitStatus},
 };
 
 use diagnostic_quick::{print_errors, QError, QResult, TextStorage};
@@ -24,13 +25,7 @@ impl DejavuWorkspace {
     /// Use this when quickly configuring your project
     ///
     /// Contains some common configuration
-    pub fn compile_project() {
-        if let Err(e) = Self::try_compile_project() {
-            eprintln!("{}", e);
-            std::process::exit(1)
-        }
-    }
-    fn try_compile_project() -> QResult {
+    pub fn compile_project() -> QResult {
         // The directory with cargo.toml
         let dir = current_dir()?;
         let mut vm = DejavuWorkspace::new(&dir)?;
@@ -38,11 +33,13 @@ impl DejavuWorkspace {
         if config_path.exists() {
             vm.reload_config(&config_path)?;
         }
+
         let err = vm.compile_all();
         vm.print_errors(&err)?;
+        vm.format_rs()?;
+
         Ok(())
     }
-
     /// For step-by-step configuration of your project with better flexibility
     ///
     /// # Arguments
@@ -64,16 +61,20 @@ impl DejavuWorkspace {
     pub fn reload_config(&mut self, path: &Path) -> QResult {
         self.config.reload_from(path)
     }
+    pub fn format_rs(&self) -> QResult<ExitStatus> {
+        Ok(Command::new("rustfmt").arg(&self.config.root).status()?)
+    }
     pub fn compile_all(&mut self) -> Vec<QError> {
+        let mut out = vec![];
         match self.try_compile_all() {
-            Ok(_) => take(&mut self.error),
-
+            Ok(_) => out.extend(take(&mut self.error)),
             Err(e) => {
-                vec![e]
+                out.extend(take(&mut self.error));
+                out.push(e);
             }
         }
+        out
     }
-
     pub fn try_compile_all(&mut self) -> QResult {
         let glob = self.config.glob_pattern()?;
         let mut files = vec![];
@@ -103,10 +104,6 @@ impl DejavuWorkspace {
         let absolute = path.as_ref().canonicalize()?;
         Ok(self.store.file(absolute)?)
     }
-    pub fn take_errors(&mut self) -> Vec<QError> {
-        take(&mut self.error)
-    }
-
     pub fn print_errors(&self, errors: &[QError]) -> QResult {
         print_errors(&self.store, errors)
     }

@@ -55,6 +55,7 @@ impl Template for crate::hello::HelloTemplate {
 }
         "#,
         )?;
+
         let mut file = File::create(&self.output)?;
         file.write_all(output.as_bytes())?;
         Ok(())

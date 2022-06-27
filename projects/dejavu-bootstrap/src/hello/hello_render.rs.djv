@@ -3,7 +3,7 @@
 use core::fmt::{Display, Formatter, Write};
 
 {% if condition %}
-use {% dejavu.namespace %}::{{% dejavu.imports.join(', ') %}};
+use {% dejavu.namespace %}::{{% dejavu.imports.join(", ") %}};
 {% end %}
 
 impl{% target.generic %} Display for {% target.path %} {
