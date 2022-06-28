@@ -62,7 +62,7 @@ impl DejavuWorkspace {
         self.config.reload_from(path)
     }
     pub fn format_rs(&self) -> QResult<ExitStatus> {
-        Ok(Command::new("rustfmt").arg(&self.config.root).status()?)
+        Ok(Command::new("cargo").arg("fmt").status()?)
     }
     pub fn compile_all(&mut self) -> Vec<QError> {
         let mut out = vec![];

@@ -21,6 +21,7 @@ impl Debug for DjvKind {
                 false => f.write_str("false"),
             },
             DjvKind::Text(v) => f.debug_tuple("Text").field(v).finish(),
+            DjvKind::String(v) => Debug::fmt(&v.value, f),
             DjvKind::Integer(v) => {
                 write!(f, "{v}")
             }

@@ -7,7 +7,11 @@ use std::{
     str::FromStr,
 };
 
-use crate::{value::for_statement::ForStatement, DjvPattern};
+use crate::{
+    value::{atomic::DjvString, for_statement::ForStatement},
+    DjvPattern,
+};
+
 pub mod atomic;
 mod constructor;
 mod convert;
@@ -31,9 +35,10 @@ pub struct DjvNode {
 pub enum DjvKind {
     Null = 0,
     Boolean(bool),
-    Text(String),
     Integer(i128),
     Decimal(f64),
+    String(Box<DjvString>),
+    Text(String),
     Namespace(Namespace),
     Vector(Vec<DjvNode>),
     Statements(Vec<DjvNode>),

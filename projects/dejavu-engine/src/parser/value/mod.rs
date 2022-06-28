@@ -1,6 +1,9 @@
-use dejavu_parser::{BooleanNode, DecimalNode, IntegerNode, NamespaceNode};
+use dejavu_parser::{BooleanNode, DecimalNode, IntegerNode, NamespaceNode, StringItem, StringNode};
 
-use crate::{Identifier, Namespace};
+use crate::{
+    value::atomic::{DjvString, StringKind},
+    Identifier, Namespace,
+};
 
 use super::*;
 
@@ -10,6 +13,7 @@ impl ParserContext {
             ValueNode::BooleanNode(v) => self.parse_boolean(v),
             ValueNode::DecimalNode(v) => self.parse_decimal(v),
             ValueNode::IntegerNode(v) => self.parse_integer(v),
+            ValueNode::StringNode(v) => self.parse_string(v),
             ValueNode::NamespaceNode(v) => self.parse_namespace(v),
         }
     }
@@ -49,5 +53,35 @@ impl ParserContext {
     }
     pub(super) fn parse_text(&mut self, text: UnicodeText) -> DjvNode {
         DjvNode::text(text.string).with_range(&text.position).with_file(&self.file)
+    }
+}
+
+impl ParserContext {
+    pub fn parse_string(&mut self, string: StringNode) -> DjvNode {
+        let mut chars = String::new();
+        for item in string.body {
+            self.parse_string_item(item, &mut chars);
+        }
+        let quote = match string.sq {
+            None => StringKind::DoubleQuote,
+            Some(_) => StringKind::SingleQuote,
+        };
+        DjvString { kind: quote, value: chars }.to_node(&string.position, &self.file)
+    }
+    fn parse_string_item(&mut self, item: StringItem, s: &mut String) {
+        match item {
+            StringItem::EscapeOther(c) => match c {
+                't' => s.push('\t'),
+                'r' => s.push('\r'),
+                'n' => s.push('\n'),
+                _ => s.push(c),
+            },
+            StringItem::EscapeUnicode(_) => {
+                todo!()
+            }
+            StringItem::char(c) => {
+                s.push(c);
+            }
+        }
     }
 }

@@ -2,7 +2,10 @@ use std::fmt::{Arguments, Result, Write};
 
 use itertools::Itertools;
 
-use crate::{value::DjvKind, DjvNode, ForStatement, Identifier, IfStatement, Namespace};
+use crate::{
+    value::{atomic::StringKind, DjvKind},
+    DjvNode, ForStatement, Identifier, IfStatement, Namespace,
+};
 
 pub struct NodeWriter<'i, W: Write> {
     pub writer: &'i mut W,
@@ -41,6 +44,18 @@ impl DjvNode {
                     _ => write!(w, "fmt.write_str({v:?})?;")?,
                 }
             }
+            DjvKind::String(v) => match v.kind {
+                StringKind::SingleQuote => {
+                    write!(w, r#"fmt.write_char('\'')?;"#)?;
+                    write!(w, r#"fmt.write_str({v:?})?;"#)?;
+                    write!(w, r#"fmt.write_char('\'')?;"#)?;
+                }
+                StringKind::DoubleQuote => {
+                    write!(w, r#"fmt.write_char('\"')?;"#)?;
+                    write!(w, r#"fmt.write_str({v:?})?;"#)?;
+                    write!(w, r#"fmt.write_char('\"')?;"#)?;
+                }
+            },
             DjvKind::Integer(v) => match *v {
                 i if (0..=9).contains(&i) => write!(w, r#"fmt.write_char('{v}')?;"#)?,
                 _ => write!(w, r#"fmt.write_str("{v}")?;"#)?,

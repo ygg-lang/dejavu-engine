@@ -69,6 +69,7 @@ ValueNode =
 	@:BooleanNode |
 	@:DecimalNode |
 	@:IntegerNode |
+	@:StringNode  |
 	@:NamespaceNode
 ;
 
@@ -118,15 +119,22 @@ DecimalNode =
 @string
 UnicodeText = {!("{%" | "{#") char}+;
 
+@position
 @no_skip_ws
-StringLiteral =
-    '"' {!'"' body:StringItem } '"' |
-    "'" {!"'" body:StringItem } "'" ;
+StringNode =
+    dq:DQ {!DQ body:StringItem } DQ |
+    sq:SQ {!SQ body:StringItem } SQ ;
 
 @no_skip_ws
 StringItem =
 	@:EscapeUnicode |
-	@:EscapeOther   ;
+	@:EscapeOther   |
+	@:char          ;
+
+SQ = "'";
+
+DQ = '"';
+
 
 EscapeOther = '\\' @:char;
 
