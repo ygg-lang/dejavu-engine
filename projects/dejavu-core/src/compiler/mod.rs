@@ -1,5 +1,4 @@
 use std::{
-    env::current_dir,
     mem::take,
     path::{Path, PathBuf},
     process::{Command, ExitStatus},
@@ -22,24 +21,6 @@ pub struct DejavuWorkspace {
 }
 
 impl DejavuWorkspace {
-    /// Use this when quickly configuring your project
-    ///
-    /// Contains some common configuration
-    pub fn compile_project() -> QResult {
-        // The directory with cargo.toml
-        let dir = current_dir()?;
-        let mut vm = DejavuWorkspace::new(&dir)?;
-        let config_path = vm.config.default_path();
-        if config_path.exists() {
-            vm.reload_config(&config_path)?;
-        }
-
-        let err = vm.compile_all();
-        vm.print_errors(&err)?;
-        vm.format_rs()?;
-
-        Ok(())
-    }
     /// For step-by-step configuration of your project with better flexibility
     ///
     /// # Arguments
@@ -106,5 +87,8 @@ impl DejavuWorkspace {
     }
     pub fn print_errors(&self, errors: &[QError]) -> QResult {
         print_errors(&self.store, errors)
+    }
+    pub fn default_config_path(&self) -> PathBuf {
+        self.config.root.join("dejavu.toml")
     }
 }

@@ -9,6 +9,10 @@ repository = "https://github.com/oovm/dejavu-engine"
 exclude = ["/tests/*"]
 edition = "2018"
 
+[[bin]]
+name = "dejavu"
+path = "src/main.rs"
+
 [dependencies]
 clap = "4.0.29"
 

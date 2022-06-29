@@ -1,3 +1,3 @@
-mod hello;
+mod rust_codegen;
 
-pub use self::hello::{HelloTemplate, User};
+pub use self::rust_codegen::{RustTemplate, User};

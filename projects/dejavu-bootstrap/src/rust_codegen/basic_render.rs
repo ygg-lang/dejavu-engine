@@ -3,13 +3,15 @@ use core::fmt::Write;
 use dejavu_runtime::{Result, Template};
 
 impl Template for crate::hello::HelloTemplate {
-    const SIZE_HINT: usize = 100;
-    const MIME_TYPE: &'static str = "text/html; charset=utf-8";
-    const EXTENSION: &'static str = "html";
+    const SIZE_HINT: usize = 1024;
+    const MIME_TYPE: &'static str = "text/rust; charset=utf-8";
+    const EXTENSION: &'static str = "rust";
 
     fn render_into<W: Write + ?Sized>(&self, fmt: &mut W) -> Result<()> {
-        if true {}
-        fmt.write_str("impl")?;
+        fmt.write_str("{}", self.dejavu)?;
+        fmt.write_str("::{")?;
+        fmt.write_str("{}", self.dejavu)?;
+        fmt.write_str("};\n\nimpl")?;
         fmt.write_str("{}", self.target)?;
         fmt.write_str("Display for")?;
         fmt.write_str("{}", self.target)?;
