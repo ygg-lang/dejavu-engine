@@ -5,7 +5,7 @@ authors = ["192607617@qq.com"]
 description = "DejaVu shared types and runtime"
 license = "MPL-2.0"
 readme = "Readme.md"
-repository = "https://github.com/doki-land/arc-rs"
+repository = "https://github.com/oovm/dejavu-engine"
 exclude = ["/tests/*"]
 edition = "2018"
 

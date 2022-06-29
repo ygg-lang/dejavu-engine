@@ -2,7 +2,6 @@
 members = ["projects/*"]
 default-members = [
     "projects/dejavu-parser",
-    "projects/dejavu-bootstrap",
 ]
 exclude = [
     "projects/.DS_Store",
