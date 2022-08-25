@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["192607617@qq.com"]
 description = "External function system for arc"
 license = "MPL-2.0"
-readme = "../../Readme.md"
+readme = "Readme.md"
 repository = "https://github.com/doki-land/arc-rs"
 exclude = ["/tests/*"]
 edition = "2018"
@@ -32,6 +32,6 @@ peginator = "0.3.0"
 [features]
 default = []
 
-json = ["serde_json", "serde_json/preserve_order"]
-yaml = ["yaml-rust"]
-hjson = ["serde-hjson"]
+#json = ["serde_json", "serde_json/preserve_order"]
+#yaml = ["yaml-rust"]
+#hjson = ["serde-hjson"]

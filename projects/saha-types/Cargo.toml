@@ -1,6 +1,5 @@
 [package]
 name = "saha-types"
-publish = false
 version = "0.0.0"
 authors = ["Aster <192607617@qq.com>"]
 description = "..."
@@ -12,6 +11,10 @@ edition = "2021"
 
 [dependencies]
 diagnostic = "0.4.1"
+
+[dependencies.voml-collection]
+#version = "0.3.0"
+path = "../voml-collection"
 
 [dev-dependencies]
 
