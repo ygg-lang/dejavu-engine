@@ -1,7 +1,4 @@
-use std::{
-    env::{current_dir, set_current_dir},
-    process::Command,
-};
+use std::env::{current_dir, set_current_dir};
 
 use dejavu_core::{DejavuWorkspace, QResult};
 

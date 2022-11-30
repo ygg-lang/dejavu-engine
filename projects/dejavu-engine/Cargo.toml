@@ -15,6 +15,8 @@ path = "src/main.rs"
 
 [dependencies]
 clap = "4.0.29"
+serde_json = "1.0.89"
+serde = { version = "1.0.130", features = ["derive"] }
 
 [dependencies.dejavu-core]
 #version = "0.0.0"

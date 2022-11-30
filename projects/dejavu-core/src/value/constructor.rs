@@ -5,9 +5,6 @@ use diagnostic_quick::{QError, QResult};
 use super::*;
 
 impl DjvNode {
-    pub fn null() -> Self {
-        Self { kind: DjvKind::Null, span: Default::default(), file: Default::default() }
-    }
     pub fn boolean(v: bool) -> Self {
         Self { kind: DjvKind::Boolean(v), span: Default::default(), file: Default::default() }
     }

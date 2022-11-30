@@ -15,7 +15,6 @@ impl Display for DjvKind {
 impl Debug for DjvKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            DjvKind::Null => f.write_str("null"),
             DjvKind::Boolean(v) => match v {
                 true => f.write_str("true"),
                 false => f.write_str("false"),

@@ -16,7 +16,8 @@ anyhow = "1.0.66"
 [dev-dependencies]
 
 [features]
-default = []
+default = ["std"]
+std = ["serde_json/std"]
 json = ["serde_json", "serde_json/preserve_order"]
 #yaml = ["yaml-rust"]
 #hjson = ["serde-hjson"]

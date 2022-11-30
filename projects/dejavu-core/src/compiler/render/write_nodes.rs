@@ -32,9 +32,6 @@ impl<'i, W: Write> NodeWriter<'i, W> {}
 impl DjvNode {
     pub(super) fn write_nodes<W: Write>(&self, w: &mut NodeWriter<W>) -> std::fmt::Result {
         match &self.kind {
-            DjvKind::Null => {
-                todo!()
-            }
             DjvKind::Boolean(v) => write!(w, r#"fmt.write_str("{v}")?;"#)?,
             DjvKind::Text(v) => {
                 match v.chars().count() {
@@ -71,12 +68,11 @@ impl DjvNode {
                 todo!()
             }
             DjvKind::LeftDestroyer(_) => {
-                todo!()
+                panic!("Logic error, there is no `LeftDestroyer` node in this stage")
             }
             DjvKind::RightDestroyer(_) => {
-                todo!()
+                panic!("Logic error, there is no `RightDestroyer` node in this stage")
             }
-
             DjvKind::IfStatement(v) => v.write_nodes(w)?,
             DjvKind::ForStatement(v) => v.write_nodes(w)?,
             DjvKind::Binary(_) => {

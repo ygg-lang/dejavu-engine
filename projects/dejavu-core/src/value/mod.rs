@@ -29,11 +29,9 @@ pub struct DjvNode {
     pub file: FileID,
 }
 
-#[repr(u8)]
 #[derive(Serialize, Deserialize)]
 #[serde(tag = "type")]
 pub enum DjvKind {
-    Null = 0,
     Boolean(bool),
     Integer(i128),
     Decimal(f64),
