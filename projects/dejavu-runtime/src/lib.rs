@@ -1,5 +1,3 @@
-pub extern crate anyhow;
-
 pub use anyhow::{Error, Result};
 
 pub use self::{

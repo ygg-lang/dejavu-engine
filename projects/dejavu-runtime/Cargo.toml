@@ -6,6 +6,7 @@ description = "DejaVu shared types and runtime"
 license = "MPL-2.0"
 readme = "Readme.md"
 repository = "https://github.com/oovm/dejavu-engine"
+documentation = "https://docs.rs/dejavu-runtime"
 exclude = ["/tests/*"]
 edition = "2018"
 

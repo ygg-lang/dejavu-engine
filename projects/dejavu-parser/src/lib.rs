@@ -4,3 +4,4 @@ mod saha;
 pub mod utils;
 
 mod extends;
+pub use peginator::{ParseError, PegParser};

@@ -1,1 +1,2 @@
-mod escaper;
+#[test]
+fn test() {}

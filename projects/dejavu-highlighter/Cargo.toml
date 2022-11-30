@@ -2,7 +2,7 @@
 name = "dejavu-highlighter"
 version = "0.0.0"
 authors = ["Aster <192607617@qq.com>"]
-description = "..."
+description = "Syntax highlighter for dejavu language"
 repository = "https://github.com/oovm/dejavu-engine"
 documentation = "https://docs.rs/sub_projects"
 readme = "Readme.md"
@@ -10,6 +10,11 @@ license = "MPL-2.0"
 edition = "2021"
 
 [dependencies]
+color-span = "0.1.0"
+
+[dependencies.dejavu-parser]
+#version = "0.1.0"
+path = "../dejavu-parser"
 
 [dev-dependencies]
 

@@ -5,12 +5,53 @@ use core::{
 
 pub mod utils;
 
+/// Write escaped string
+///
+/// # Arguments
+///
+/// * `fmt`:
+/// * `string`:
+///
+/// returns: Result<(), Error>
+///
+/// # Examples
+///
+/// ```
+/// use dejavu_runtime::Escaper;
+/// ```
 pub trait Escaper {
+    /// Write escaped string
+    ///
+    /// # Arguments
+    ///
+    /// * `fmt`:
+    /// * `string`:
+    ///
+    /// returns: Result<(), Error>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use dejavu_runtime::Escaper;
+    /// ```
     fn write_escaped<W>(&self, fmt: W, string: &str) -> Result
     where
         W: Write;
 }
-
+/// Write escaped string
+///
+/// # Arguments
+///
+/// * `fmt`:
+/// * `string`:
+///
+/// returns: Result<(), Error>
+///
+/// # Examples
+///
+/// ```
+/// use dejavu_runtime::Escaper;
+/// ```
 pub struct XmlEscaper;
 
 impl Escaper for XmlEscaper {
@@ -31,7 +72,20 @@ impl Escaper for XmlEscaper {
         Ok(())
     }
 }
-
+/// Write escaped string
+///
+/// # Arguments
+///
+/// * `fmt`:
+/// * `string`:
+///
+/// returns: Result<(), Error>
+///
+/// # Examples
+///
+/// ```
+/// use dejavu_runtime::Escaper;
+/// ```
 pub struct PlainText;
 
 impl Escaper for PlainText {
