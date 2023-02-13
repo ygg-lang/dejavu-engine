@@ -1,4 +1,4 @@
-use dejavu_highlighter::DejavuHighlighter;
+use dejavu_highlighter::{ClassPalette, DejavuHighlighter};
 
 #[test]
 fn ready() {
@@ -7,6 +7,7 @@ fn ready() {
 
 #[test]
 fn test() {
+    let mut allocator = ClassPalette::new("");
     let mut renderer = DejavuHighlighter::default();
-    renderer.render(&include_str!("hello_render.rs.djv"));
+    renderer.render(&include_str!("hello_render.rs.djv"), &mut allocator).unwrap();
 }

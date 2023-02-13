@@ -1,12 +1,13 @@
-use crate::render::HighlightState;
 use dejavu_parser::{SlotFor, SlotIf};
 
-impl HighlightState<'_> {
-    fn visit_for(&self, slot: SlotFor) {
+use crate::render::HighlightState;
+
+impl HighlightState<'_, '_> {
+    pub(super) fn visit_for(&self, slot: SlotFor) {
         todo!()
     }
 
-    fn visit_if(&self, slot: SlotIf) {
+    pub(super) fn visit_if(&self, slot: SlotIf) {
         todo!()
     }
 }
