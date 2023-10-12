@@ -31,19 +31,25 @@ impl YggdrasilParser for DejavuParser {
 pub enum DejavuRule {
     Root,
     Element,
+    TextElements,
+    TEMPLATE_E,
+    TEXT_SPACE,
+    TEXT_WORD,
+    TEMPLATE_L,
+    TEMPLATE_R,
+    SPACE_CONTROL,
     TemplateIf,
     IfBegin,
     IfElse,
     IfElseIf,
     IfEnd,
-    KW_END,
     KW_IF,
-    TEMPLATE_L,
-    TEMPLATE_R,
-    TextElements,
-    TEMPLATE_E,
-    TEXT_SPACE,
-    TEXT_WORD,
+    KW_ELSE,
+    KW_END,
+    Atomic,
+    Number,
+    Identifier,
+    Boolean,
     WhiteSpace,
     /// Label for text literal
     IgnoreText,
@@ -60,19 +66,25 @@ impl YggdrasilRule for DejavuRule {
         match self {
             Self::Root => "",
             Self::Element => "",
+            Self::TextElements => "",
+            Self::TEMPLATE_E => "",
+            Self::TEXT_SPACE => "",
+            Self::TEXT_WORD => "",
+            Self::TEMPLATE_L => "",
+            Self::TEMPLATE_R => "",
+            Self::SPACE_CONTROL => "",
             Self::TemplateIf => "",
             Self::IfBegin => "",
             Self::IfElse => "",
             Self::IfElseIf => "",
             Self::IfEnd => "",
-            Self::KW_END => "",
             Self::KW_IF => "",
-            Self::TEMPLATE_L => "",
-            Self::TEMPLATE_R => "",
-            Self::TextElements => "",
-            Self::TEMPLATE_E => "",
-            Self::TEXT_SPACE => "",
-            Self::TEXT_WORD => "",
+            Self::KW_ELSE => "",
+            Self::KW_END => "",
+            Self::Atomic => "",
+            Self::Number => "",
+            Self::Identifier => "",
+            Self::Boolean => "",
             Self::WhiteSpace => "",
             _ => "",
         }
@@ -89,70 +101,6 @@ pub struct RootNode {
 pub enum ElementNode {
     TemplateIf(TemplateIfNode),
     TextElements(TextElementsNode),
-}
-#[derive(Clone, Debug, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct TemplateIfNode {
-    pub if_begin: IfBeginNode,
-    pub if_end: IfEndNode,
-    pub text_elements: Vec<TextElementsNode>,
-    pub span: Range<u32>,
-}
-#[derive(Clone, Debug, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct IfBeginNode {
-    pub kw_end: KwEndNode,
-    pub kw_if: Option<KwIfNode>,
-    pub template_l: TemplateLNode,
-    pub template_r: TemplateRNode,
-    pub span: Range<u32>,
-}
-#[derive(Clone, Debug, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct IfElseNode {
-    pub kw_end: KwEndNode,
-    pub kw_if: Option<KwIfNode>,
-    pub template_l: TemplateLNode,
-    pub template_r: TemplateRNode,
-    pub span: Range<u32>,
-}
-#[derive(Clone, Debug, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct IfElseIfNode {
-    pub kw_end: KwEndNode,
-    pub kw_if: Option<KwIfNode>,
-    pub template_l: TemplateLNode,
-    pub template_r: TemplateRNode,
-    pub span: Range<u32>,
-}
-#[derive(Clone, Debug, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct IfEndNode {
-    pub kw_end: KwEndNode,
-    pub kw_if: Option<KwIfNode>,
-    pub template_l: TemplateLNode,
-    pub template_r: TemplateRNode,
-    pub span: Range<u32>,
-}
-#[derive(Clone, Debug, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct KwEndNode {
-    pub span: Range<u32>,
-}
-#[derive(Clone, Debug, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct KwIfNode {
-    pub span: Range<u32>,
-}
-#[derive(Clone, Debug, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct TemplateLNode {
-    pub span: Range<u32>,
-}
-#[derive(Clone, Debug, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct TemplateRNode {
-    pub span: Range<u32>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -175,6 +123,107 @@ pub struct TextSpaceNode {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct TextWordNode {
     pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct TemplateLNode {
+    pub space_control: SpaceControlNode,
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct TemplateRNode {
+    pub space_control: SpaceControlNode,
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub enum SpaceControlNode {
+    SpaceControl0,
+    SpaceControl1,
+    SpaceControl2,
+    SpaceControl3,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct TemplateIfNode {
+    pub if_begin: IfBeginNode,
+    pub if_end: IfEndNode,
+    pub text_elements: Vec<TextElementsNode>,
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct IfBeginNode {
+    pub atomic: AtomicNode,
+    pub kw_if: KwIfNode,
+    pub template_l: TemplateLNode,
+    pub template_r: TemplateRNode,
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct IfElseNode {
+    pub kw_else: KwElseNode,
+    pub template_l: TemplateLNode,
+    pub template_r: TemplateRNode,
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct IfElseIfNode {
+    pub kw_else: KwElseNode,
+    pub kw_if: KwIfNode,
+    pub template_l: TemplateLNode,
+    pub template_r: TemplateRNode,
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct IfEndNode {
+    pub kw_end: KwEndNode,
+    pub kw_if: Option<KwIfNode>,
+    pub template_l: TemplateLNode,
+    pub template_r: TemplateRNode,
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct KwIfNode {
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct KwElseNode {
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct KwEndNode {
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub enum AtomicNode {
+    Boolean(BooleanNode),
+    Identifier(IdentifierNode),
+    Number(NumberNode),
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct NumberNode {
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct IdentifierNode {
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub enum BooleanNode {
+    Boolean0,
+    Boolean1,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]

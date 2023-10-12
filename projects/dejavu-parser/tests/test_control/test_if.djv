@@ -1,4 +1,4 @@
 # simple if elements
-<% if %>
+<% if true %>
    if
 <% end if%>

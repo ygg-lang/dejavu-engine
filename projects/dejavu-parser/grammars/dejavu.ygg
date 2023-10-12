@@ -12,41 +12,6 @@ union Element {
     | TemplateIf #TemplateIf
 }
 // === text area === ---------------------------------------------------------------------------------------------------
-atomic class TemplateIf {
-    IfBegin TextElements* IfEnd
-}
-class IfBegin {
-    TEMPLATE_L KW_END KW_IF? TEMPLATE_R
-}
-class IfElse {
-    TEMPLATE_L KW_END KW_IF? TEMPLATE_R
-}
-class IfElseIf {
-    TEMPLATE_L KW_END KW_IF? TEMPLATE_R
-}
-class IfEnd {
-    TEMPLATE_L KW_END KW_IF? TEMPLATE_R
-}
-
-class KW_END {
-    'end'
-}
-class KW_IF {
-    'if'
-}
-
-// === text area === ---------------------------------------------------------------------------------------------------
-@style(operator)
-atomic class TEMPLATE_L {
-    '<%'
-}
-atomic class TEMPLATE_R {
-    '%>'
-}
-
-
-
-// === text area === ---------------------------------------------------------------------------------------------------
 union TextElements {
     | TEMPLATE_E #Escape
     | TEXT_SPACE #TextSpace
@@ -64,7 +29,71 @@ class TEXT_SPACE {
 class TEXT_WORD {
     /[^<\p{White_Space}]+/
 }
+// === template token === ----------------------------------------------------------------------------------------------
+@style(operator)
+atomic class TEMPLATE_L {
+    '<%' SPACE_CONTROL
+}
+atomic class TEMPLATE_R {
+    SPACE_CONTROL '%>'
+}
+union SPACE_CONTROL {
+    | '_'
+    | '-'
+    | '~'
+    | '='
+}
+// === template if === -------------------------------------------------------------------------------------------------
+atomic class TemplateIf {
+    IfBegin TextElements* IfEnd
+}
+class IfBegin {
+    TEMPLATE_L KW_IF Atomic TEMPLATE_R
+}
+class IfElse {
+    TEMPLATE_L KW_ELSE TEMPLATE_R
+}
+class IfElseIf {
+    TEMPLATE_L KW_ELSE KW_IF TEMPLATE_R
+}
+class IfEnd {
+    TEMPLATE_L KW_END KW_IF? TEMPLATE_R
+}
+class KW_IF {
+    'if'
+}
+class KW_ELSE {
+    'else'
+}
+@style(keyword)
+token {
+    KW_IF: 'if'
+    KW_ELSE: 'else'
+}
+// === text area === ---------------------------------------------------------------------------------------------------
+class KW_END {
+    'end'
+}
+// === string === ------------------------------------------------------------------------------------------------------
+union Atomic {
+    | Boolean
+    | Identifier
+    | Number
+}
+// === string === ------------------------------------------------------------------------------------------------------
 
+// === number === ------------------------------------------------------------------------------------------------------
+class Number {
+    /0|[1-9][0-9]/
+}
+// === identifier === --------------------------------------------------------------------------------------------------
+class Identifier {
+    /[_\p{XID_start}][\p{XID_continue}]*/
+}
+union Boolean {
+    | 'true'  #True
+    | 'false' #False
+}
 // === ignores === -----------------------------------------------------------------------------------------------------
 ignore class WhiteSpace {
     /\p{White_Space}+/
