@@ -31,10 +31,20 @@ impl YggdrasilParser for DejavuParser {
 pub enum DejavuRule {
     Root,
     Element,
+    TemplateIf,
+    IfBegin,
+    IfElse,
+    IfElseIf,
+    IfEnd,
+    KW_END,
+    KW_IF,
+    TEMPLATE_L,
+    TEMPLATE_R,
+    TextElements,
     TEMPLATE_E,
     TEXT_SPACE,
     TEXT_WORD,
-    ERROR,
+    WhiteSpace,
     /// Label for text literal
     IgnoreText,
     /// Label for regex literal
@@ -43,17 +53,27 @@ pub enum DejavuRule {
 
 impl YggdrasilRule for DejavuRule {
     fn is_ignore(&self) -> bool {
-        matches!(self, Self::IgnoreText | Self::IgnoreRegex | Self::ERROR)
+        matches!(self, Self::IgnoreText | Self::IgnoreRegex | Self::WhiteSpace)
     }
 
     fn get_style(&self) -> &'static str {
         match self {
             Self::Root => "",
             Self::Element => "",
+            Self::TemplateIf => "",
+            Self::IfBegin => "",
+            Self::IfElse => "",
+            Self::IfElseIf => "",
+            Self::IfEnd => "",
+            Self::KW_END => "",
+            Self::KW_IF => "",
+            Self::TEMPLATE_L => "",
+            Self::TEMPLATE_R => "",
+            Self::TextElements => "",
             Self::TEMPLATE_E => "",
             Self::TEXT_SPACE => "",
             Self::TEXT_WORD => "",
-            Self::ERROR => "",
+            Self::WhiteSpace => "",
             _ => "",
         }
     }
@@ -67,6 +87,76 @@ pub struct RootNode {
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum ElementNode {
+    TemplateIf(TemplateIfNode),
+    TextElements(TextElementsNode),
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct TemplateIfNode {
+    pub if_begin: IfBeginNode,
+    pub if_end: IfEndNode,
+    pub text_elements: Vec<TextElementsNode>,
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct IfBeginNode {
+    pub kw_end: KwEndNode,
+    pub kw_if: Option<KwIfNode>,
+    pub template_l: TemplateLNode,
+    pub template_r: TemplateRNode,
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct IfElseNode {
+    pub kw_end: KwEndNode,
+    pub kw_if: Option<KwIfNode>,
+    pub template_l: TemplateLNode,
+    pub template_r: TemplateRNode,
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct IfElseIfNode {
+    pub kw_end: KwEndNode,
+    pub kw_if: Option<KwIfNode>,
+    pub template_l: TemplateLNode,
+    pub template_r: TemplateRNode,
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct IfEndNode {
+    pub kw_end: KwEndNode,
+    pub kw_if: Option<KwIfNode>,
+    pub template_l: TemplateLNode,
+    pub template_r: TemplateRNode,
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct KwEndNode {
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct KwIfNode {
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct TemplateLNode {
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct TemplateRNode {
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub enum TextElementsNode {
     TemplateE(TemplateENode),
     TextSpace(TextSpaceNode),
     TextWord(TextWordNode),
@@ -88,6 +178,6 @@ pub struct TextWordNode {
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct ErrorNode {
+pub struct WhiteSpaceNode {
     pub span: Range<u32>,
 }

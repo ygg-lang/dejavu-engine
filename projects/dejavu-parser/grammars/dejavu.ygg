@@ -8,16 +8,56 @@ entry class Root {
 
 
 union Element {
+    | TextElements #Text
+    | TemplateIf #TemplateIf
+}
+// === text area === ---------------------------------------------------------------------------------------------------
+atomic class TemplateIf {
+    IfBegin TextElements* IfEnd
+}
+class IfBegin {
+    TEMPLATE_L KW_END KW_IF? TEMPLATE_R
+}
+class IfElse {
+    TEMPLATE_L KW_END KW_IF? TEMPLATE_R
+}
+class IfElseIf {
+    TEMPLATE_L KW_END KW_IF? TEMPLATE_R
+}
+class IfEnd {
+    TEMPLATE_L KW_END KW_IF? TEMPLATE_R
+}
+
+class KW_END {
+    'end'
+}
+class KW_IF {
+    'if'
+}
+
+// === text area === ---------------------------------------------------------------------------------------------------
+@style(operator)
+atomic class TEMPLATE_L {
+    '<%'
+}
+atomic class TEMPLATE_R {
+    '%>'
+}
+
+
+
+// === text area === ---------------------------------------------------------------------------------------------------
+union TextElements {
     | TEMPLATE_E #Escape
     | TEXT_SPACE #TextSpace
     | TEXT_WORD  #TextWord
 }
 
+@style(escape)
 class TEMPLATE_E {
     '<<%'
 }
 
-// === ignores === -----------------------------------------------------------------------------------------------------
 class TEXT_SPACE {
     /\p{White_Space}+/
 }
@@ -26,8 +66,8 @@ class TEXT_WORD {
 }
 
 // === ignores === -----------------------------------------------------------------------------------------------------
-ignore class ERROR {
-    '@@'
+ignore class WhiteSpace {
+    /\p{White_Space}+/
 }
 
 //@style(comment)

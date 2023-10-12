@@ -6,13 +6,8 @@ fn ready() {
     println!("it works!")
 }
 
-#[test]
-fn test_unicode() {
-    let cst = DejavuParser::parse_cst("{int: 1, bool: [true, false]}", DejavuRule::Root).unwrap();
-    println!("Short Form:\n{}", cst);
-    let first = RootNode::from_cst(cst).unwrap();
-    println!("{:#?}", first)
-}
+mod test_control;
+
 
 #[test]
 fn test_ascii() {
