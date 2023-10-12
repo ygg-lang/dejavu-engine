@@ -12,9 +12,9 @@ edition = "2021"
 [dependencies]
 color-span = "0.1.0"
 
-[dependencies.dejavu-parser]
+#[dependencies.dejavu-parser]
 #version = "0.1.0"
-path = "../dejavu-parser"
+#path = "../dejavu-parser"
 
 [dev-dependencies]
 

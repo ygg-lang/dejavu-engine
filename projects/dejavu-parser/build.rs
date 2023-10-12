@@ -1,9 +1,8 @@
-use std::env::current_dir;
-
-use peginator_codegen::Compile;
+use yggdrasil_shared::codegen::RustCodegen;
 
 fn main() {
-    let path = current_dir().unwrap();
-    let output = path.join("src/saha.rs");
-    Compile::file("src/saha.peg").destination(output).format().run().unwrap();
+    let grammars = std::path::Path::new("grammars/").canonicalize().unwrap();
+    let builder = RustCodegen::default();
+    builder.generate(include_str!("grammars/dejavu.ygg"), "src/dejavu").unwrap();
+    println!("cargo:rerun-if-changed={}", grammars.display());
 }

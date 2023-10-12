@@ -1,0 +1,11 @@
+GrammarInfo {
+    url: None,
+    name: YggdrasilIdentifier("Dejavu", 8..13),
+    extensions: [],
+    imports: {},
+    exports: [],
+    ignores: {},
+    rules: {},
+    functions: {},
+    range_type: "usize",
+}

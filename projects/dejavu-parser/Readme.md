@@ -1,30 +1,8 @@
+Title
+=====
 
-## Comment
 
-- surrounded by parentheses `{#` and `#}`
 
-```saha
-{% filter comment %}
-
-comment block
-
-{% end %}
+```shell
+cargo doc --package build_by_script --no-deps --open
 ```
-
-
-
-## Whitespace Control
-
-**Saha Supports `LF` only!**
-
-- `{%=`: Destroy all whitespace on the left
-- `{%-`: Destroy all blank lines on the left
-- `{%_`: Destroy left whitespace, and the first newline encountered
-- `{%!`: destroy left whitespace, but exclude newlines
-
-
-- `=%}`: Destroy all whitespace on the right
-- `-%}`: Destroy all blank lines on the right
-- `_%}`: Destroy right whitespace, and the first newline encountered
-- `!%}`: destroy right whitespace, but exclude newlines
-

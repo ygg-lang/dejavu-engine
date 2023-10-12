@@ -19,19 +19,19 @@ itertools = "0.10.5"
 toml = "0.5.9"
 mime = "0.3.16"
 
-[dependencies.dejavu-parser]
+#[dependencies.dejavu-parser]
 #version = "0.0.0"
-path = "../dejavu-parser"
+#path = "../dejavu-parser"
 
-[dependencies.diagnostic-quick]
+#[dependencies.diagnostic-quick]
 #git = "https://github.com/oovm/diagnostic-rs"
 #rev = "527707f5"
-version = "0.2.3"
-features = ["peginator", "rust_decimal", "globset", "walkdir", "serde", "toml"]
+#version = "0.2.3"
+#features = ["peginator", "rust_decimal", "globset", "walkdir", "serde", "toml"]
 
-[dev-dependencies.dejavu-runtime]
+#[dev-dependencies.dejavu-runtime]
 #version = "0.1.0"
-path = "../dejavu-runtime"
+#path = "../dejavu-runtime"
 
 
 [features]

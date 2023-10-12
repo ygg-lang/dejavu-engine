@@ -1,28 +1,28 @@
 [package]
 name = "dejavu-parser"
 version = "0.1.0"
-authors = ["192607617@qq.com"]
+authors = ["Aster <192607617@qq.com>"]
 description = "Parser of DejaVu Language"
+homepage = "https://github.com/ygg-lang/yggdrasil-rs"
+repository = "https://github.com/ygg-lang/yggdrasil-template/tree/master/projects/build_by_dep"
+documentation = "https://ygg-lang.github.io/yggdrasil-template/build_by_script/struct.Json5Language.html"
+readme = "readme.md"
 license = "MPL-2.0"
-readme = "Readme.md"
-repository = "https://github.com/oovm/dejavu-engine"
-documentation = "https://docs.rs/dejavu-parser"
-exclude = ["/tests/*"]
-edition = "2018"
+edition = "2021"
+exclude = ["package.json", "tests/**"]
 
 [dependencies]
-peginator = "0.6.0"
-unicode-ident = "1.0.5"
-ucd-trie = "0.1.5"
+
+[dependencies.yggdrasil-rt]
+version = "0.0.8"
+path = 'C:\Users\Dell\CLionProjects\yggdrasil.rs\projects\ygg-rt'
 
 [dev-dependencies]
 
-[build-dependencies]
-peginator_codegen  = "0.6.0"
+[build-dependencies.yggdrasil-shared]
+version = "0.2.3"
+path = 'C:\Users\Dell\CLionProjects\yggdrasil.rs\projects\ygg-core'
 
 [features]
 default = []
 
-#json = ["serde_json", "serde_json/preserve_order"]
-#yaml = ["yaml-rust"]
-#hjson = ["serde-hjson"]

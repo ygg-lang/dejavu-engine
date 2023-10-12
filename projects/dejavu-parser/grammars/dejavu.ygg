@@ -1,0 +1,27 @@
+grammar Dejavu {
+file: '*.djv'
+}
+
+class Root {
+    Element*
+}
+
+
+union Element {
+    | TEMPLATE_E #Escape
+}
+
+class TEMPLATE_E {
+    '<<%'
+}
+
+// === ignores === -----------------------------------------------------------------------------------------------------
+
+
+//@style(comment)
+//ignore union Comment {
+//    | @comment_line('//')
+//    | @comment_line('#')
+//    | @comment_block('/*', '*/', nest: false)
+//}
+
