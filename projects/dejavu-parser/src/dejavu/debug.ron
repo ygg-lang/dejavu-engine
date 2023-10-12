@@ -5,7 +5,193 @@ GrammarInfo {
     imports: {},
     exports: [],
     ignores: {},
-    rules: {},
+    rules: {
+        "Root": GrammarRule {
+            name: YggdrasilIdentifier("Root", 46..49),
+            redirect: None,
+            document: "",
+            derives: RuleDerive {
+                derives: {},
+            },
+            atomic: Optimized,
+            auto_inline: false,
+            entry: true,
+            hide: false,
+            ignored: false,
+            body: Class {
+                term: YggdrasilExpression {
+                    tag: None,
+                    remark: false,
+                    body: UnaryExpression {
+                        base: YggdrasilExpression {
+                            tag: Some(
+                                YggdrasilIdentifier("Element", 57..63),
+                            ),
+                            remark: false,
+                            body: RuleReference {
+                                name: YggdrasilIdentifier("Element", 57..63),
+                                boxed: false,
+                                inline: false,
+                            },
+                        },
+                        operators: [
+                            Repeats,
+                        ],
+                    },
+                },
+            },
+            range: 34..66,
+        },
+        "Element": GrammarRule {
+            name: YggdrasilIdentifier("Element", 76..82),
+            redirect: None,
+            document: "",
+            derives: RuleDerive {
+                derives: {},
+            },
+            atomic: Optimized,
+            auto_inline: false,
+            entry: false,
+            hide: false,
+            ignored: false,
+            body: Union {
+                branches: [
+                    YggdrasilExpression {
+                        tag: Some(
+                            YggdrasilIdentifier("TemplateE", 92..101),
+                        ),
+                        remark: false,
+                        body: RuleReference {
+                            name: YggdrasilIdentifier("TEMPLATE_E", 92..101),
+                            boxed: false,
+                            inline: false,
+                        },
+                    },
+                    YggdrasilExpression {
+                        tag: Some(
+                            YggdrasilIdentifier("TextSpace", 117..126),
+                        ),
+                        remark: false,
+                        body: RuleReference {
+                            name: YggdrasilIdentifier("TEXT_SPACE", 117..126),
+                            boxed: false,
+                            inline: false,
+                        },
+                    },
+                    YggdrasilExpression {
+                        tag: Some(
+                            YggdrasilIdentifier("TextWord", 145..153),
+                        ),
+                        remark: false,
+                        body: RuleReference {
+                            name: YggdrasilIdentifier("TEXT_WORD", 145..153),
+                            boxed: false,
+                            inline: false,
+                        },
+                    },
+                ],
+            },
+            range: 70..166,
+        },
+        "TEMPLATE_E": GrammarRule {
+            name: YggdrasilIdentifier("TEMPLATE_E", 175..184),
+            redirect: None,
+            document: "",
+            derives: RuleDerive {
+                derives: {},
+            },
+            atomic: Optimized,
+            auto_inline: false,
+            entry: false,
+            hide: false,
+            ignored: false,
+            body: Class {
+                term: YggdrasilExpression {
+                    tag: None,
+                    remark: false,
+                    body: YggdrasilText {
+                        text: "<<%",
+                        insensitive: false,
+                        range: 192..196,
+                    },
+                },
+            },
+            range: 169..198,
+        },
+        "TEXT_SPACE": GrammarRule {
+            name: YggdrasilIdentifier("TEXT_SPACE", 328..337),
+            redirect: None,
+            document: "",
+            derives: RuleDerive {
+                derives: {},
+            },
+            atomic: Optimized,
+            auto_inline: false,
+            entry: false,
+            hide: false,
+            ignored: false,
+            body: Class {
+                term: YggdrasilExpression {
+                    tag: None,
+                    remark: false,
+                    body: YggdrasilRegex {
+                        raw: "\\p{White_Space}+",
+                        span: 345..362,
+                    },
+                },
+            },
+            range: 322..364,
+        },
+        "TEXT_WORD": GrammarRule {
+            name: YggdrasilIdentifier("TEXT_WORD", 372..380),
+            redirect: None,
+            document: "",
+            derives: RuleDerive {
+                derives: {},
+            },
+            atomic: Optimized,
+            auto_inline: false,
+            entry: false,
+            hide: false,
+            ignored: false,
+            body: Class {
+                term: YggdrasilExpression {
+                    tag: None,
+                    remark: false,
+                    body: YggdrasilRegex {
+                        raw: "[^<\\p{White_Space}]+",
+                        span: 388..409,
+                    },
+                },
+            },
+            range: 366..411,
+        },
+        "ERROR": GrammarRule {
+            name: YggdrasilIdentifier("ERROR", 548..552),
+            redirect: None,
+            document: "",
+            derives: RuleDerive {
+                derives: {},
+            },
+            atomic: Optimized,
+            auto_inline: false,
+            entry: false,
+            hide: false,
+            ignored: true,
+            body: Class {
+                term: YggdrasilExpression {
+                    tag: None,
+                    remark: false,
+                    body: YggdrasilText {
+                        text: "@@",
+                        insensitive: false,
+                        range: 560..563,
+                    },
+                },
+            },
+            range: 535..565,
+        },
+    },
     functions: {},
     range_type: "usize",
 }

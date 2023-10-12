@@ -29,6 +29,12 @@ impl YggdrasilParser for DejavuParser {
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Ord, PartialOrd, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum DejavuRule {
+    Root,
+    Element,
+    TEMPLATE_E,
+    TEXT_SPACE,
+    TEXT_WORD,
+    ERROR,
     /// Label for text literal
     IgnoreText,
     /// Label for regex literal
@@ -37,12 +43,51 @@ pub enum DejavuRule {
 
 impl YggdrasilRule for DejavuRule {
     fn is_ignore(&self) -> bool {
-        matches!(self, Self::IgnoreText | Self::IgnoreRegex)
+        matches!(self, Self::IgnoreText | Self::IgnoreRegex | Self::ERROR)
     }
 
     fn get_style(&self) -> &'static str {
         match self {
+            Self::Root => "",
+            Self::Element => "",
+            Self::TEMPLATE_E => "",
+            Self::TEXT_SPACE => "",
+            Self::TEXT_WORD => "",
+            Self::ERROR => "",
             _ => "",
         }
     }
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct RootNode {
+    pub element: Vec<ElementNode>,
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub enum ElementNode {
+    TemplateE(TemplateENode),
+    TextSpace(TextSpaceNode),
+    TextWord(TextWordNode),
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct TemplateENode {
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct TextSpaceNode {
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct TextWordNode {
+    pub span: Range<u32>,
+}
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct ErrorNode {
+    pub span: Range<u32>,
 }

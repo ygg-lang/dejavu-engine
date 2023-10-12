@@ -5,5 +5,5 @@
 #![doc(html_favicon_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 
 pub use yggdrasil_rt::{YggdrasilNode, YggdrasilParser};
-pub mod dejavu;
 
+pub mod dejavu;

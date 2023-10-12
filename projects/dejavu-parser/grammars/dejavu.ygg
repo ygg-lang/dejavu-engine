@@ -2,13 +2,15 @@ grammar Dejavu {
 file: '*.djv'
 }
 
-class Root {
+entry class Root {
     Element*
 }
 
 
 union Element {
     | TEMPLATE_E #Escape
+    | TEXT_SPACE #TextSpace
+    | TEXT_WORD  #TextWord
 }
 
 class TEMPLATE_E {
@@ -16,7 +18,17 @@ class TEMPLATE_E {
 }
 
 // === ignores === -----------------------------------------------------------------------------------------------------
+class TEXT_SPACE {
+    /\p{White_Space}+/
+}
+class TEXT_WORD {
+    /[^<\p{White_Space}]+/
+}
 
+// === ignores === -----------------------------------------------------------------------------------------------------
+ignore class ERROR {
+    '@@'
+}
 
 //@style(comment)
 //ignore union Comment {

@@ -1,4 +1,116 @@
-<svg class="railroad" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg class="railroad" viewBox="0 0 451 242" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <style type="text/css">svg.railroad{background-color:hsl(30,20%,95%);background-size:15px 15px;background-image:linear-gradient(to right,rgba(30,30,30,.05) 1px,transparent 1px),linear-gradient(to bottom,rgba(30,30,30,.05) 1px,transparent 1px);}svg.railroad path{stroke-width:3px;stroke:black;fill:transparent;}svg.railroad .debug{stroke-width:1px;stroke:red;}svg.railroad text{font-size:14px;font-family:monospace;text-anchor:middle;}svg.railroad .nonterminal text{font-weight:bold;}svg.railroad text.comment{font-family:serif;font-style:italic;font-size:12px;}svg.railroad rect{stroke-width:3px;stroke:black;}svg.railroad g.labeledbox>rect{stroke-width:1px;stroke:grey;stroke-dasharray:5px;fill:rgba(90,90,150,.1);}svg.railroad .symbol>rect{fill:rgba(90,90,150,.1);}svg.railroad .regex>rect{fill:honeydew;}svg.railroad .string>rect{fill:cornsilk;}svg.railroad .character>rect{fill:lightcoral;}</style>
-<g class="verticalgrid"/>
+<g class="verticalgrid">
+<g class="sequence">
+<path d=" M 10 21 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5 m 10 0 h 5"/>
+<text class="comment" id="Root" x="54" y="26">
+Root</text>
+<g class="repeat">
+<path d=" M 83 21 h 12 m 76 0 h 12 m -12 0 a 12 12 0 0 1 12 12 v 7 a 12 12 0 0 1 -12 12 m -17 0 h -59 m 32 0 l 5 -5 m 0 10 l -5 -5 m -32 0 a 12 12 0 0 1 -12 -12 v -7 a 12 12 0 0 1 12 -12"/>
+<text class="comment" x="162" y="57">
+*</text>
+<a class="link" xlink:href="#Element">
+<g class="symbol">
+<rect height="22" width="76" x="95" y="10"/>
+<text x="133" y="26">
+Element</text>
+</g>
+</a>
+</g>
+<path d=" M 193 21 h 5 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5"/>
+<path d=" M 25 21 h 10"/>
+<path d=" M 73 21 h 10"/>
+<path d=" M 183 21 h 10"/>
+</g>
+<g class="sequence">
+<path d=" M 10 85 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5 m 10 0 h 5"/>
+<text class="comment" id="Element" x="64" y="90">
+Element</text>
+<g class="sequence">
+<a class="link" xlink:href="#TEMPLATE_E">
+<g class="symbol">
+<rect height="22" width="100" x="104" y="74"/>
+<text x="154" y="90">
+TEMPLATE_E</text>
+</g>
+</a>
+<a class="link" xlink:href="#TEXT_SPACE">
+<g class="symbol">
+<rect height="22" width="100" x="214" y="74"/>
+<text x="264" y="90">
+TEXT_SPACE</text>
+</g>
+</a>
+<a class="link" xlink:href="#TEXT_WORD">
+<g class="symbol">
+<rect height="22" width="92" x="324" y="74"/>
+<text x="370" y="90">
+TEXT_WORD</text>
+</g>
+</a>
+<path d=" M 204 85 h 10"/>
+<path d=" M 314 85 h 10"/>
+</g>
+<path d=" M 426 85 h 5 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5"/>
+<path d=" M 25 85 h 10"/>
+<path d=" M 94 85 h 10"/>
+<path d=" M 416 85 h 10"/>
+</g>
+<g class="sequence">
+<path d=" M 10 119 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5 m 10 0 h 5"/>
+<text class="comment" id="TEMPLATE_E" x="75" y="124">
+TEMPLATE_E</text>
+<g class="string">
+<rect height="22" rx="10" ry="10" width="44" x="125" y="108"/>
+<text x="147" y="124">
+&lt;&lt;%</text>
+</g>
+<path d=" M 179 119 h 5 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5"/>
+<path d=" M 25 119 h 10"/>
+<path d=" M 115 119 h 10"/>
+<path d=" M 169 119 h 10"/>
+</g>
+<g class="sequence">
+<path d=" M 10 153 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5 m 10 0 h 5"/>
+<text class="comment" id="TEXT_SPACE" x="75" y="158">
+TEXT_SPACE</text>
+<g class="string">
+<rect height="22" rx="10" ry="10" width="148" x="125" y="142"/>
+<text x="199" y="158">
+\p{White_Space}+</text>
+</g>
+<path d=" M 283 153 h 5 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5"/>
+<path d=" M 25 153 h 10"/>
+<path d=" M 115 153 h 10"/>
+<path d=" M 273 153 h 10"/>
+</g>
+<g class="sequence">
+<path d=" M 10 187 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5 m 10 0 h 5"/>
+<text class="comment" id="TEXT_WORD" x="71" y="192">
+TEXT_WORD</text>
+<g class="string">
+<rect height="22" rx="10" ry="10" width="188" x="118" y="176"/>
+<text x="212" y="192">
+[^&lt;\p{White_Space}]+</text>
+</g>
+<path d=" M 316 187 h 5 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5"/>
+<path d=" M 25 187 h 10"/>
+<path d=" M 108 187 h 10"/>
+<path d=" M 306 187 h 10"/>
+</g>
+<g class="sequence">
+<path d=" M 10 221 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5 m 10 0 h 5"/>
+<text class="comment" id="ERROR" x="57" y="226">
+ERROR</text>
+<g class="string">
+<rect height="22" rx="10" ry="10" width="36" x="90" y="210"/>
+<text x="108" y="226">
+@@</text>
+</g>
+<path d=" M 136 221 h 5 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5"/>
+<path d=" M 25 221 h 10"/>
+<path d=" M 80 221 h 10"/>
+<path d=" M 126 221 h 10"/>
+</g>
+</g>
 </svg>
