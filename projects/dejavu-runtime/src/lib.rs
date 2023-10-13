@@ -1,15 +1,7 @@
-pub use anyhow::{Error, Result};
+#![no_std]
 
-pub use self::{
-    escaper::{
-        utils::{escape, TemplateDisplay},
-        Escaper, PlainText, XmlEscaper,
-    },
-    looper::{ForLooper, Looper},
-    traits::Template,
-};
+mod display;
+pub mod escaper;
+pub mod looper;
 
-mod escaper;
-mod for_3rd;
-mod looper;
-mod traits;
+pub use crate::display::{EscapeDisplay, Escaper};

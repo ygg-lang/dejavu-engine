@@ -4,21 +4,15 @@ version = "0.1.0"
 authors = ["192607617@qq.com"]
 description = "DejaVu shared types and runtime"
 license = "MPL-2.0"
-readme = "Readme.md"
+readme = "readme.md"
 repository = "https://github.com/oovm/dejavu-engine"
 documentation = "https://docs.rs/dejavu-runtime"
 exclude = ["/tests/*"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
-serde_json = { version = "1.0.89", optional = true }
-anyhow = "1.0.66"
 
 [dev-dependencies]
 
 [features]
-default = ["std"]
-std = ["serde_json/std"]
-json = ["serde_json", "serde_json/preserve_order"]
-#yaml = ["yaml-rust"]
-#hjson = ["serde-hjson"]
+default = []

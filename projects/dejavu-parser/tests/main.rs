@@ -1,4 +1,5 @@
-use dejavu_parser::dejavu::{DejavuParser, DejavuRule, RootNode};
+use dejavu_parser::dejavu::{NexusParser, NexusRule, RootNode};
+use std::fmt::Formatter;
 use yggdrasil_rt::{YggdrasilNode, YggdrasilParser};
 
 #[test]
@@ -11,7 +12,7 @@ mod test_control;
 
 #[test]
 fn test_ascii() {
-    let cst = DejavuParser::parse_cst("[true, false, 1, 2, null]", DejavuRule::Root).unwrap();
+    let cst = NexusParser::parse_cst("[true, false, 1, 2, null]", NexusRule::Root).unwrap();
     println!("Short Form:\n{}", cst);
     let first = RootNode::from_cst(cst).unwrap();
     println!("{:#?}", first)

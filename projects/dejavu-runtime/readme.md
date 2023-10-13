@@ -17,7 +17,7 @@ comment block
 
 **DejaVu Supports `LF` only!**
 
-- `{%=`: Destroy all whitespace on the left
+- `{%.`: Destroy all whitespace on the left
 - `{%-`: Destroy all blank lines on the left
 - `{%_`: Destroy left whitespace, and the first newline encountered
 - `{%!`: destroy left whitespace, but exclude newlines

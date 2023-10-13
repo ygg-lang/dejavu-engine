@@ -1,4 +1,4 @@
-grammar Dejavu {
+grammar Nexus {
 file: '*.djv'
 }
 
@@ -32,10 +32,10 @@ class TEXT_WORD {
 // === template token === ----------------------------------------------------------------------------------------------
 @style(operator)
 atomic class TEMPLATE_L {
-    '<%' SPACE_CONTROL
+    '<%' SPACE_CONTROL?
 }
 atomic class TEMPLATE_R {
-    SPACE_CONTROL '%>'
+    SPACE_CONTROL? '%>'
 }
 union SPACE_CONTROL {
     | '_' #A

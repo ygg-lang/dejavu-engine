@@ -6,21 +6,22 @@
 mod parse_ast;
 mod parse_cst;
 
+use core::str::FromStr;
 use std::{borrow::Cow, ops::Range, sync::OnceLock};
 use yggdrasil_rt::*;
 
-type Input<'i> = Box<State<'i, DejavuRule>>;
-type Output<'i> = Result<Box<State<'i, DejavuRule>>, Box<State<'i, DejavuRule>>>;
+type Input<'i> = Box<State<'i, NexusRule>>;
+type Output<'i> = Result<Box<State<'i, NexusRule>>, Box<State<'i, NexusRule>>>;
 
 #[doc = include_str!("railway.min.svg")]
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Default, PartialEq, Eq, Ord, PartialOrd, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct DejavuParser {}
+pub struct NexusParser {}
 
-impl YggdrasilParser for DejavuParser {
-    type Rule = DejavuRule;
-    fn parse_cst(input: &str, rule: Self::Rule) -> OutputResult<DejavuRule> {
+impl YggdrasilParser for NexusParser {
+    type Rule = NexusRule;
+    fn parse_cst(input: &str, rule: Self::Rule) -> OutputResult<NexusRule> {
         self::parse_cst::parse_cst(input, rule)
     }
 }
@@ -28,7 +29,7 @@ impl YggdrasilParser for DejavuParser {
 #[repr(u32)]
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Ord, PartialOrd, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum DejavuRule {
+pub enum NexusRule {
     Root,
     Element,
     TextElements,
@@ -67,7 +68,7 @@ pub enum DejavuRule {
     IgnoreRegex,
 }
 
-impl YggdrasilRule for DejavuRule {
+impl YggdrasilRule for NexusRule {
     fn is_ignore(&self) -> bool {
         matches!(self, Self::IgnoreText | Self::IgnoreRegex | Self::WhiteSpace)
     }
@@ -148,13 +149,13 @@ pub struct TextWordNode {
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct TemplateLNode {
-    pub space_control: SpaceControlNode,
+    pub space_control: Option<SpaceControlNode>,
     pub span: Range<u32>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct TemplateRNode {
-    pub space_control: SpaceControlNode,
+    pub space_control: Option<SpaceControlNode>,
     pub span: Range<u32>,
 }
 #[derive(Clone, Debug, Hash)]
@@ -165,61 +166,44 @@ pub enum SpaceControlNode {
     SpaceControl2,
     SpaceControl3,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct KwEndNode {
     pub span: Range<u32>,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct TemplateExportNode {
-    pub export_item: Vec<ExportItemNode>,
-    pub template_l: TemplateLNode,
-    pub template_r: TemplateRNode,
     pub span: Range<u32>,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ExportItemNode {
-    pub identifier: IdentifierNode,
-    pub kw_by: Vec<KwByNode>,
-    pub kw_class: KwClassNode,
-    pub kw_export: KwExportNode,
-    pub kw_to: KwToNode,
-    pub kw_trait: KwTraitNode,
-    pub namepath_free: Option<NamepathFreeNode>,
     pub class: NamepathFreeNode,
     pub language: IdentifierNode,
+    pub r#trait: Option<NamepathFreeNode>,
     pub span: Range<u32>,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct KwExportNode {
     pub span: Range<u32>,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct KwClassNode {
     pub span: Range<u32>,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct KwTraitNode {
     pub span: Range<u32>,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct KwToNode {
     pub span: Range<u32>,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct KwByNode {
@@ -236,39 +220,24 @@ pub struct TemplateIfNode {
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct IfBeginNode {
-    pub atomic: AtomicNode,
-    pub kw_if: KwIfNode,
-    pub template_l: TemplateLNode,
-    pub template_r: TemplateRNode,
-    pub text_elements: Vec<TextElementsNode>,
+    pub text: Vec<TextElementsNode>,
     pub span: Range<u32>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct IfElseNode {
-    pub kw_else: KwElseNode,
-    pub template_l: TemplateLNode,
-    pub template_r: TemplateRNode,
-    pub text_elements: Vec<TextElementsNode>,
+    pub text: Vec<TextElementsNode>,
     pub span: Range<u32>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct IfElseIfNode {
-    pub kw_else: KwElseNode,
-    pub kw_if: KwIfNode,
-    pub template_l: TemplateLNode,
-    pub template_r: TemplateRNode,
-    pub text_elements: Vec<TextElementsNode>,
+    pub text: Vec<TextElementsNode>,
     pub span: Range<u32>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct IfEndNode {
-    pub kw_end: KwEndNode,
-    pub kw_if: Option<KwIfNode>,
-    pub template_l: TemplateLNode,
-    pub template_r: TemplateRNode,
     pub span: Range<u32>,
 }
 #[derive(Clone, Debug, Hash)]
@@ -288,7 +257,6 @@ pub enum AtomicNode {
     Identifier(IdentifierNode),
     Number(NumberNode),
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum StringNode {
@@ -300,14 +268,12 @@ pub enum StringNode {
 pub struct NumberNode {
     pub span: Range<u32>,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct NamepathFreeNode {
     pub identifier: Vec<IdentifierNode>,
     pub span: Range<u32>,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct NamepathNode {
