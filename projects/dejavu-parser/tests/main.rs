@@ -1,13 +1,13 @@
-use yggdrasil_rt::{YggdrasilNode, YggdrasilParser};
 use dejavu_parser::dejavu::{DejavuParser, DejavuRule, RootNode};
+use yggdrasil_rt::{YggdrasilNode, YggdrasilParser};
 
 #[test]
 fn ready() {
     println!("it works!")
 }
 
+mod test_class;
 mod test_control;
-
 
 #[test]
 fn test_ascii() {

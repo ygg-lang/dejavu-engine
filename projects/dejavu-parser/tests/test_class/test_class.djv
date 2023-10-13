@@ -1,0 +1,5 @@
+<%
+    export function_name in rust by class A by trait A
+    export method_name in rust by class writer::Rust by trait TraitName
+%>
+

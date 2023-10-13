@@ -6,10 +6,10 @@ entry class Root {
     Element*
 }
 
-
 union Element {
-    | TextElements #Text
-    | TemplateIf #TemplateIf
+    | TextElements   #Text
+    | TemplateExport #Export
+    | TemplateIf     #If
 }
 // === text area === ---------------------------------------------------------------------------------------------------
 union TextElements {
@@ -38,32 +38,48 @@ atomic class TEMPLATE_R {
     SPACE_CONTROL '%>'
 }
 union SPACE_CONTROL {
-    | '_'
-    | '-'
-    | '~'
-    | '='
+    | '_' #A
+    | '-' #B
+    | '~' #C
+    | '=' #D
+}
+@style(keyword)
+token {
+    KW_END: 'end'
+}
+// === template export === -------------------------------------------------------------------------------------------------
+class TemplateExport ^ {
+    TEMPLATE_L exports:ExportItem* TEMPLATE_R
+}
+class ExportItem ^ {
+    KW_EXPORT name:Identifier
+    (KW_TO language:Identifier)?
+    (KW_BY KW_CLASS class:NamepathFree)?
+    (KW_BY KW_TRAIT trait:NamepathFree?)?
+}
+@style(keyword)
+token {
+    KW_EXPORT: 'export'
+    KW_CLASS: 'class'
+    KW_TRAIT: 'trait'
+    KW_TO: 'to'
+    KW_BY: 'by'
 }
 // === template if === -------------------------------------------------------------------------------------------------
 atomic class TemplateIf {
-    IfBegin TextElements* IfEnd
+    IfBegin IfElseIf* IfElse? ^IfEnd
 }
-class IfBegin {
-    TEMPLATE_L KW_IF Atomic TEMPLATE_R
+atomic class IfBegin ^ {
+    TEMPLATE_L ~ KW_IF ~ condition:Atomic ~ TEMPLATE_R text:TextElements*
 }
-class IfElse {
-    TEMPLATE_L KW_ELSE TEMPLATE_R
+atomic class IfElse ^ {
+    TEMPLATE_L ~ KW_ELSE ~ TEMPLATE_R text:TextElements*
 }
-class IfElseIf {
-    TEMPLATE_L KW_ELSE KW_IF TEMPLATE_R
+atomic class IfElseIf ^ {
+    TEMPLATE_L ~ KW_ELSE ~ KW_IF ~ TEMPLATE_R text:TextElements*
 }
-class IfEnd {
-    TEMPLATE_L KW_END KW_IF? TEMPLATE_R
-}
-class KW_IF {
-    'if'
-}
-class KW_ELSE {
-    'else'
+atomic class IfEnd ^ {
+    TEMPLATE_L ~ KW_END ~ KW_IF? ~ TEMPLATE_R
 }
 @style(keyword)
 token {
@@ -71,9 +87,7 @@ token {
     KW_ELSE: 'else'
 }
 // === text area === ---------------------------------------------------------------------------------------------------
-class KW_END {
-    'end'
-}
+
 // === string === ------------------------------------------------------------------------------------------------------
 union Atomic {
     | Boolean
@@ -81,14 +95,23 @@ union Atomic {
     | Number
 }
 // === string === ------------------------------------------------------------------------------------------------------
-
+union String {
+    | '"' '"' #SingleQuote
+    | "'" "'" #DoubleQuote
+}
 // === number === ------------------------------------------------------------------------------------------------------
 class Number {
     /0|[1-9][0-9]/
 }
 // === identifier === --------------------------------------------------------------------------------------------------
+class NamepathFree -> Namepath {
+    Identifier (('.' | '::') Identifier)*
+}
+class Namepath {
+    Identifier ('::' Identifier)*
+}
 class Identifier {
-    /[_\p{XID_start}][\p{XID_continue}]*/
+    /[_\p{XID_start}]\p{XID_continue}*/
 }
 union Boolean {
     | 'true'  #True
