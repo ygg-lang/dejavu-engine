@@ -1,18 +1,14 @@
 use crate::{
     dejavu::{RootNode, TemplateIfNode, TextElementNode},
-    utils::take_control_r,
+    utils::{take_control_r, take_elements},
 };
 use dejavu_ir::hir::{DejavuBranches, DejavuRoot, DejavuStatement, DejavuTextTrim};
-use crate::utils::take_elements;
 
 mod conditional;
 
 impl RootNode {
     pub fn as_hir(&self) -> DejavuRoot {
-        DejavuRoot {
-            statements: take_elements(&self.element, DejavuTextTrim::Nothing),
-        }
-
+        take_elements(&self.element)
     }
 }
 

@@ -1,4 +1,4 @@
-use crate::dejavu::{ElementNode, SpaceControlNode, TextElementNode};
+use crate::dejavu::{ElementNode, SpaceControlNode, TemplateLNode, TemplateRNode, TextElementNode};
 use dejavu_ir::hir::{DejavuRoot, DejavuStatement, DejavuText, DejavuTextTrim};
 
 pub fn take_elements(s: &[ElementNode]) -> DejavuRoot {
@@ -49,25 +49,17 @@ impl SpaceControlNode {
     }
 }
 
-pub fn take_control_l(o: Option<SpaceControlNode>, statement: bool) -> DejavuTextTrim {
-    match o {
-        Some(SpaceControlNode::SpaceControl0) => DejavuTextTrim::Nothing,
-        Some(SpaceControlNode::SpaceControl1) => DejavuTextTrim::UntilLineBreak,
-        Some(SpaceControlNode::SpaceControl2) => DejavuTextTrim::RecentLineBreak,
-        Some(SpaceControlNode::SpaceControl3) => DejavuTextTrim::FurthestLineBreak,
-        Some(SpaceControlNode::SpaceControl4) => DejavuTextTrim::AllLineBreaks,
+pub fn take_control_l(o: &TemplateLNode, statement: bool) -> DejavuTextTrim {
+    match &o.space_control {
+        Some(s) => s.as_hir(),
         None if statement => DejavuTextTrim::RecentLineBreak,
         None => DejavuTextTrim::Nothing,
     }
 }
 
-pub fn take_control_r(o: Option<SpaceControlNode>, statement: bool) -> DejavuTextTrim {
-    match o {
-        Some(SpaceControlNode::SpaceControl0) => DejavuTextTrim::Nothing,
-        Some(SpaceControlNode::SpaceControl1) => DejavuTextTrim::UntilLineBreak,
-        Some(SpaceControlNode::SpaceControl2) => DejavuTextTrim::RecentLineBreak,
-        Some(SpaceControlNode::SpaceControl3) => DejavuTextTrim::FurthestLineBreak,
-        Some(SpaceControlNode::SpaceControl4) => DejavuTextTrim::AllLineBreaks,
+pub fn take_control_r(o: &TemplateRNode, statement: bool) -> DejavuTextTrim {
+    match &o.space_control {
+        Some(s) => s.as_hir(),
         None if statement => DejavuTextTrim::UntilLineBreak,
         None => DejavuTextTrim::Nothing,
     }

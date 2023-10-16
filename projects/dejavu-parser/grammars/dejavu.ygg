@@ -7,9 +7,10 @@ entry class Root {
 }
 
 union Element {
-    | TextMany   #Text
+    | TextMany       #Text
     | TemplateExport #Export
     | TemplateIf     #If
+    | TemplateFor    #For
 }
 // === text area === ---------------------------------------------------------------------------------------------------
 class TextMany {
@@ -87,6 +88,23 @@ TEMPLATE_L ~ ^KW_END ~ ^KW_IF? ~ TEMPLATE_R
 token {
 KW_IF: 'if'
 KW_ELSE: 'else'
+}
+// === template for === ------------------------------------------------------------------------------------------------
+atomic class TemplateFor {
+IfBegin ForElse? ForEnd
+}
+atomic class IfBegin {
+TEMPLATE_L ~ ^KW_FOR ~ condition:Expression ~ TEMPLATE_R body:Element*
+}
+atomic class ForElse {
+TEMPLATE_L ~ ^KW_ELSE ~ TEMPLATE_R body:Element*
+}
+atomic class ForEnd {
+TEMPLATE_L ~ ^KW_END ~ ^KW_FOR? ~ TEMPLATE_R
+}
+@style(keyword)
+token {
+KW_FOR: 'for'
 }
 // === text area === ---------------------------------------------------------------------------------------------------
 class Expression {
