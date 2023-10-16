@@ -5,7 +5,7 @@ pub(super) fn parse_cst(input: &str, rule: NexusRule) -> OutputResult<NexusRule>
         NexusRule::Root => parse_root(state),
         NexusRule::Element => parse_element(state),
         NexusRule::TextMany => parse_text_many(state),
-        NexusRule::TextElements => parse_text_elements(state),
+        NexusRule::TextElement => parse_text_element(state),
         NexusRule::TEMPLATE_E => parse_template_e(state),
         NexusRule::TEXT_SPACE => parse_text_space(state),
         NexusRule::TEXT_WORD => parse_text_word(state),
@@ -61,12 +61,12 @@ fn parse_element(state: Input) -> Output {
 #[inline]
 fn parse_text_many(state: Input) -> Output {
     state.rule(NexusRule::TextMany, |s| {
-        s.repeat(1..4294967295, |s| parse_text_elements(s).and_then(|s| s.tag_node("text_elements")))
+        s.repeat(1..4294967295, |s| parse_text_element(s).and_then(|s| s.tag_node("text_element")))
     })
 }
 #[inline]
-fn parse_text_elements(state: Input) -> Output {
-    state.rule(NexusRule::TextElements, |s| {
+fn parse_text_element(state: Input) -> Output {
+    state.rule(NexusRule::TextElement, |s| {
         Err(s)
             .or_else(|s| parse_template_e(s).and_then(|s| s.tag_node("template_e")))
             .or_else(|s| parse_text_space(s).and_then(|s| s.tag_node("text_space")))
@@ -265,8 +265,8 @@ fn parse_if_begin(state: Input) -> Output {
                                 })
                             })
                             .and_then(|s| {
-                                s.repeat(0..4294967295, |s| parse_text_elements(s).and_then(|s| s.tag_node("text_elements")))
-                                    .and_then(|s| s.tag_node("text"))
+                                s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element")))
+                                    .and_then(|s| s.tag_node("body"))
                             })
                     })
                     .and_then(|s| s.tag_node("condition"))
@@ -290,8 +290,8 @@ fn parse_if_else(state: Input) -> Output {
                     })
                 })
                 .and_then(|s| {
-                    s.repeat(0..4294967295, |s| parse_text_elements(s).and_then(|s| s.tag_node("text_elements")))
-                        .and_then(|s| s.tag_node("text"))
+                    s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element")))
+                        .and_then(|s| s.tag_node("body"))
                 })
         })
     })
@@ -324,8 +324,8 @@ fn parse_if_else_if(state: Input) -> Output {
                                 })
                             })
                             .and_then(|s| {
-                                s.repeat(0..4294967295, |s| parse_text_elements(s).and_then(|s| s.tag_node("text_elements")))
-                                    .and_then(|s| s.tag_node("text"))
+                                s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element")))
+                                    .and_then(|s| s.tag_node("body"))
                             })
                     })
                     .and_then(|s| s.tag_node("condition"))

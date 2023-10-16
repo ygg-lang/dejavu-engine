@@ -8,4 +8,5 @@ pub use yggdrasil_rt::{YggdrasilNode, YggdrasilParser};
 
 pub mod dejavu;
 
+mod utils;
 mod visitor;

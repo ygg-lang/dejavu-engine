@@ -13,9 +13,9 @@ union Element {
 }
 // === text area === ---------------------------------------------------------------------------------------------------
 class TextMany {
-    TextElements+
+    TextElement+
 }
-union TextElements {
+union TextElement {
     | TEMPLATE_E #Escape
     | TEXT_SPACE #TextSpace
     | TEXT_WORD  #TextWord
@@ -72,13 +72,13 @@ atomic class TemplateIf {
 IfBegin IfElseIf* IfElse? IfEnd
 }
 atomic class IfBegin {
-TEMPLATE_L ~ ^KW_IF ~ condition:Expression ~ TEMPLATE_R text:TextElements*
+TEMPLATE_L ~ ^KW_IF ~ condition:Expression ~ TEMPLATE_R body:Element*
 }
 atomic class IfElse {
-TEMPLATE_L ~ ^KW_ELSE ~ TEMPLATE_R text:TextElements*
+TEMPLATE_L ~ ^KW_ELSE ~ TEMPLATE_R body:Element*
 }
 atomic class IfElseIf {
-TEMPLATE_L ~ ^KW_ELSE ~ ^KW_IF ~ condition:Expression ~ TEMPLATE_R text:TextElements*
+TEMPLATE_L ~ ^KW_ELSE ~ ^KW_IF ~ condition:Expression ~ TEMPLATE_R body:Element*
 }
 atomic class IfEnd {
 TEMPLATE_L ~ ^KW_END ~ ^KW_IF? ~ TEMPLATE_R

@@ -3,8 +3,8 @@
 #![allow(clippy::unnecessary_cast)]
 #![doc = include_str!("readme.md")]
 
-mod parse_ast;
 mod parse_cst;
+mod parse_ast;
 
 use core::str::FromStr;
 use std::{borrow::Cow, ops::Range, sync::OnceLock};
@@ -33,7 +33,7 @@ pub enum NexusRule {
     Root,
     Element,
     TextMany,
-    TextElements,
+    TextElement,
     TEMPLATE_E,
     TEXT_SPACE,
     TEXT_WORD,
@@ -85,7 +85,7 @@ impl YggdrasilRule for NexusRule {
             Self::Root => "",
             Self::Element => "",
             Self::TextMany => "",
-            Self::TextElements => "",
+            Self::TextElement => "",
             Self::TEMPLATE_E => "",
             Self::TEXT_SPACE => "",
             Self::TEXT_WORD => "",
@@ -141,12 +141,12 @@ pub enum ElementNode {
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct TextManyNode {
-    pub text_elements: Vec<TextElementsNode>,
+    pub text_element: Vec<TextElementNode>,
     pub span: Range<u32>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum TextElementsNode {
+pub enum TextElementNode {
     TemplateE(TemplateENode),
     TextSpace(TextSpaceNode),
     TextWord(TextWordNode),
@@ -244,27 +244,27 @@ pub struct TemplateIfNode {
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct IfBeginNode {
+    pub element: Vec<ElementNode>,
     pub expression: ExpressionNode,
     pub template_l: TemplateLNode,
     pub template_r: TemplateRNode,
-    pub text_elements: Vec<TextElementsNode>,
     pub span: Range<u32>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct IfElseNode {
+    pub element: Vec<ElementNode>,
     pub template_l: TemplateLNode,
     pub template_r: TemplateRNode,
-    pub text_elements: Vec<TextElementsNode>,
     pub span: Range<u32>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct IfElseIfNode {
+    pub element: Vec<ElementNode>,
     pub expression: ExpressionNode,
     pub template_l: TemplateLNode,
     pub template_r: TemplateRNode,
-    pub text_elements: Vec<TextElementsNode>,
     pub span: Range<u32>,
 }
 #[derive(Clone, Debug, Hash)]

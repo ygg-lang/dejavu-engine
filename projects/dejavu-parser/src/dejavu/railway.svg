@@ -129,60 +129,61 @@ TemplateIf</text>
         TextMany
     </text>
     <g class="repeat">
-        <path d=" M 111 185 h 12 m 116 0 h 12 m -12 0 a 12 12 0 0 1 12 12 v 7 a 12 12 0 0 1 -12 12 m -17 0 h -99 m 52 0 l 5 -5 m 0 10 l -5 -5 m -52 0 a 12 12 0 0 1 -12 -12 v -7 a 12 12 0 0 1 12 -12"/>
-        <text class="comment" x="230" y="221">
+        <path d=" M 111 185 h 12 m 108 0 h 12 m -12 0 a 12 12 0 0 1 12 12 v 7 a 12 12 0 0 1 -12 12 m -17 0 h -91 m 48 0 l 5 -5 m 0 10 l -5 -5 m -48 0 a 12 12 0 0 1 -12 -12 v -7 a 12 12 0 0 1 12 -12"/>
+        <text class="comment" x="222" y="221">
             +
         </text>
-        <a class="link" xlink:href="#TextElements">
+        <a class="link" xlink:href="#TextElement">
             <g class="symbol">
-                <rect height="22" width="116" x="123" y="174"/>
-                <text x="181" y="190">
-                    TextElements
+                <rect height="22" width="108" x="123" y="174"/>
+                <text x="177" y="190">
+                    TextElement
                 </text>
             </g>
         </a>
     </g>
-    <path d=" M 261 185 h 5 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5"/>
+    <path d=" M 253 185 h 5 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5"/>
     <path d=" M 25 185 h 10"/>
     <path d=" M 101 185 h 10"/>
-    <path d=" M 251 185 h 10"/>
+    <path d=" M 243 185 h 10"/>
 </g>
     <g class="sequence">
         <path d=" M 10 249 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5 m 10 0 h 5"/>
-        <text class="comment" id="TextElements" x="82" y="254">
-TextElements</text>
+        <text class="comment" id="TextElement" x="78" y="254">
+            TextElement
+        </text>
 <g class="choice">
-    <path d=" M 139 249 h 24 m 100 0 h 24"/>
+    <path d=" M 132 249 h 24 m 100 0 h 24"/>
 <a class="link" xlink:href="#TEMPLATE_E">
 <g class="symbol">
-    <rect height="22" width="100" x="163" y="238"/>
-    <text x="213" y="254">
+    <rect height="22" width="100" x="156" y="238"/>
+    <text x="206" y="254">
 TEMPLATE_E</text>
 </g>
 </a>
-    <path d=" M 139 249 a 12 12 0 0 1 12 12 v 9 m 124 0 v -9 a 12 12 0 0 1 12 -12"/>
-    <path d=" M 151 270 v 33 m 124 0 v -33"/>
-    <path d=" M 151 270 v 0 a 12 12 0 0 0 12 12 m 100 0 h 0 a 12 12 0 0 0 12 -12 v 0"/>
+    <path d=" M 132 249 a 12 12 0 0 1 12 12 v 9 m 124 0 v -9 a 12 12 0 0 1 12 -12"/>
+    <path d=" M 144 270 v 33 m 124 0 v -33"/>
+    <path d=" M 144 270 v 0 a 12 12 0 0 0 12 12 m 100 0 h 0 a 12 12 0 0 0 12 -12 v 0"/>
 <a class="link" xlink:href="#TEXT_SPACE">
 <g class="symbol">
-    <rect height="22" width="100" x="163" y="271"/>
-    <text x="213" y="287">
+    <rect height="22" width="100" x="156" y="271"/>
+    <text x="206" y="287">
 TEXT_SPACE</text>
 </g>
 </a>
-    <path d=" M 151 303 v 0 a 12 12 0 0 0 12 12 m 92 0 h 8 a 12 12 0 0 0 12 -12 v 0"/>
+    <path d=" M 144 303 v 0 a 12 12 0 0 0 12 12 m 92 0 h 8 a 12 12 0 0 0 12 -12 v 0"/>
 <a class="link" xlink:href="#TEXT_WORD">
 <g class="symbol">
-    <rect height="22" width="92" x="163" y="304"/>
-    <text x="209" y="320">
+    <rect height="22" width="92" x="156" y="304"/>
+    <text x="202" y="320">
 TEXT_WORD</text>
 </g>
 </a>
 </g>
-        <path d=" M 297 249 h 5 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5"/>
+        <path d=" M 290 249 h 5 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5"/>
         <path d=" M 25 249 h 10"/>
-        <path d=" M 129 249 h 10"/>
-        <path d=" M 287 249 h 10"/>
+        <path d=" M 122 249 h 10"/>
+        <path d=" M 280 249 h 10"/>
 </g>
 <g class="sequence">
     <path d=" M 10 349 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5 m 10 0 h 5"/>
@@ -748,14 +749,15 @@ TEMPLATE_R</text>
     <path d=" M 642 1115 h 10"/>
 </g>
 <g class="repeat">
-    <path d=" M 762 1115 h 12 m 116 0 h 12 m -12 0 a 12 12 0 0 1 12 12 v 7 a 12 12 0 0 1 -12 12 m -17 0 h -99 m 52 0 l 5 -5 m 0 10 l -5 -5 m -52 0 a 12 12 0 0 1 -12 -12 v -7 a 12 12 0 0 1 12 -12"/>
-    <text class="comment" x="881" y="1151">
+    <path d=" M 762 1115 h 12 m 76 0 h 12 m -12 0 a 12 12 0 0 1 12 12 v 7 a 12 12 0 0 1 -12 12 m -17 0 h -59 m 32 0 l 5 -5 m 0 10 l -5 -5 m -32 0 a 12 12 0 0 1 -12 -12 v -7 a 12 12 0 0 1 12 -12"/>
+    <text class="comment" x="841" y="1151">
 *</text>
-<a class="link" xlink:href="#TextElements">
+    <a class="link" xlink:href="#Element">
 <g class="symbol">
-    <rect height="22" width="116" x="774" y="1104"/>
-    <text x="832" y="1120">
-TextElements</text>
+    <rect height="22" width="76" x="774" y="1104"/>
+    <text x="812" y="1120">
+        Element
+    </text>
 </g>
 </a>
 </g>
@@ -764,10 +766,10 @@ TextElements</text>
     <path d=" M 360 1115 h 10"/>
     <path d=" M 446 1115 h 10"/>
 </g>
-    <path d=" M 912 1115 h 5 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5"/>
+    <path d=" M 872 1115 h 5 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5"/>
     <path d=" M 25 1115 h 10"/>
     <path d=" M 94 1115 h 10"/>
-    <path d=" M 902 1115 h 10"/>
+    <path d=" M 862 1115 h 10"/>
 </g>
 <g class="sequence">
     <path d=" M 10 1179 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5 m 10 0 h 5"/>
@@ -812,23 +814,24 @@ TEMPLATE_R</text>
     <path d=" M 455 1179 h 10"/>
 </g>
 <g class="repeat">
-    <path d=" M 575 1179 h 12 m 116 0 h 12 m -12 0 a 12 12 0 0 1 12 12 v 7 a 12 12 0 0 1 -12 12 m -17 0 h -99 m 52 0 l 5 -5 m 0 10 l -5 -5 m -52 0 a 12 12 0 0 1 -12 -12 v -7 a 12 12 0 0 1 12 -12"/>
-    <text class="comment" x="694" y="1215">
+    <path d=" M 575 1179 h 12 m 76 0 h 12 m -12 0 a 12 12 0 0 1 12 12 v 7 a 12 12 0 0 1 -12 12 m -17 0 h -59 m 32 0 l 5 -5 m 0 10 l -5 -5 m -32 0 a 12 12 0 0 1 -12 -12 v -7 a 12 12 0 0 1 12 -12"/>
+    <text class="comment" x="654" y="1215">
 *</text>
-<a class="link" xlink:href="#TextElements">
+    <a class="link" xlink:href="#Element">
 <g class="symbol">
-    <rect height="22" width="116" x="587" y="1168"/>
-    <text x="645" y="1184">
-TextElements</text>
+    <rect height="22" width="76" x="587" y="1168"/>
+    <text x="625" y="1184">
+        Element
+    </text>
 </g>
 </a>
 </g>
     <path d=" M 565 1179 h 10"/>
 </g>
-    <path d=" M 725 1179 h 5 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5"/>
+    <path d=" M 685 1179 h 5 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5"/>
     <path d=" M 25 1179 h 10"/>
     <path d=" M 87 1179 h 10"/>
-    <path d=" M 715 1179 h 10"/>
+    <path d=" M 675 1179 h 10"/>
 </g>
 <g class="sequence">
     <path d=" M 10 1243 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5 m 10 0 h 5"/>
@@ -904,14 +907,15 @@ TEMPLATE_R</text>
             <path d=" M 821 1243 h 10"/>
 </g>
 <g class="repeat">
-    <path d=" M 941 1243 h 12 m 116 0 h 12 m -12 0 a 12 12 0 0 1 12 12 v 7 a 12 12 0 0 1 -12 12 m -17 0 h -99 m 52 0 l 5 -5 m 0 10 l -5 -5 m -52 0 a 12 12 0 0 1 -12 -12 v -7 a 12 12 0 0 1 12 -12"/>
-    <text class="comment" x="1060" y="1279">
+    <path d=" M 941 1243 h 12 m 76 0 h 12 m -12 0 a 12 12 0 0 1 12 12 v 7 a 12 12 0 0 1 -12 12 m -17 0 h -59 m 32 0 l 5 -5 m 0 10 l -5 -5 m -32 0 a 12 12 0 0 1 -12 -12 v -7 a 12 12 0 0 1 12 -12"/>
+    <text class="comment" x="1020" y="1279">
 *</text>
-<a class="link" xlink:href="#TextElements">
+    <a class="link" xlink:href="#Element">
 <g class="symbol">
-    <rect height="22" width="116" x="953" y="1232"/>
-    <text x="1011" y="1248">
-TextElements</text>
+    <rect height="22" width="76" x="953" y="1232"/>
+    <text x="991" y="1248">
+        Element
+    </text>
 </g>
 </a>
 </g>
@@ -920,10 +924,10 @@ TextElements</text>
     <path d=" M 539 1243 h 10"/>
     <path d=" M 625 1243 h 10"/>
 </g>
-    <path d=" M 1091 1243 h 5 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5"/>
+    <path d=" M 1051 1243 h 5 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5"/>
     <path d=" M 25 1243 h 10"/>
     <path d=" M 101 1243 h 10"/>
-    <path d=" M 1081 1243 h 10"/>
+    <path d=" M 1041 1243 h 10"/>
 </g>
 <g class="sequence">
     <path d=" M 10 1320 a 5 5 0 0 1 5 -5 a 5 5 0 0 1 5 5 a 5 5 0 0 1 -5 5 a 5 5 0 0 1 -5 -5 m 10 0 h 5"/>

@@ -8,6 +8,12 @@ DejavuRoot {
                 range: 0..0,
             },
         ),
+        Branches(
+            DejavuBranches {
+                branches: [],
+                default: None,
+            },
+        ),
         Text(
             DejavuText {
                 head: "\n",
@@ -16,12 +22,10 @@ DejavuRoot {
                 range: 0..0,
             },
         ),
-        Text(
-            DejavuText {
-                head: "\n",
-                body: "# if-else-if element\n# simple if elements\n",
-                tail: "",
-                range: 0..0,
+        Branches(
+            DejavuBranches {
+                branches: [],
+                default: None,
             },
         ),
         Text(
@@ -30,6 +34,26 @@ DejavuRoot {
                 body: "# if-else-if element\n# simple if elements\n",
                 tail: "",
                 range: 0..0,
+            },
+        ),
+        Branches(
+            DejavuBranches {
+                branches: [],
+                default: None,
+            },
+        ),
+        Text(
+            DejavuText {
+                head: "\n",
+                body: "# if-else-if element\n# simple if elements\n",
+                tail: "",
+                range: 0..0,
+            },
+        ),
+        Branches(
+            DejavuBranches {
+                branches: [],
+                default: None,
             },
         ),
     ],

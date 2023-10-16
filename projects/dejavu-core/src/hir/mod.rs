@@ -1,13 +1,23 @@
 use alloc::{string::String, vec::Vec};
-use core::ops::Range;
+use core::ops::{AddAssign, Range};
 
+mod conditional;
 mod text;
 
-pub use self::text::{DejavuText, DejavuTextTrim};
+pub use self::{
+    conditional::{DejavuBranches, DejavuConditional},
+    text::{DejavuText, DejavuTextTrim},
+};
 
 #[derive(Debug)]
 pub struct DejavuRoot {
     pub statements: Vec<DejavuStatement>,
+}
+
+#[derive(Debug)]
+pub enum DejavuStatement {
+    Text(DejavuText),
+    Branches(DejavuBranches),
 }
 
 impl Default for DejavuRoot {
@@ -16,35 +26,31 @@ impl Default for DejavuRoot {
     }
 }
 
+impl<T> AddAssign<T> for DejavuRoot
+where
+    T: Into<DejavuStatement>,
+{
+    fn add_assign(&mut self, rhs: T) {
+        self.statements.push(rhs.into())
+    }
+}
+
 impl DejavuRoot {
-    pub fn trim_last_text(&mut self, mode: DejavuTextTrim) {
-        match self.statements.last_mut() {
-            Some(DejavuStatement::Text(v)) => v.trim_tail(mode),
-            _ => {}
+    pub fn new(capacity: usize) -> Self {
+        Self { statements: Vec::with_capacity(capacity) }
+    }
+    /// `%> ... <%`
+    pub fn trim_text(&mut self, head: DejavuTextTrim, tail: DejavuTextTrim) {
+        if let Some(DejavuStatement::Text(v)) = self.statements.first_mut() {
+            v.trim_head(head)
+        }
+        if let Some(DejavuStatement::Text(v)) = self.statements.last_mut() {
+            v.trim_tail(tail)
         }
     }
 }
 
-#[derive(Debug)]
-pub enum DejavuStatement {
-    Text(DejavuText),
-    If(DejavuIfElse),
-}
-
-#[derive(Debug)]
-pub struct DejavuIfElse {
-    pub then: DejavuBranch,
-    pub else_if: Vec<DejavuBranch>,
-    pub default: Option<DejavuBranch>,
-}
-
-#[derive(Debug)]
-pub struct DejavuBranch {
-    pub condition: DejavuExpression,
-    pub body: Vec<DejavuStatement>,
-}
-
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct DejavuExpression {}
 
 pub trait CodeGenerator {}
