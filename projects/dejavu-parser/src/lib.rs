@@ -9,5 +9,3 @@ pub use yggdrasil_rt::{YggdrasilNode, YggdrasilParser};
 pub mod dejavu;
 
 mod visitor;
-
-pub use crate::visitor::DejavuDisplay;

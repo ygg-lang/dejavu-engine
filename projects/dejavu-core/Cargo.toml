@@ -1,10 +1,10 @@
 [package]
-name = "dejavu-core"
-version = "0.1.0"
+name = "dejavu-ir"
+version = "0.0.0"
 authors = ["192607617@qq.com"]
 description = "Error Handling, Parser and Compiler of DejaVu Language"
 license = "MPL-2.0"
-readme = "Readme.md"
+readme = "readme.md"
 repository = "https://github.com/oovm/dejavu-engine"
 exclude = ["/tests/*"]
 edition = "2018"

@@ -1,28 +1,50 @@
 use crate::dejavu::{ElementNode, RootNode, TextElementsNode};
-use std::fmt::{Display, Formatter};
+use dejavu_ir::hir::{DejavuRoot, DejavuStatement, DejavuText};
 
-#[derive(Clone, Debug)]
-pub struct DejavuDisplay {
-    pub root: RootNode,
-}
-
-impl Display for DejavuDisplay {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "impl core::fmt::Display for HelloTemplate {{")?;
-        writeln!(f, "#[inline]")?;
-        writeln!(f, "fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {{")?;
-        for x in &self.root.element {
+impl RootNode {
+    pub fn as_hir(&self) -> DejavuRoot {
+        let mut out = DejavuRoot::default();
+        for x in &self.element {
             match x {
                 ElementNode::TemplateExport(_) => {}
                 ElementNode::TemplateIf(_) => {}
-                ElementNode::TextElements(x) => match x {
-                    TextElementsNode::TemplateE(_) => writeln!(f, "f.write_str(\"<%\")?")?,
-                    TextElementsNode::TextSpace(s) => writeln!(f, "f.write_str(\"{s:?}\")?;")?,
-                    TextElementsNode::TextWord(w) => writeln!(f, "f.write_str(\"{w:?}\")?;")?,
-                },
+                ElementNode::TextMany(v) => out.statements.push(DejavuStatement::Text(many_text(&v.text_elements))),
             }
         }
-        writeln!(f, "Ok(())}}}}")?;
-        Ok(())
+
+        out
     }
+}
+
+impl TextElementsNode {
+    pub fn pure_space(&self) -> bool {
+        matches!(self, Self::TextSpace { .. })
+    }
+    pub fn write_buffer(&self, w: &mut String) {
+        match self {
+            TextElementsNode::TemplateE(_) => w.push_str("<%"),
+            TextElementsNode::TextSpace(s) => w.push_str(&s._text),
+            TextElementsNode::TextWord(s) => w.push_str(&s._text),
+        }
+    }
+}
+
+fn many_text(texts: &[TextElementsNode]) -> DejavuText {
+    let mut out = DejavuText::default();
+    match texts {
+        [head, middle @ .., tail] => {
+            if head.pure_space() {
+                head.write_buffer(&mut out.head)
+            }
+            else {
+                head.write_buffer(&mut out.body)
+            }
+            for term in middle {
+                term.write_buffer(&mut out.body)
+            }
+            if tail.pure_space() { tail.write_buffer(&mut out.body) } else { tail.write_buffer(&mut out.body) }
+        }
+        _ => panic!("many_text: {}", texts.len()),
+    }
+    out
 }

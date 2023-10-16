@@ -7,11 +7,14 @@ entry class Root {
 }
 
 union Element {
-    | TextElements   #Text
+    | TextMany   #Text
     | TemplateExport #Export
     | TemplateIf     #If
 }
 // === text area === ---------------------------------------------------------------------------------------------------
+class TextMany {
+    TextElements+
+}
 union TextElements {
     | TEMPLATE_E #Escape
     | TEXT_SPACE #TextSpace
