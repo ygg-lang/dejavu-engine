@@ -4,7 +4,15 @@ struct HelloTemplate<'a> {
 
 impl<'a> core::fmt::Display for HelloTemplate<'a> {
     #[inline]
-    fn fmt(&self, f: &mut core::fmt::Formatter) -> ::std::fmt::Result {
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+{% for node in self.statements %}
+{% match node %}
+    {% when DejavuStatement::Text with (a) %}
+        f.write_fmt(format_args!({{ a }}))
+    {% when DejavuStatement::Branches with (b) %}
+
+{% endmatch %}
+{% endfor %}
         Ok(())
     }
 }
