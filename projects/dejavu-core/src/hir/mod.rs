@@ -16,6 +16,15 @@ impl Default for DejavuRoot {
     }
 }
 
+impl DejavuRoot {
+    pub fn trim_last_text(&mut self, mode: DejavuTextTrim) {
+        match self.statements.last_mut() {
+            Some(DejavuStatement::Text(v)) => v.trim_tail(mode),
+            _ => {}
+        }
+    }
+}
+
 #[derive(Debug)]
 pub enum DejavuStatement {
     Text(DejavuText),

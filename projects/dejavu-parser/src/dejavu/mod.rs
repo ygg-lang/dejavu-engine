@@ -284,7 +284,6 @@ pub struct KwIfNode {
 pub struct KwElseNode {
     pub span: Range<u32>,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ExpressionNode {
@@ -292,7 +291,6 @@ pub struct ExpressionNode {
     pub term: TermNode,
     pub span: Range<u32>,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ExpressionRestNode {
@@ -300,14 +298,12 @@ pub struct ExpressionRestNode {
     pub term: TermNode,
     pub span: Range<u32>,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum InfixNode {
     Infix0,
     Infix1,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct TermNode {
@@ -316,13 +312,11 @@ pub struct TermNode {
     pub suffix: Vec<SuffixNode>,
     pub span: Range<u32>,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum PrefixNode {
     Prefix0,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum SuffixNode {
@@ -332,7 +326,7 @@ pub enum SuffixNode {
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum AtomicNode {
-    Atomic0(ExpressionNode),
+    Atomic0,
     Boolean(BooleanNode),
     Identifier(IdentifierNode),
     Number(NumberNode),

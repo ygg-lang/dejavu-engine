@@ -10,7 +10,7 @@ DejavuRoot {
         ),
         Text(
             DejavuText {
-                head: "\n\n",
+                head: "\n",
                 body: "# if else element\n# simple if elements\n",
                 tail: "",
                 range: 0..0,
@@ -18,7 +18,7 @@ DejavuRoot {
         ),
         Text(
             DejavuText {
-                head: "\n\n\n",
+                head: "\n",
                 body: "# if-else-if element\n# simple if elements\n",
                 tail: "",
                 range: 0..0,
@@ -26,7 +26,7 @@ DejavuRoot {
         ),
         Text(
             DejavuText {
-                head: "\n\n",
+                head: "\n",
                 body: "# if-else-if element\n# simple if elements\n",
                 tail: "",
                 range: 0..0,

@@ -9,6 +9,8 @@ pub struct DejavuText {
     pub range: Range<usize>,
 }
 
+#[derive(Copy, Clone, Debug, Ord, PartialOrd, Eq, PartialEq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum DejavuTextTrim {
     /// `<%= ... =%>`
     Nothing,

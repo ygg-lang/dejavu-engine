@@ -356,7 +356,6 @@ fn parse_kw_if(state: Input) -> Output {
 fn parse_kw_else(state: Input) -> Output {
     state.rule(NexusRule::KW_ELSE, |s| s.match_string("else", false))
 }
-
 #[inline]
 fn parse_expression(state: Input) -> Output {
     state.rule(NexusRule::Expression, |s| {
@@ -368,7 +367,6 @@ fn parse_expression(state: Input) -> Output {
         })
     })
 }
-
 #[inline]
 fn parse_expression_rest(state: Input) -> Output {
     state.rule(NexusRule::ExpressionRest, |s| {
@@ -380,7 +378,6 @@ fn parse_expression_rest(state: Input) -> Output {
         })
     })
 }
-
 #[inline]
 fn parse_infix(state: Input) -> Output {
     state.rule(NexusRule::Infix, |s| {
@@ -389,7 +386,6 @@ fn parse_infix(state: Input) -> Output {
             .or_else(|s| builtin_text(s, "-", false).and_then(|s| s.tag_node("infix_1")))
     })
 }
-
 #[inline]
 fn parse_term(state: Input) -> Output {
     state.rule(NexusRule::Term, |s| {
@@ -403,12 +399,10 @@ fn parse_term(state: Input) -> Output {
         })
     })
 }
-
 #[inline]
 fn parse_prefix(state: Input) -> Output {
     state.rule(NexusRule::Prefix, |s| Err(s).or_else(|s| builtin_text(s, "!", false).and_then(|s| s.tag_node("prefix_0"))))
 }
-
 #[inline]
 fn parse_suffix(state: Input) -> Output {
     state.rule(NexusRule::Suffix, |s| {
@@ -432,7 +426,7 @@ fn parse_atomic(state: Input) -> Output {
                     Ok(s)
                         .and_then(|s| builtin_text(s, "(", false))
                         .and_then(|s| builtin_ignore(s))
-                        .and_then(|s| parse_expression(s).and_then(|s| s.tag_node("expression")))
+                        .and_then(|s| Err(/* box */ s))
                         .and_then(|s| builtin_ignore(s))
                         .and_then(|s| builtin_text(s, ")", false))
                 })

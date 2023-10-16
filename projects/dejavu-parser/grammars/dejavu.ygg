@@ -111,10 +111,10 @@ union Suffix {
 }
 // === string === ------------------------------------------------------------------------------------------------------
 union Atomic {
-| '(' Expression ')' #Group
-| Boolean            #Boolean
-| Identifier         #Identifier
-| Number             #Number
+| '(' @box(Expression) ')' #Group
+| Boolean                  #Boolean
+| Identifier               #Identifier
+| Number                   #Number
 }
 // === string === ------------------------------------------------------------------------------------------------------
 union String {
