@@ -10,28 +10,11 @@ exclude = ["/tests/*"]
 edition = "2018"
 
 [dependencies]
-#pratt = "0.4.0"
-#peginator = "0.6.0"
-#serde = { version = "1.0.148", features = ["derive"] }
-#globset = "0.4.9"
-#walkdir = "2.3.2"
-#itertools = "0.11.0"
-#toml = "0.8.2"
-#mime = "0.3.16"
 
-#[dependencies.dejavu-parser]
-#version = "0.0.0"
-#path = "../dejavu-parser"
 
-#[dependencies.diagnostic-quick]
-#git = "https://github.com/oovm/diagnostic-rs"
-#rev = "527707f5"
-#version = "0.2.3"
-#features = ["peginator", "rust_decimal", "globset", "walkdir", "serde", "toml"]
-
-#[dev-dependencies.dejavu-runtime]
-#version = "0.1.0"
-#path = "../dejavu-runtime"
+[dependencies.dejavu-parser]
+version = "0.1.*"
+path = '../dejavu-parser'
 
 
 [features]

@@ -13,10 +13,6 @@ exclude = ["package.json", "tests/**"]
 
 [dependencies]
 
-[dependencies.dejavu-ir]
-version = "0.0.*"
-path = '../dejavu-core'
-
 [dependencies.yggdrasil-rt]
 version = "0.0.8"
 path = 'C:\Users\Dell\CLionProjects\yggdrasil.rs\projects\ygg-rt'

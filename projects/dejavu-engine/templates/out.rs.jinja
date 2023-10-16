@@ -1,0 +1,10 @@
+struct HelloTemplate<'a> {
+    name: &'a str,
+}
+
+impl<'a> core::fmt::Display for HelloTemplate<'a> {
+    #[inline]
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> ::std::fmt::Result {
+        Ok(())
+    }
+}

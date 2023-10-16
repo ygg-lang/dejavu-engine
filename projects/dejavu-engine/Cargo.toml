@@ -21,7 +21,7 @@ version = "0.0.*"
 path = "../dejavu-core"
 
 [dependencies.dejavu-runtime]
-version = "0.0.*"
+version = "0.1.*"
 path = "../dejavu-runtime"
 
 [features]

@@ -1,0 +1,12 @@
+DejavuRoot {
+    statements: [
+        Text(
+            DejavuText {
+                head: "",
+                body: "# simple if elements\n",
+                tail: "",
+                range: 0..0,
+            },
+        ),
+    ],
+}

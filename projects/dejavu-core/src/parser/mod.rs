@@ -1,43 +1,28 @@
-use diagnostic_quick::{Failure, FileID, QError, QErrorKind, Success, Validation};
-use peginator::PegParser;
+mod conditional;
+mod looping;
+mod utils;
 
+use crate::{
+    hir::{DejavuBranches, DejavuConditional, DejavuExpression, DejavuRoot, DejavuStatement, DejavuTextTrim},
+    parser::utils::{take_control_l, take_control_r, take_elements},
+};
+use alloc::string::String;
+use core::{mem::take, str::FromStr};
 use dejavu_parser::{
-    ExpressionNode, IdentifierNode, SahaParser, SahaStatement, SahaStatementNodes, SlotExpressionNode, UnicodeText, ValueNode,
+    dejavu::{DejavuRule, ExpressionNode, RootNode, TemplateIfNode, TextElementNode},
+    YggdrasilError,
 };
 
-use crate::value::{DjvNode, SpaceDestroyer};
-
-mod condition;
-mod expression;
-mod slots;
-mod value;
-mod whitespace;
-
-pub struct ParserContext {
-    file: FileID,
-    errors: Vec<QError>,
-}
-
-impl ParserContext {
-    pub fn custom_error(&mut self, message: impl Into<String>) {
-        self.errors.push(QError {
-            error: Box::new(QErrorKind::Custom(message.into())),
-            level: Default::default(),
-            source: None,
-        });
+impl From<RootNode> for DejavuRoot {
+    fn from(value: RootNode) -> Self {
+        take_elements(&value.element)
     }
 }
 
-pub fn parse(input: &str, file: &FileID) -> Validation<Vec<DjvNode>> {
-    let mut ctx = ParserContext { file: file.clone(), errors: vec![] };
-    if input.contains('\r') {
-        ctx.errors.push(QError::syntax_error("CR (\\r) is not allowed in the input"));
-    }
-    match SahaParser::parse(input) {
-        Ok(s) => {
-            let value = ctx.parse_root(s);
-            Success { value, diagnostics: ctx.errors }
-        }
-        Err(e) => Failure { fatal: QError::from(e).with_file(file), diagnostics: ctx.errors },
+impl FromStr for DejavuRoot {
+    type Err = YggdrasilError<DejavuRule>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        todo!()
     }
 }

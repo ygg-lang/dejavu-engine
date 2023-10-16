@@ -5,7 +5,7 @@ use std::env::current_dir;
 // use dejavu_core::DejavuWorkspace;
 
 mod hello;
-
+mod test_control;
 #[test]
 fn ready() {
     println!("it works!")

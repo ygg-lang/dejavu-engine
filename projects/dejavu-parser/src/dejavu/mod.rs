@@ -3,25 +3,25 @@
 #![allow(clippy::unnecessary_cast)]
 #![doc = include_str!("readme.md")]
 
-mod parse_ast;
 mod parse_cst;
+mod parse_ast;
 
 use core::str::FromStr;
 use std::{borrow::Cow, ops::Range, sync::OnceLock};
 use yggdrasil_rt::*;
 
-type Input<'i> = Box<State<'i, NexusRule>>;
-type Output<'i> = Result<Box<State<'i, NexusRule>>, Box<State<'i, NexusRule>>>;
+type Input<'i> = Box<State<'i, DejavuRule>>;
+type Output<'i> = Result<Box<State<'i, DejavuRule>>, Box<State<'i, DejavuRule>>>;
 
 #[doc = include_str!("railway.min.svg")]
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Default, PartialEq, Eq, Ord, PartialOrd, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct NexusParser {}
+pub struct DejavuParser {}
 
-impl YggdrasilParser for NexusParser {
-    type Rule = NexusRule;
-    fn parse_cst(input: &str, rule: Self::Rule) -> OutputResult<NexusRule> {
+impl YggdrasilParser for DejavuParser {
+    type Rule = DejavuRule;
+    fn parse_cst(input: &str, rule: Self::Rule) -> OutputResult<DejavuRule> {
         self::parse_cst::parse_cst(input, rule)
     }
 }
@@ -29,7 +29,7 @@ impl YggdrasilParser for NexusParser {
 #[repr(u32)]
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Ord, PartialOrd, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum NexusRule {
+pub enum DejavuRule {
     Root,
     Element,
     TextMany,
@@ -79,7 +79,7 @@ pub enum NexusRule {
     IgnoreRegex,
 }
 
-impl YggdrasilRule for NexusRule {
+impl YggdrasilRule for DejavuRule {
     fn is_ignore(&self) -> bool {
         matches!(self, Self::IgnoreText | Self::IgnoreRegex | Self::WhiteSpace)
     }
@@ -293,7 +293,6 @@ pub struct KwIfNode {
 pub struct KwElseNode {
     pub span: Range<u32>,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct TemplateForNode {
@@ -302,7 +301,6 @@ pub struct TemplateForNode {
     pub if_begin: IfBeginNode,
     pub span: Range<u32>,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ForElseNode {
@@ -311,7 +309,6 @@ pub struct ForElseNode {
     pub template_r: TemplateRNode,
     pub span: Range<u32>,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ForEndNode {
@@ -319,7 +316,6 @@ pub struct ForEndNode {
     pub template_r: TemplateRNode,
     pub span: Range<u32>,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct KwForNode {
