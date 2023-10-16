@@ -2,6 +2,8 @@ use askama::Template;
 use dejavu_engine::DejavuBuilder;
 use std::{fs::File, io::Write};
 
+mod test_if;
+
 #[test]
 fn test_codegen() {
     let cst = DejavuBuilder::new(include_str!("test_if.djv"));

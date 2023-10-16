@@ -1,6 +1,6 @@
 use super::*;
 use alloc::string::ToString;
-use core::fmt::{Display, Formatter};
+use core::fmt::{Display, Formatter, Write};
 
 #[derive(Debug, Default)]
 pub struct DejavuText {
@@ -12,7 +12,15 @@ pub struct DejavuText {
 
 impl Display for DejavuText {
     fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
-        writeln!(f, "f.write_str()")
+        f.write_str("f.write_str(\"")?;
+        for c in self.head.chars().chain(self.body.chars()).chain(self.tail.chars()) {
+            match c {
+                '\n' => f.write_str("\\n")?,
+                '\r' => f.write_str("\\r")?,
+                _ => f.write_char(c)?,
+            }
+        }
+        f.write_str("\")?;\n")
     }
 }
 

@@ -92,9 +92,9 @@ KW_ELSE: 'else'
 }
 // === template for === ------------------------------------------------------------------------------------------------
 atomic class TemplateFor {
-IfBegin ForElse? ForEnd
+ForBegin ForElse? ForEnd
 }
-atomic class IfBegin {
+atomic class ForBegin {
 TEMPLATE_L ~ ^KW_FOR ~ condition:Expression ~ TEMPLATE_R body:Element*
 }
 atomic class ForElse {

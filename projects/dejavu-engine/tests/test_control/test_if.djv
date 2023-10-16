@@ -3,8 +3,7 @@
    if text
 <% end %>
 
-# if else element
-# simple if elements
+# if-else element
 <% if true %>
    if text
 <% else %>
@@ -13,7 +12,6 @@
 
 
 # if-else-if element
-# simple if elements
 <% if true %>
    if text
 <% else if false %>
@@ -21,7 +19,6 @@
 <% end %>
 
 # if-else-if element
-# simple if elements
 <% if true %>
    if text
 <% else if false %>

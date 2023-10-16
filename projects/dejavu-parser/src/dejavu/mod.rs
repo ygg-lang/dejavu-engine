@@ -3,8 +3,8 @@
 #![allow(clippy::unnecessary_cast)]
 #![doc = include_str!("readme.md")]
 
-mod parse_cst;
 mod parse_ast;
+mod parse_cst;
 
 use core::str::FromStr;
 use std::{borrow::Cow, ops::Range, sync::OnceLock};
@@ -56,6 +56,7 @@ pub enum DejavuRule {
     KW_IF,
     KW_ELSE,
     TemplateFor,
+    ForBegin,
     ForElse,
     ForEnd,
     KW_FOR,
@@ -112,6 +113,7 @@ impl YggdrasilRule for DejavuRule {
             Self::KW_IF => "",
             Self::KW_ELSE => "",
             Self::TemplateFor => "",
+            Self::ForBegin => "",
             Self::ForElse => "",
             Self::ForEnd => "",
             Self::KW_FOR => "",
@@ -296,9 +298,19 @@ pub struct KwElseNode {
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct TemplateForNode {
+    pub for_begin: ForBeginNode,
     pub for_else: Option<ForElseNode>,
     pub for_end: ForEndNode,
-    pub if_begin: IfBeginNode,
+    pub span: Range<u32>,
+}
+
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct ForBeginNode {
+    pub element: Vec<ElementNode>,
+    pub expression: ExpressionNode,
+    pub template_l: TemplateLNode,
+    pub template_r: TemplateRNode,
     pub span: Range<u32>,
 }
 #[derive(Clone, Debug, Hash)]

@@ -7,10 +7,16 @@ impl<'a> core::fmt::Display for HelloTemplate<'a> {
     fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
 {% for node in self.statements %}
 {% match node %}
-    {% when DejavuStatement::Text with (a) %}
-        f.write_fmt(format_args!({{ a }}))
-    {% when DejavuStatement::Branches with (b) %}
+    {% when DejavuStatement::Text with (s) %}
+        {{ s }}
+    {% when DejavuStatement::Branches with (s) %}
+        {% for branch in s.branches %}
+        if {{ branch.condition }} {
+            {% for item in branch.body %}
 
+            {% endfor %}
+        }
+        {% endfor %}
 {% endmatch %}
 {% endfor %}
         Ok(())

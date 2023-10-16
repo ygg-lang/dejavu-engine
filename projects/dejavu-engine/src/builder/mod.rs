@@ -2,7 +2,7 @@ use askama::Template;
 use dejavu_ir::hir::{DejavuRoot, DejavuStatement};
 use std::str::FromStr;
 
-#[derive(Template)]
+#[derive(Debug, Template)]
 #[template(path = "out.rs.jinja", escape = "none")]
 pub struct DejavuBuilder {
     statements: Vec<DejavuStatement>,

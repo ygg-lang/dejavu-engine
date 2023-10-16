@@ -1,5 +1,8 @@
 use alloc::{string::String, vec::Vec};
-use core::ops::{AddAssign, Range};
+use core::{
+    fmt::{Display, Formatter},
+    ops::{AddAssign, Range},
+};
 
 mod conditional;
 mod text;
@@ -18,6 +21,15 @@ pub struct DejavuRoot {
 pub enum DejavuStatement {
     Text(DejavuText),
     Branches(DejavuBranches),
+}
+
+impl Display for DejavuStatement {
+    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
+        match self {
+            DejavuStatement::Text(v) => Display::fmt(v, f),
+            DejavuStatement::Branches(v) => Display::fmt(v, f),
+        }
+    }
 }
 
 impl Default for DejavuRoot {
@@ -52,5 +64,11 @@ impl DejavuRoot {
 
 #[derive(Debug, Default)]
 pub struct DejavuExpression {}
+
+impl Display for DejavuExpression {
+    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
+        f.write_str("true")
+    }
+}
 
 pub trait CodeGenerator {}
