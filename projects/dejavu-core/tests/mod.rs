@@ -1,8 +1,8 @@
 use std::env::current_dir;
-
-use diagnostic_quick::QError;
-
-use dejavu_core::DejavuWorkspace;
+//
+// use diagnostic_quick::QError;
+//
+// use dejavu_core::DejavuWorkspace;
 
 mod hello;
 
@@ -11,14 +11,14 @@ fn ready() {
     println!("it works!")
 }
 
-#[track_caller]
-fn test_file(path: &str, vm: &mut DejavuWorkspace, errors: &mut Vec<QError>) {
-    let file = vm.add_file(path).unwrap();
-    match vm.compile(&file) {
-        Ok(o) => errors.extend(o),
-        Err(e) => errors.push(e),
-    }
-}
+// #[track_caller]
+// fn test_file(path: &str, vm: &mut DejavuWorkspace, errors: &mut Vec<QError>) {
+//     let file = vm.add_file(path).unwrap();
+//     match vm.compile(&file) {
+//         Ok(o) => errors.extend(o),
+//         Err(e) => errors.push(e),
+//     }
+// }
 //
 // #[test]
 // fn test_number() {

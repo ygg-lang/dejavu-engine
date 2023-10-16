@@ -1,9 +1,6 @@
 grammar Dejavu {}
 
 
-
-
-
 union Root {
     | DefineImport
     | DefineClass
@@ -45,7 +42,7 @@ class TemplateText {
 
 token {
     // outer
-    TEMPLATE_E: '<<%'
+    TEMPLATE_E: '<%!'
     TEXT_SPACE: /\p{White_Space}+/
     TEXT_WORD:  /\p{XID_continue}+/
     TEXT_OTHER: /[^<]+/;

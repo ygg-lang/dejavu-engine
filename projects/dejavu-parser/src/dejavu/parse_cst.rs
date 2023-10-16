@@ -10,7 +10,7 @@ pub(super) fn parse_cst(input: &str, rule: NexusRule) -> OutputResult<NexusRule>
         NexusRule::TEXT_WORD => parse_text_word(state),
         NexusRule::TEMPLATE_L => parse_template_l(state),
         NexusRule::TEMPLATE_R => parse_template_r(state),
-        NexusRule::SPACE_CONTROL => parse_space_control(state),
+        NexusRule::SpaceControl => parse_space_control(state),
         NexusRule::KW_END => parse_kw_end(state),
         NexusRule::TemplateExport => parse_template_export(state),
         NexusRule::ExportItem => parse_export_item(state),
@@ -59,7 +59,7 @@ fn parse_text_elements(state: Input) -> Output {
 #[inline]
 fn parse_template_e(state: Input) -> Output {
     state.rule(NexusRule::TEMPLATE_E, |s| {
-        s.match_string("<<%", false)
+        s.match_string("<%!", false)
     })
 }
 #[inline]
@@ -88,7 +88,7 @@ fn parse_template_r(state: Input) -> Output {
 }
 #[inline]
 fn parse_space_control(state: Input) -> Output {
-    state.rule(NexusRule::SPACE_CONTROL, |s| {
+    state.rule(NexusRule::SpaceControl, |s| {
         Err(s).or_else(|s|builtin_text(s, "_", false).and_then(|s| s.tag_node("space_control_0"))).or_else(|s|builtin_text(s, "-", false).and_then(|s| s.tag_node("space_control_1"))).or_else(|s|builtin_text(s, "~", false).and_then(|s| s.tag_node("space_control_2"))).or_else(|s|builtin_text(s, "=", false).and_then(|s| s.tag_node("space_control_3")))
     })
 }

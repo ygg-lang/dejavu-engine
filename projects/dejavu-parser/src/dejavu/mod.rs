@@ -3,8 +3,8 @@
 #![allow(clippy::unnecessary_cast)]
 #![doc = include_str!("readme.md")]
 
-mod parse_ast;
 mod parse_cst;
+mod parse_ast;
 
 use core::str::FromStr;
 use std::{borrow::Cow, ops::Range, sync::OnceLock};
@@ -38,7 +38,7 @@ pub enum NexusRule {
     TEXT_WORD,
     TEMPLATE_L,
     TEMPLATE_R,
-    SPACE_CONTROL,
+    SpaceControl,
     KW_END,
     TemplateExport,
     ExportItem,
@@ -83,7 +83,7 @@ impl YggdrasilRule for NexusRule {
             Self::TEXT_WORD => "",
             Self::TEMPLATE_L => "",
             Self::TEMPLATE_R => "",
-            Self::SPACE_CONTROL => "",
+            Self::SpaceControl => "",
             Self::KW_END => "",
             Self::TemplateExport => "",
             Self::ExportItem => "",

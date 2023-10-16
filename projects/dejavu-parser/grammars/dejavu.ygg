@@ -1,5 +1,5 @@
 grammar Nexus {
-file: '*.djv'
+    file: '*.djv'
 }
 
 entry class Root {
@@ -20,106 +20,104 @@ union TextElements {
 
 @style(escape)
 class TEMPLATE_E {
-    '<<%'
+    '<%!'
 }
 
-class TEXT_SPACE {
-    /\p{White_Space}+/
-}
-class TEXT_WORD {
-    /[^<\p{White_Space}]+/
+text token {
+TEXT_SPACE: /\p{White_Space}+/
+TEXT_WORD:  /[^<\p{White_Space}]+/
 }
 // === template token === ----------------------------------------------------------------------------------------------
 @style(operator)
 atomic class TEMPLATE_L {
-    '<%' SPACE_CONTROL?
+'<%' SpaceControl?
 }
 atomic class TEMPLATE_R {
-    SPACE_CONTROL? '%>'
+SpaceControl? '%>'
 }
-union SPACE_CONTROL {
-    | '_' #A
-    | '-' #B
-    | '~' #C
-    | '=' #D
+union SpaceControl {
+| '_' #A
+| '-' #B
+| '~' #C
+| '=' #D
 }
 @style(keyword)
 token {
-    KW_END: 'end'
+KW_END: 'end'
 }
 // === template export === -------------------------------------------------------------------------------------------------
 class TemplateExport ^ {
-    TEMPLATE_L exports:ExportItem* TEMPLATE_R
+TEMPLATE_L exports:ExportItem* TEMPLATE_R
 }
 class ExportItem ^ {
-    KW_EXPORT name:Identifier
-    (KW_TO language:Identifier)?
-    (KW_BY KW_CLASS class:NamepathFree)?
-    (KW_BY KW_TRAIT trait:NamepathFree?)?
+KW_EXPORT name:Identifier
+(KW_TO language:Identifier)?
+(KW_BY KW_CLASS class :NamepathFree)?
+(KW_BY KW_TRAIT trait:NamepathFree?)?
 }
 @style(keyword)
 token {
-    KW_EXPORT: 'export'
-    KW_CLASS: 'class'
-    KW_TRAIT: 'trait'
-    KW_TO: 'to'
-    KW_BY: 'by'
+KW_EXPORT: 'export'
+KW_CLASS: 'class'
+KW_TRAIT: 'trait'
+KW_TO: 'to'
+KW_BY: 'by'
 }
 // === template if === -------------------------------------------------------------------------------------------------
 atomic class TemplateIf {
-    IfBegin IfElseIf* IfElse? ^IfEnd
+IfBegin IfElseIf* IfElse? ^IfEnd
 }
 atomic class IfBegin ^ {
-    TEMPLATE_L ~ KW_IF ~ condition:Atomic ~ TEMPLATE_R text:TextElements*
+TEMPLATE_L ~ KW_IF ~ condition:Atomic ~ TEMPLATE_R text:TextElements*
 }
 atomic class IfElse ^ {
-    TEMPLATE_L ~ KW_ELSE ~ TEMPLATE_R text:TextElements*
+TEMPLATE_L ~ KW_ELSE ~ TEMPLATE_R text:TextElements*
 }
 atomic class IfElseIf ^ {
-    TEMPLATE_L ~ KW_ELSE ~ KW_IF ~ TEMPLATE_R text:TextElements*
+TEMPLATE_L ~ KW_ELSE ~ KW_IF ~ TEMPLATE_R text:TextElements*
 }
 atomic class IfEnd ^ {
-    TEMPLATE_L ~ KW_END ~ KW_IF? ~ TEMPLATE_R
+TEMPLATE_L ~ KW_END ~ KW_IF? ~ TEMPLATE_R
 }
 @style(keyword)
 token {
-    KW_IF: 'if'
-    KW_ELSE: 'else'
+KW_IF: 'if'
+KW_ELSE: 'else'
 }
 // === text area === ---------------------------------------------------------------------------------------------------
 
 // === string === ------------------------------------------------------------------------------------------------------
 union Atomic {
-    | Boolean
-    | Identifier
-    | Number
+| Boolean
+| Identifier
+| Number
 }
 // === string === ------------------------------------------------------------------------------------------------------
 union String {
-    | '"' '"' #SingleQuote
-    | "'" "'" #DoubleQuote
+| '"' '"' #SingleQuote
+| "'" "'" #DoubleQuote
 }
 // === number === ------------------------------------------------------------------------------------------------------
 class Number {
-    /0|[1-9][0-9]/
+/0|[1-9][0-9]/
 }
 // === identifier === --------------------------------------------------------------------------------------------------
 class NamepathFree -> Namepath {
-    Identifier (('.' | '::') Identifier)*
+Identifier (('.' | '::') Identifier)*
 }
 class Namepath {
-    Identifier ('::' Identifier)*
+Identifier ('::' Identifier)*
 }
 class Identifier {
-    /[_\p{XID_start}]\p{XID_continue}*/
+/[_\p{XID_start}]\p{XID_continue}*/
 }
 union Boolean {
-    | 'true'  #True
-    | 'false' #False
+| 'true'  #True
+| 'false' #False
 }
 // === ignores === -----------------------------------------------------------------------------------------------------
 ignore class WhiteSpace {
-    /\p{White_Space}+/
+/\p{White_Space}+/
 }
 
 //@style(comment)
