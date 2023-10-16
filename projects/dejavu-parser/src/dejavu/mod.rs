@@ -3,8 +3,8 @@
 #![allow(clippy::unnecessary_cast)]
 #![doc = include_str!("readme.md")]
 
-mod parse_cst;
 mod parse_ast;
+mod parse_cst;
 
 use core::str::FromStr;
 use std::{borrow::Cow, ops::Range, sync::OnceLock};
@@ -55,6 +55,10 @@ pub enum NexusRule {
     IfEnd,
     KW_IF,
     KW_ELSE,
+    TemplateFor,
+    ForElse,
+    ForEnd,
+    KW_FOR,
     Expression,
     ExpressionRest,
     Infix,
@@ -107,6 +111,10 @@ impl YggdrasilRule for NexusRule {
             Self::IfEnd => "",
             Self::KW_IF => "",
             Self::KW_ELSE => "",
+            Self::TemplateFor => "",
+            Self::ForElse => "",
+            Self::ForEnd => "",
+            Self::KW_FOR => "",
             Self::Expression => "",
             Self::ExpressionRest => "",
             Self::Infix => "",
@@ -135,6 +143,7 @@ pub struct RootNode {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum ElementNode {
     TemplateExport(TemplateExportNode),
+    TemplateFor(TemplateForNode),
     TemplateIf(TemplateIfNode),
     TextMany(TextManyNode),
 }
@@ -282,6 +291,38 @@ pub struct KwIfNode {
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct KwElseNode {
+    pub span: Range<u32>,
+}
+
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct TemplateForNode {
+    pub for_else: Option<ForElseNode>,
+    pub for_end: ForEndNode,
+    pub if_begin: IfBeginNode,
+    pub span: Range<u32>,
+}
+
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct ForElseNode {
+    pub element: Vec<ElementNode>,
+    pub template_l: TemplateLNode,
+    pub template_r: TemplateRNode,
+    pub span: Range<u32>,
+}
+
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct ForEndNode {
+    pub template_l: TemplateLNode,
+    pub template_r: TemplateRNode,
+    pub span: Range<u32>,
+}
+
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct KwForNode {
     pub span: Range<u32>,
 }
 #[derive(Clone, Debug, Hash)]

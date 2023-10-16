@@ -1,6 +1,6 @@
 [package]
 name = "dejavu-runtime"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["192607617@qq.com"]
 description = "DejaVu shared types and runtime"
 license = "MPL-2.0"

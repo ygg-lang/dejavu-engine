@@ -34,6 +34,7 @@ TEXT_WORD:  /[^<\p{White_Space}]+/
 // === template token === ----------------------------------------------------------------------------------------------
 @style(operator)
 atomic class TEMPLATE_L {
+// !'<%!'
 '<%' SpaceControl?
 }
 atomic class TEMPLATE_R {

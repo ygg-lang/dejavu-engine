@@ -14,13 +14,15 @@ name = "dejavu"
 path = "src/main.rs"
 
 [dependencies]
-clap = "4.0.29"
-serde_json = "1.0.89"
-serde = { version = "1.0.130", features = ["derive"] }
+askama = "0.12.1"
 
 [dependencies.dejavu-ir]
 version = "0.0.*"
 path = "../dejavu-core"
+
+[dependencies.dejavu-runtime]
+version = "0.0.*"
+path = "../dejavu-runtime"
 
 [features]
 default = []

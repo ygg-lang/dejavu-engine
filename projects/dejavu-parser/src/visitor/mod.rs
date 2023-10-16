@@ -5,6 +5,7 @@ use crate::{
 use dejavu_ir::hir::{DejavuBranches, DejavuRoot, DejavuStatement, DejavuTextTrim};
 
 mod conditional;
+mod looping;
 
 impl RootNode {
     pub fn as_hir(&self) -> DejavuRoot {

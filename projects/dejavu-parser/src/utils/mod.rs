@@ -6,12 +6,13 @@ pub fn take_elements(s: &[ElementNode]) -> DejavuRoot {
     for x in s {
         match x {
             ElementNode::TemplateExport(_) => {}
+            ElementNode::TextMany(v) => out += take_text(&v.text_element),
             ElementNode::TemplateIf(v) => {
                 // out.trim_text(take_control_l(v.if_begin.template_l.space_control.clone(), true));
                 // last_trim = take_control_r(v.if_end.template_r.space_control.clone(), true);
                 out += v.as_hir();
             }
-            ElementNode::TextMany(v) => out += take_text(&v.text_element),
+            ElementNode::TemplateFor(_) => {}
         }
     }
     out
