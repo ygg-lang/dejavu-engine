@@ -17,9 +17,10 @@ impl<'a> core::fmt::Display for HelloTemplate<'a> {
 
         f.write_str("\n\n# if-else-if element\n")?;
 
-        if true {}
-
-        if true {}
+        if true {
+        }
+        else if true {
+        }
 
         Ok(())
     }

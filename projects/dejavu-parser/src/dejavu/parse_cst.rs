@@ -373,7 +373,6 @@ fn parse_template_for(state: Input) -> Output {
         })
     })
 }
-
 #[inline]
 fn parse_for_begin(state: Input) -> Output {
     state.rule(DejavuRule::ForBegin, |s| {

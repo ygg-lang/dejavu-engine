@@ -10,13 +10,7 @@ impl<'a> core::fmt::Display for HelloTemplate<'a> {
     {% when DejavuStatement::Text with (s) %}
         {{ s }}
     {% when DejavuStatement::Branches with (s) %}
-        {% for branch in s.branches %}
-        if {{ branch.condition }} {
-            {% for item in branch.body %}
-
-            {% endfor %}
-        }
-        {% endfor %}
+        {{ s }}
 {% endmatch %}
 {% endfor %}
         Ok(())

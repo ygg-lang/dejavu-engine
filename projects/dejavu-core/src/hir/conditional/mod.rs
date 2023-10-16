@@ -23,10 +23,30 @@ impl Display for DejavuBranches {
             }
             f.write_fmt(format_args!("{}", condition))?;
             f.write_str(" {\n")?;
-
+            for s in body {
+                f.write_fmt(format_args!("{}", s))?;
+            }
             f.write_str("}")?
         }
+        match &self.default {
+            Some(s) => {
+                f.write_str("else ")?;
+                f.write_fmt(format_args!("{}", s))?;
+            }
+            None => {}
+        }
         Ok(())
+    }
+}
+
+impl Display for DejavuConditional {
+    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
+        f.write_fmt(format_args!("{}", self.condition))?;
+        f.write_str(" {\n")?;
+        for s in &self.body {
+            f.write_fmt(format_args!("{}", s))?;
+        }
+        f.write_str("}")
     }
 }
 
