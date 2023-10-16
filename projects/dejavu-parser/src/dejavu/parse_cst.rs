@@ -27,6 +27,12 @@ pub(super) fn parse_cst(input: &str, rule: NexusRule) -> OutputResult<NexusRule>
         NexusRule::IfEnd => parse_if_end(state),
         NexusRule::KW_IF => parse_kw_if(state),
         NexusRule::KW_ELSE => parse_kw_else(state),
+        NexusRule::Expression => parse_expression(state),
+        NexusRule::ExpressionRest => parse_expression_rest(state),
+        NexusRule::Infix => parse_infix(state),
+        NexusRule::Term => parse_term(state),
+        NexusRule::Prefix => parse_prefix(state),
+        NexusRule::Suffix => parse_suffix(state),
         NexusRule::Atomic => parse_atomic(state),
         NexusRule::String => parse_string(state),
         NexusRule::Number => parse_number(state),
@@ -52,7 +58,6 @@ fn parse_element(state: Input) -> Output {
             .or_else(|s| parse_template_if(s).and_then(|s| s.tag_node("template_if")))
     })
 }
-
 #[inline]
 fn parse_text_many(state: Input) -> Output {
     state.rule(NexusRule::TextMany, |s| {
@@ -114,10 +119,11 @@ fn parse_template_r(state: Input) -> Output {
 fn parse_space_control(state: Input) -> Output {
     state.rule(NexusRule::SpaceControl, |s| {
         Err(s)
-            .or_else(|s| builtin_text(s, "_", false).and_then(|s| s.tag_node("space_control_0")))
-            .or_else(|s| builtin_text(s, "-", false).and_then(|s| s.tag_node("space_control_1")))
-            .or_else(|s| builtin_text(s, "~", false).and_then(|s| s.tag_node("space_control_2")))
-            .or_else(|s| builtin_text(s, "=", false).and_then(|s| s.tag_node("space_control_3")))
+            .or_else(|s| builtin_text(s, "=", false).and_then(|s| s.tag_node("space_control_0")))
+            .or_else(|s| builtin_text(s, "~", false).and_then(|s| s.tag_node("space_control_1")))
+            .or_else(|s| builtin_text(s, "-", false).and_then(|s| s.tag_node("space_control_2")))
+            .or_else(|s| builtin_text(s, "_", false).and_then(|s| s.tag_node("space_control_3")))
+            .or_else(|s| builtin_text(s, ".", false).and_then(|s| s.tag_node("space_control_4")))
     })
 }
 #[inline]
@@ -229,7 +235,7 @@ fn parse_template_if(state: Input) -> Output {
                 .and_then(|s| parse_if_begin(s).and_then(|s| s.tag_node("if_begin")))
                 .and_then(|s| s.repeat(0..4294967295, |s| parse_if_else_if(s).and_then(|s| s.tag_node("if_else_if"))))
                 .and_then(|s| s.optional(|s| parse_if_else(s).and_then(|s| s.tag_node("if_else"))))
-                .and_then(|s| parse_if_end(s))
+                .and_then(|s| parse_if_end(s).and_then(|s| s.tag_node("if_end")))
         })
     })
 }
@@ -240,7 +246,10 @@ fn parse_if_begin(state: Input) -> Output {
             Ok(s)
                 .and_then(|s| {
                     s.sequence(|s| {
-                        Ok(s).and_then(|s| parse_template_l(s)).and_then(|s| builtin_ignore(s)).and_then(|s| parse_kw_if(s))
+                        Ok(s)
+                            .and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l")))
+                            .and_then(|s| builtin_ignore(s))
+                            .and_then(|s| parse_kw_if(s))
                     })
                 })
                 .and_then(|s| builtin_ignore(s))
@@ -250,12 +259,15 @@ fn parse_if_begin(state: Input) -> Output {
                             .and_then(|s| {
                                 s.sequence(|s| {
                                     Ok(s)
-                                        .and_then(|s| parse_atomic(s))
+                                        .and_then(|s| parse_expression(s).and_then(|s| s.tag_node("expression")))
                                         .and_then(|s| builtin_ignore(s))
-                                        .and_then(|s| parse_template_r(s))
+                                        .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
                                 })
                             })
-                            .and_then(|s| s.repeat(0..4294967295, |s| parse_text_elements(s)).and_then(|s| s.tag_node("text")))
+                            .and_then(|s| {
+                                s.repeat(0..4294967295, |s| parse_text_elements(s).and_then(|s| s.tag_node("text_elements")))
+                                    .and_then(|s| s.tag_node("text"))
+                            })
                     })
                     .and_then(|s| s.tag_node("condition"))
                 })
@@ -270,14 +282,17 @@ fn parse_if_else(state: Input) -> Output {
                 .and_then(|s| {
                     s.sequence(|s| {
                         Ok(s)
-                            .and_then(|s| parse_template_l(s))
+                            .and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l")))
                             .and_then(|s| builtin_ignore(s))
                             .and_then(|s| parse_kw_else(s))
                             .and_then(|s| builtin_ignore(s))
-                            .and_then(|s| parse_template_r(s))
+                            .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
                     })
                 })
-                .and_then(|s| s.repeat(0..4294967295, |s| parse_text_elements(s)).and_then(|s| s.tag_node("text")))
+                .and_then(|s| {
+                    s.repeat(0..4294967295, |s| parse_text_elements(s).and_then(|s| s.tag_node("text_elements")))
+                        .and_then(|s| s.tag_node("text"))
+                })
         })
     })
 }
@@ -289,16 +304,32 @@ fn parse_if_else_if(state: Input) -> Output {
                 .and_then(|s| {
                     s.sequence(|s| {
                         Ok(s)
-                            .and_then(|s| parse_template_l(s))
+                            .and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l")))
                             .and_then(|s| builtin_ignore(s))
                             .and_then(|s| parse_kw_else(s))
                             .and_then(|s| builtin_ignore(s))
                             .and_then(|s| parse_kw_if(s))
-                            .and_then(|s| builtin_ignore(s))
-                            .and_then(|s| parse_template_r(s))
                     })
                 })
-                .and_then(|s| s.repeat(0..4294967295, |s| parse_text_elements(s)).and_then(|s| s.tag_node("text")))
+                .and_then(|s| builtin_ignore(s))
+                .and_then(|s| {
+                    s.sequence(|s| {
+                        Ok(s)
+                            .and_then(|s| {
+                                s.sequence(|s| {
+                                    Ok(s)
+                                        .and_then(|s| parse_expression(s).and_then(|s| s.tag_node("expression")))
+                                        .and_then(|s| builtin_ignore(s))
+                                        .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
+                                })
+                            })
+                            .and_then(|s| {
+                                s.repeat(0..4294967295, |s| parse_text_elements(s).and_then(|s| s.tag_node("text_elements")))
+                                    .and_then(|s| s.tag_node("text"))
+                            })
+                    })
+                    .and_then(|s| s.tag_node("condition"))
+                })
         })
     })
 }
@@ -307,13 +338,13 @@ fn parse_if_end(state: Input) -> Output {
     state.rule(NexusRule::IfEnd, |s| {
         s.sequence(|s| {
             Ok(s)
-                .and_then(|s| parse_template_l(s))
+                .and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l")))
                 .and_then(|s| builtin_ignore(s))
                 .and_then(|s| parse_kw_end(s))
                 .and_then(|s| builtin_ignore(s))
                 .and_then(|s| s.optional(|s| parse_kw_if(s)))
                 .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_template_r(s))
+                .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
         })
     })
 }
@@ -325,10 +356,88 @@ fn parse_kw_if(state: Input) -> Output {
 fn parse_kw_else(state: Input) -> Output {
     state.rule(NexusRule::KW_ELSE, |s| s.match_string("else", false))
 }
+
+#[inline]
+fn parse_expression(state: Input) -> Output {
+    state.rule(NexusRule::Expression, |s| {
+        s.sequence(|s| {
+            Ok(s)
+                .and_then(|s| parse_term(s).and_then(|s| s.tag_node("term")))
+                .and_then(|s| builtin_ignore(s))
+                .and_then(|s| s.repeat(0..4294967295, |s| parse_expression_rest(s).and_then(|s| s.tag_node("expression_rest"))))
+        })
+    })
+}
+
+#[inline]
+fn parse_expression_rest(state: Input) -> Output {
+    state.rule(NexusRule::ExpressionRest, |s| {
+        s.sequence(|s| {
+            Ok(s)
+                .and_then(|s| parse_infix(s).and_then(|s| s.tag_node("infix")))
+                .and_then(|s| builtin_ignore(s))
+                .and_then(|s| parse_term(s).and_then(|s| s.tag_node("term")))
+        })
+    })
+}
+
+#[inline]
+fn parse_infix(state: Input) -> Output {
+    state.rule(NexusRule::Infix, |s| {
+        Err(s)
+            .or_else(|s| builtin_text(s, "+", false).and_then(|s| s.tag_node("infix_0")))
+            .or_else(|s| builtin_text(s, "-", false).and_then(|s| s.tag_node("infix_1")))
+    })
+}
+
+#[inline]
+fn parse_term(state: Input) -> Output {
+    state.rule(NexusRule::Term, |s| {
+        s.sequence(|s| {
+            Ok(s)
+                .and_then(|s| s.repeat(0..4294967295, |s| parse_prefix(s).and_then(|s| s.tag_node("prefix"))))
+                .and_then(|s| builtin_ignore(s))
+                .and_then(|s| parse_atomic(s).and_then(|s| s.tag_node("atomic")))
+                .and_then(|s| builtin_ignore(s))
+                .and_then(|s| s.repeat(0..4294967295, |s| parse_suffix(s).and_then(|s| s.tag_node("suffix"))))
+        })
+    })
+}
+
+#[inline]
+fn parse_prefix(state: Input) -> Output {
+    state.rule(NexusRule::Prefix, |s| Err(s).or_else(|s| builtin_text(s, "!", false).and_then(|s| s.tag_node("prefix_0"))))
+}
+
+#[inline]
+fn parse_suffix(state: Input) -> Output {
+    state.rule(NexusRule::Suffix, |s| {
+        Err(s).or_else(|s| builtin_text(s, "?", false).and_then(|s| s.tag_node("suffix_0"))).or_else(|s| {
+            s.sequence(|s| {
+                Ok(s)
+                    .and_then(|s| builtin_text(s, ".", false))
+                    .and_then(|s| builtin_ignore(s))
+                    .and_then(|s| parse_identifier(s).and_then(|s| s.tag_node("identifier")))
+            })
+            .and_then(|s| s.tag_node("suffix_1"))
+        })
+    })
+}
 #[inline]
 fn parse_atomic(state: Input) -> Output {
     state.rule(NexusRule::Atomic, |s| {
         Err(s)
+            .or_else(|s| {
+                s.sequence(|s| {
+                    Ok(s)
+                        .and_then(|s| builtin_text(s, "(", false))
+                        .and_then(|s| builtin_ignore(s))
+                        .and_then(|s| parse_expression(s).and_then(|s| s.tag_node("expression")))
+                        .and_then(|s| builtin_ignore(s))
+                        .and_then(|s| builtin_text(s, ")", false))
+                })
+                .and_then(|s| s.tag_node("atomic_0"))
+            })
             .or_else(|s| parse_boolean(s).and_then(|s| s.tag_node("boolean")))
             .or_else(|s| parse_identifier(s).and_then(|s| s.tag_node("identifier")))
             .or_else(|s| parse_number(s).and_then(|s| s.tag_node("number")))
@@ -341,18 +450,18 @@ fn parse_string(state: Input) -> Output {
             .or_else(|s| {
                 s.sequence(|s| {
                     Ok(s)
-                        .and_then(|s| builtin_text(s, "\"", false))
+                        .and_then(|s| builtin_text(s, "'", false))
                         .and_then(|s| builtin_ignore(s))
-                        .and_then(|s| builtin_text(s, "\"", false))
+                        .and_then(|s| builtin_text(s, "'", false))
                 })
                 .and_then(|s| s.tag_node("string_0"))
             })
             .or_else(|s| {
                 s.sequence(|s| {
                     Ok(s)
-                        .and_then(|s| builtin_text(s, "'", false))
+                        .and_then(|s| builtin_text(s, "\"", false))
                         .and_then(|s| builtin_ignore(s))
-                        .and_then(|s| builtin_text(s, "'", false))
+                        .and_then(|s| builtin_text(s, "\"", false))
                 })
                 .and_then(|s| s.tag_node("string_1"))
             })

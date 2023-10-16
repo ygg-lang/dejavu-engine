@@ -39,10 +39,11 @@ atomic class TEMPLATE_R {
 SpaceControl? '%>'
 }
 union SpaceControl {
-| '_' #A
-| '-' #B
-| '~' #C
-| '=' #D
+| '=' #E
+| '~' #D
+| '-' #C
+| '_' #B
+| '.' #A
 }
 @style(keyword)
 token {
@@ -68,19 +69,19 @@ KW_BY: 'by'
 }
 // === template if === -------------------------------------------------------------------------------------------------
 atomic class TemplateIf {
-IfBegin IfElseIf* IfElse? ^IfEnd
+IfBegin IfElseIf* IfElse? IfEnd
 }
-atomic class IfBegin ^ {
-TEMPLATE_L ~ KW_IF ~ condition:Atomic ~ TEMPLATE_R text:TextElements*
+atomic class IfBegin {
+TEMPLATE_L ~ ^KW_IF ~ condition:Expression ~ TEMPLATE_R text:TextElements*
 }
-atomic class IfElse ^ {
-TEMPLATE_L ~ KW_ELSE ~ TEMPLATE_R text:TextElements*
+atomic class IfElse {
+TEMPLATE_L ~ ^KW_ELSE ~ TEMPLATE_R text:TextElements*
 }
-atomic class IfElseIf ^ {
-TEMPLATE_L ~ KW_ELSE ~ KW_IF ~ TEMPLATE_R text:TextElements*
+atomic class IfElseIf {
+TEMPLATE_L ~ ^KW_ELSE ~ ^KW_IF ~ condition:Expression ~ TEMPLATE_R text:TextElements*
 }
-atomic class IfEnd ^ {
-TEMPLATE_L ~ KW_END ~ KW_IF? ~ TEMPLATE_R
+atomic class IfEnd {
+TEMPLATE_L ~ ^KW_END ~ ^KW_IF? ~ TEMPLATE_R
 }
 @style(keyword)
 token {
@@ -88,17 +89,37 @@ KW_IF: 'if'
 KW_ELSE: 'else'
 }
 // === text area === ---------------------------------------------------------------------------------------------------
-
+class Expression {
+Term ExpressionRest*
+}
+class ExpressionRest {
+Infix Term
+}
+union Infix {
+| '+' #Add
+| '-' #Mul
+}
+class Term {
+Prefix* Atomic Suffix*
+}
+union Prefix {
+| '!' #Not
+}
+union Suffix {
+| '?' #Null
+| '.' Identifier
+}
 // === string === ------------------------------------------------------------------------------------------------------
 union Atomic {
-| Boolean
-| Identifier
-| Number
+| '(' Expression ')' #Group
+| Boolean            #Boolean
+| Identifier         #Identifier
+| Number             #Number
 }
 // === string === ------------------------------------------------------------------------------------------------------
 union String {
-| '"' '"' #SingleQuote
 | "'" "'" #DoubleQuote
+| '"' '"' #SingleQuote
 }
 // === number === ------------------------------------------------------------------------------------------------------
 class Number {

@@ -7,7 +7,7 @@ impl RootNode {
         for x in &self.element {
             match x {
                 ElementNode::TemplateExport(_) => {}
-                ElementNode::TemplateIf(_) => {}
+                ElementNode::TemplateIf(v) => {}
                 ElementNode::TextMany(v) => out.statements.push(DejavuStatement::Text(many_text(&v.text_elements))),
             }
         }
@@ -23,8 +23,8 @@ impl TextElementsNode {
     pub fn write_buffer(&self, w: &mut String) {
         match self {
             TextElementsNode::TemplateE(_) => w.push_str("<%"),
-            TextElementsNode::TextSpace(s) => w.push_str(&s._text),
-            TextElementsNode::TextWord(s) => w.push_str(&s._text),
+            TextElementsNode::TextSpace(s) => w.push_str(&s.text),
+            TextElementsNode::TextWord(s) => w.push_str(&s.text),
         }
     }
 }
