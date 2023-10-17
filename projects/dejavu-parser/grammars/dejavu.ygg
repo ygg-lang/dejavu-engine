@@ -142,10 +142,10 @@ union String {
 }
 // === number === ------------------------------------------------------------------------------------------------------
 atomic union Number {
-    | Digits Unit?    #Dec
-    | /0b/ BIN Unit?  #Bin
-    | /0o/ OCT Unit?  #Oct
-    | /0x/ HEX Unit?  #Hex
+    | Digits     #Dec
+//    | /0b/ BIN Unit?  #Bin
+//    | /0o/ OCT Unit?  #Oct
+//    | /0x/ HEX Unit?  #Hex
 }
 text class Digits {
     /(0|[1-9][0-9])(.[0-9]+)?/

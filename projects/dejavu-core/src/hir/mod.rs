@@ -4,6 +4,8 @@ use core::{
     ops::{AddAssign, Range},
 };
 
+use indentation::{display_wrap, DisplayIndent, IndentFormatter};
+
 pub use self::{
     conditional::{DejavuBranches, DejavuConditional},
     expr::DejavuExpression,
@@ -25,11 +27,6 @@ pub enum DejavuStatement {
     Branches(DejavuBranches),
 }
 
-struct IndentAware<'i, W> {
-    buffer: &'i mut W,
-    indent: usize,
-}
-
 impl Debug for DejavuStatement {
     fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
         match self {
@@ -39,11 +36,12 @@ impl Debug for DejavuStatement {
     }
 }
 
-impl Display for DejavuStatement {
-    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
+display_wrap![DejavuStatement, DejavuText, DejavuBranches, DejavuConditional];
+impl DisplayIndent for DejavuStatement {
+    fn fmt_indent<W: Write>(&self, f: IndentFormatter<W>) -> core::fmt::Result {
         match self {
-            DejavuStatement::Text(v) => Display::fmt(v, f),
-            DejavuStatement::Branches(v) => Display::fmt(v, f),
+            DejavuStatement::Text(v) => v.fmt_indent(f),
+            DejavuStatement::Branches(v) => v.fmt_indent(f),
         }
     }
 }

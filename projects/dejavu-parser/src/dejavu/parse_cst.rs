@@ -488,61 +488,8 @@ fn parse_string(state: Input) -> Output {
 }
 #[inline]
 fn parse_number(state: Input) -> Output {
-    state.rule(DejavuRule::Number, |s| {
-        Err(s)
-            .or_else(|s| {
-                s.sequence(|s| {
-                    Ok(s)
-                        .and_then(|s| parse_digits(s).and_then(|s| s.tag_node("digits")))
-                        .and_then(|s| s.optional(|s| parse_unit(s).and_then(|s| s.tag_node("unit"))))
-                })
-                .and_then(|s| s.tag_node("number_0"))
-            })
-            .or_else(|s| {
-                s.sequence(|s| {
-                    Ok(s)
-                        .and_then(|s| {
-                            builtin_regex(s, {
-                                static REGEX: OnceLock<Regex> = OnceLock::new();
-                                REGEX.get_or_init(|| Regex::new("^(0b)").unwrap())
-                            })
-                        })
-                        .and_then(|s| parse_bin(s).and_then(|s| s.tag_node("bin")))
-                        .and_then(|s| s.optional(|s| parse_unit(s).and_then(|s| s.tag_node("unit"))))
-                })
-                .and_then(|s| s.tag_node("number_1"))
-            })
-            .or_else(|s| {
-                s.sequence(|s| {
-                    Ok(s)
-                        .and_then(|s| {
-                            builtin_regex(s, {
-                                static REGEX: OnceLock<Regex> = OnceLock::new();
-                                REGEX.get_or_init(|| Regex::new("^(0o)").unwrap())
-                            })
-                        })
-                        .and_then(|s| parse_oct(s).and_then(|s| s.tag_node("oct")))
-                        .and_then(|s| s.optional(|s| parse_unit(s).and_then(|s| s.tag_node("unit"))))
-                })
-                .and_then(|s| s.tag_node("number_2"))
-            })
-            .or_else(|s| {
-                s.sequence(|s| {
-                    Ok(s)
-                        .and_then(|s| {
-                            builtin_regex(s, {
-                                static REGEX: OnceLock<Regex> = OnceLock::new();
-                                REGEX.get_or_init(|| Regex::new("^(0x)").unwrap())
-                            })
-                        })
-                        .and_then(|s| parse_hex(s).and_then(|s| s.tag_node("hex")))
-                        .and_then(|s| s.optional(|s| parse_unit(s).and_then(|s| s.tag_node("unit"))))
-                })
-                .and_then(|s| s.tag_node("number_3"))
-            })
-    })
+    state.rule(DejavuRule::Number, |s| Err(s).or_else(|s| parse_digits(s).and_then(|s| s.tag_node("digits"))))
 }
-
 #[inline]
 fn parse_digits(state: Input) -> Output {
     state.rule(DejavuRule::Digits, |s| {
@@ -552,12 +499,10 @@ fn parse_digits(state: Input) -> Output {
         })
     })
 }
-
 #[inline]
 fn parse_unit(state: Input) -> Output {
     state.rule(DejavuRule::Unit, |s| parse_identifier(s).and_then(|s| s.tag_node("identifier")))
 }
-
 #[inline]
 fn parse_bin(state: Input) -> Output {
     state.rule(DejavuRule::BIN, |s| {
@@ -567,7 +512,6 @@ fn parse_bin(state: Input) -> Output {
         })
     })
 }
-
 #[inline]
 fn parse_oct(state: Input) -> Output {
     state.rule(DejavuRule::OCT, |s| {
@@ -577,7 +521,6 @@ fn parse_oct(state: Input) -> Output {
         })
     })
 }
-
 #[inline]
 fn parse_hex(state: Input) -> Output {
     state.rule(DejavuRule::HEX, |s| {

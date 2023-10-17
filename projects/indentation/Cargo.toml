@@ -1,14 +1,14 @@
 [package]
 name = "indentation"
-version = "0.1.5"
+version = "0.1.6"
 authors = ["Aster <192607617@qq.com>"]
 categories = ["text-processing"]
 description = "Indentation Formatter"
 keywords = ["indentation", "formatter"]
-homepage = "https://github.com/ygg-lang/pex-lisp"
-repository = "https://github.com/ygg-lang/pex-lisp"
+homepage = "https://github.com/oovm/dejavu-engine"
+repository = "https://github.com/oovm/dejavu-engine/tree/dev/projects/indentation"
 documentation = "https://docs.rs/indentation"
-readme = "Readme.md"
+readme = "readme.md"
 license = "MPL-2.0"
 edition = "2021"
 

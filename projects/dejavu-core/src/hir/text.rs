@@ -10,8 +10,8 @@ pub struct DejavuText {
     pub range: Range<usize>,
 }
 
-impl Display for DejavuText {
-    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
+impl DisplayIndent for DejavuText {
+    fn fmt_indent<W: Write>(&self, mut f: IndentFormatter<W>) -> core::fmt::Result {
         f.write_str("f.write_str(\"")?;
         for c in self.head.chars().chain(self.body.chars()).chain(self.tail.chars()) {
             match c {

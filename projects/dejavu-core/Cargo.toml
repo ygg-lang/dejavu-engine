@@ -17,6 +17,10 @@ version = "0.1.*"
 path = '../dejavu-parser'
 
 
+[dependencies.indentation]
+version = "0.1.*"
+path = "../indentation"
+
 [features]
 default = []
 

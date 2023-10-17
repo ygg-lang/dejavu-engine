@@ -124,7 +124,9 @@ impl YggdrasilNode for TemplateENode {
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
+        Ok(Self {
+            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
+        })
     }
 }
 #[automatically_derived]
@@ -144,7 +146,10 @@ impl YggdrasilNode for TextSpaceNode {
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
-        Ok(Self { text: pair.get_string(), span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
+        Ok(Self {
+            text: pair.get_string(),
+            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
+        })
     }
 }
 #[automatically_derived]
@@ -164,7 +169,10 @@ impl YggdrasilNode for TextWordNode {
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
-        Ok(Self { text: pair.get_string(), span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
+        Ok(Self {
+            text: pair.get_string(),
+            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
+        })
     }
 }
 #[automatically_derived]
@@ -237,19 +245,19 @@ impl YggdrasilNode for SpaceControlNode {
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
         if let Some(_) = pair.find_first_tag("space_control_0") {
-            return Ok(Self::SpaceControl0);
+            return Ok(Self::SpaceControl0)
         }
         if let Some(_) = pair.find_first_tag("space_control_1") {
-            return Ok(Self::SpaceControl1);
+            return Ok(Self::SpaceControl1)
         }
         if let Some(_) = pair.find_first_tag("space_control_2") {
-            return Ok(Self::SpaceControl2);
+            return Ok(Self::SpaceControl2)
         }
         if let Some(_) = pair.find_first_tag("space_control_3") {
-            return Ok(Self::SpaceControl3);
+            return Ok(Self::SpaceControl3)
         }
         if let Some(_) = pair.find_first_tag("space_control_4") {
-            return Ok(Self::SpaceControl4);
+            return Ok(Self::SpaceControl4)
         }
         Err(YggdrasilError::invalid_node(DejavuRule::SpaceControl, _span))
     }
@@ -271,7 +279,9 @@ impl YggdrasilNode for KwEndNode {
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
+        Ok(Self {
+            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
+        })
     }
 }
 #[automatically_derived]
@@ -291,7 +301,9 @@ impl YggdrasilNode for TemplateExportNode {
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
+        Ok(Self {
+            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
+        })
     }
 }
 #[automatically_derived]
@@ -336,7 +348,9 @@ impl YggdrasilNode for KwExportNode {
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
+        Ok(Self {
+            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
+        })
     }
 }
 #[automatically_derived]
@@ -356,7 +370,9 @@ impl YggdrasilNode for KwClassNode {
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
+        Ok(Self {
+            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
+        })
     }
 }
 #[automatically_derived]
@@ -376,7 +392,9 @@ impl YggdrasilNode for KwTraitNode {
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
+        Ok(Self {
+            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
+        })
     }
 }
 #[automatically_derived]
@@ -396,7 +414,9 @@ impl YggdrasilNode for KwToNode {
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
+        Ok(Self {
+            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
+        })
     }
 }
 #[automatically_derived]
@@ -416,7 +436,9 @@ impl YggdrasilNode for KwByNode {
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
+        Ok(Self {
+            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
+        })
     }
 }
 #[automatically_derived]
@@ -563,7 +585,9 @@ impl YggdrasilNode for KwIfNode {
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
+        Ok(Self {
+            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
+        })
     }
 }
 #[automatically_derived]
@@ -583,7 +607,9 @@ impl YggdrasilNode for KwElseNode {
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
+        Ok(Self {
+            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
+        })
     }
 }
 #[automatically_derived]
@@ -703,7 +729,9 @@ impl YggdrasilNode for KwForNode {
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
+        Ok(Self {
+            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
+        })
     }
 }
 #[automatically_derived]
@@ -775,10 +803,10 @@ impl YggdrasilNode for InfixNode {
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
         if let Some(_) = pair.find_first_tag("infix_0") {
-            return Ok(Self::Infix0);
+            return Ok(Self::Infix0)
         }
         if let Some(_) = pair.find_first_tag("infix_1") {
-            return Ok(Self::Infix1);
+            return Ok(Self::Infix1)
         }
         Err(YggdrasilError::invalid_node(DejavuRule::Infix, _span))
     }
@@ -828,7 +856,7 @@ impl YggdrasilNode for PrefixNode {
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
         if let Some(_) = pair.find_first_tag("prefix_0") {
-            return Ok(Self::Prefix0);
+            return Ok(Self::Prefix0)
         }
         Err(YggdrasilError::invalid_node(DejavuRule::Prefix, _span))
     }
@@ -854,7 +882,7 @@ impl YggdrasilNode for SuffixNode {
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
         if let Some(_) = pair.find_first_tag("suffix_0") {
-            return Ok(Self::Suffix0);
+            return Ok(Self::Suffix0)
         }
         if let Ok(s) = pair.take_tagged_one::<IdentifierNode>(Cow::Borrowed("suffix_1")) {
             return Ok(Self::Suffix1(s));
@@ -885,7 +913,7 @@ impl YggdrasilNode for AtomicNode {
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
         if let Some(_) = pair.find_first_tag("atomic_0") {
-            return Ok(Self::Atomic0);
+            return Ok(Self::Atomic0)
         }
         if let Ok(s) = pair.take_tagged_one::<BooleanNode>(Cow::Borrowed("boolean")) {
             return Ok(Self::Boolean(s));
@@ -920,10 +948,10 @@ impl YggdrasilNode for StringNode {
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
         if let Some(_) = pair.find_first_tag("string_0") {
-            return Ok(Self::String0);
+            return Ok(Self::String0)
         }
         if let Some(_) = pair.find_first_tag("string_1") {
-            return Ok(Self::String1);
+            return Ok(Self::String1)
         }
         Err(YggdrasilError::invalid_node(DejavuRule::String, _span))
     }
@@ -942,30 +970,17 @@ impl YggdrasilNode for NumberNode {
 
     fn get_range(&self) -> Option<Range<usize>> {
         match self {
-            Self::Number0 { .. } => None,
-            Self::Number1 { .. } => None,
-            Self::Number2 { .. } => None,
-            Self::Number3 { .. } => None,
+            Self::Digits(s) => s.get_range(),
         }
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
-        if let Ok(s) = pair.take_tagged_one("number_0") {
-            unimplemented!()
-        }
-        if let Ok(s) = pair.take_tagged_one("number_1") {
-            unimplemented!()
-        }
-        if let Ok(s) = pair.take_tagged_one("number_2") {
-            unimplemented!()
-        }
-        if let Ok(s) = pair.take_tagged_one("number_3") {
-            unimplemented!()
+        if let Ok(s) = pair.take_tagged_one::<DigitsNode>(Cow::Borrowed("digits")) {
+            return Ok(Self::Digits(s));
         }
         Err(YggdrasilError::invalid_node(DejavuRule::Number, _span))
     }
 }
-
 #[automatically_derived]
 impl FromStr for NumberNode {
     type Err = YggdrasilError<DejavuRule>;
@@ -974,7 +989,6 @@ impl FromStr for NumberNode {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::Number)?)
     }
 }
-
 #[automatically_derived]
 impl YggdrasilNode for DigitsNode {
     type Rule = DejavuRule;
@@ -984,7 +998,10 @@ impl YggdrasilNode for DigitsNode {
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
-        Ok(Self { text: pair.get_string(), span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
+        Ok(Self {
+            text: pair.get_string(),
+            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
+        })
     }
 }
 #[automatically_derived]
@@ -995,7 +1012,6 @@ impl FromStr for DigitsNode {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::Digits)?)
     }
 }
-
 #[automatically_derived]
 impl YggdrasilNode for UnitNode {
     type Rule = DejavuRule;
@@ -1011,7 +1027,6 @@ impl YggdrasilNode for UnitNode {
         })
     }
 }
-
 #[automatically_derived]
 impl FromStr for UnitNode {
     type Err = YggdrasilError<DejavuRule>;
@@ -1020,7 +1035,6 @@ impl FromStr for UnitNode {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::Unit)?)
     }
 }
-
 #[automatically_derived]
 impl YggdrasilNode for BinNode {
     type Rule = DejavuRule;
@@ -1030,10 +1044,11 @@ impl YggdrasilNode for BinNode {
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
+        Ok(Self {
+            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
+        })
     }
 }
-
 #[automatically_derived]
 impl FromStr for BinNode {
     type Err = YggdrasilError<DejavuRule>;
@@ -1042,7 +1057,6 @@ impl FromStr for BinNode {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::BIN)?)
     }
 }
-
 #[automatically_derived]
 impl YggdrasilNode for OctNode {
     type Rule = DejavuRule;
@@ -1052,10 +1066,11 @@ impl YggdrasilNode for OctNode {
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
+        Ok(Self {
+            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
+        })
     }
 }
-
 #[automatically_derived]
 impl FromStr for OctNode {
     type Err = YggdrasilError<DejavuRule>;
@@ -1064,7 +1079,6 @@ impl FromStr for OctNode {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::OCT)?)
     }
 }
-
 #[automatically_derived]
 impl YggdrasilNode for HexNode {
     type Rule = DejavuRule;
@@ -1074,10 +1088,11 @@ impl YggdrasilNode for HexNode {
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
+        Ok(Self {
+            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
+        })
     }
 }
-
 #[automatically_derived]
 impl FromStr for HexNode {
     type Err = YggdrasilError<DejavuRule>;
@@ -1141,7 +1156,9 @@ impl YggdrasilNode for IdentifierNode {
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
+        Ok(Self {
+            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
+        })
     }
 }
 #[automatically_derived]
@@ -1165,10 +1182,10 @@ impl YggdrasilNode for BooleanNode {
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
         if let Some(_) = pair.find_first_tag("boolean_0") {
-            return Ok(Self::Boolean0);
+            return Ok(Self::Boolean0)
         }
         if let Some(_) = pair.find_first_tag("boolean_1") {
-            return Ok(Self::Boolean1);
+            return Ok(Self::Boolean1)
         }
         Err(YggdrasilError::invalid_node(DejavuRule::Boolean, _span))
     }
@@ -1190,7 +1207,9 @@ impl YggdrasilNode for WhiteSpaceNode {
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
+        Ok(Self {
+            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
+        })
     }
 }
 #[automatically_derived]

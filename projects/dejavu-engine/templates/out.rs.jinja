@@ -6,12 +6,7 @@ impl<'a> core::fmt::Display for HelloTemplate<'a> {
     #[inline]
     fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
 {% for node in self.statements %}
-{% match node %}
-    {% when DejavuStatement::Text with (s) %}
-        {{ s }}
-    {% when DejavuStatement::Branches with (s) %}
-        {{ s }}
-{% endmatch %}
+{{ node }}
 {% endfor %}
         Ok(())
     }

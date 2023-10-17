@@ -13,3 +13,17 @@ macro_rules! indent_write {
         $dst.write_fmt($crate::format_args!($($arg)*))
     };
 }
+
+/// Wrap for [`core::fmt::Display`]
+#[macro_export]
+macro_rules! display_wrap {
+    ($($t:ty),*) => {
+        $(
+            impl Display for $t {
+                fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
+                    self.fmt_indent(IndentFormatter::new(f, "    "))
+                }
+            }
+        )*
+    };
+}

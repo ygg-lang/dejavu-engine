@@ -5,49 +5,51 @@ use core::{
 };
 
 /// A wrapper around a `Formatter` that adds indentation.
-pub struct IndentFormatter<'a, 'i> {
-    raw: &'i mut Formatter<'a>,
+pub struct IndentFormatter<W> {
+    raw: W,
     /// The current indentation level.
     indent_level: usize,
     /// The characters to use for indentation.
     indent_chars: &'static str,
 }
 
-impl<'a, 'i> Borrow<Formatter<'a>> for IndentFormatter<'a, 'i> {
-    fn borrow(&self) -> &Formatter<'a> {
-        self.raw
+impl<'i, W> Borrow<W> for &'i mut IndentFormatter<W> {
+    fn borrow(&self) -> &W {
+        &self.raw
     }
 }
 
-impl<'a, 'i> BorrowMut<Formatter<'a>> for IndentFormatter<'a, 'i> {
-    fn borrow_mut(&mut self) -> &mut Formatter<'a> {
-        self.raw
+impl<'i, W> BorrowMut<W> for &'i mut IndentFormatter<W> {
+    fn borrow_mut(&mut self) -> &mut W {
+        &mut self.raw
     }
 }
 
-impl<'a, 'i> Debug for IndentFormatter<'a, 'i> {
+impl<W> Debug for IndentFormatter<W> {
     fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
         f.debug_struct("IndentFormatter")
             .field("indent_level", &self.indent_level)
             .field("indent_chars", &self.indent_chars)
-            .field("width", &self.raw.width())
             .finish()
     }
 }
 
-impl AddAssign<usize> for IndentFormatter<'_, '_> {
+impl<W> AddAssign<usize> for IndentFormatter<W> {
     fn add_assign(&mut self, rhs: usize) {
         self.indent_level = self.indent_level.saturating_add(rhs);
     }
 }
 
-impl SubAssign<usize> for IndentFormatter<'_, '_> {
+impl<W> SubAssign<usize> for IndentFormatter<W> {
     fn sub_assign(&mut self, rhs: usize) {
         self.indent_level = self.indent_level.saturating_sub(rhs)
     }
 }
 
-impl Write for IndentFormatter<'_, '_> {
+impl<W> Write for IndentFormatter<W>
+where
+    W: Write,
+{
     fn write_str(&mut self, s: &str) -> core::fmt::Result {
         self.raw.write_str(s)
     }
@@ -59,34 +61,46 @@ impl Write for IndentFormatter<'_, '_> {
     }
 }
 
-impl<'a, 'i> IndentFormatter<'a, 'i> {
+impl<W> IndentFormatter<W> {
     /// Create a new `IndentFormatter` from a `Formatter` and an indent string.
-    pub fn new(f: &'i mut Formatter<'a>, indent: &'static str) -> Self {
+    pub fn new(f: W, indent: &'static str) -> Self {
         Self { raw: f, indent_level: 0, indent_chars: indent }
     }
     /// Wrap an `IndentDisplay` in an `IndentFormatter`.
-    pub fn wrap<T: IndentDisplay>(item: &T, f: &'i mut Formatter<'a>) -> core::fmt::Result {
-        item.indent_fmt(&mut IndentFormatter::new(f, "    "))
+    pub fn wrap<T: DisplayIndent>(item: &T, f: W) -> core::fmt::Result
+    where
+        W: Write,
+    {
+        item.fmt_indent(IndentFormatter::new(f, "    "))
     }
     /// Unwrap the `IndentFormatter` to get the underlying `Formatter`.
-    pub fn unwrap(self) -> &'i mut Formatter<'a> {
+    pub fn unwrap(self) -> W {
         self.raw
     }
     /// Write the current indentation level to the formatter.
-    pub fn write_indent(&mut self) -> core::fmt::Result {
+    pub fn write_indent(&mut self) -> core::fmt::Result
+    where
+        W: Write,
+    {
         for _ in 0..self.indent_level {
             self.raw.write_str(self.indent_chars)?;
         }
         Ok(())
     }
     /// Write a newline and the current indentation level to the formatter.
-    pub fn write_newline(&mut self) -> core::fmt::Result {
+    pub fn write_newline(&mut self) -> core::fmt::Result
+    where
+        W: Write,
+    {
         self.raw.write_char('\n')?;
         self.write_indent()?;
         Ok(())
     }
     /// Write a string, splitting it into lines and indenting each line.
-    pub fn write_lines(&mut self, s: &str) -> core::fmt::Result {
+    pub fn write_lines(&mut self, s: &str) -> core::fmt::Result
+    where
+        W: Write,
+    {
         for line in s.lines() {
             self.write_indent()?;
             self.raw.write_str(line)?;
@@ -104,7 +118,7 @@ impl<'a, 'i> IndentFormatter<'a, 'i> {
 }
 
 /// A trait for types that can be displayed with indentation.
-pub trait IndentDisplay {
+pub trait DisplayIndent {
     /// Display the type with indentation.
-    fn indent_fmt(&self, f: &mut IndentFormatter) -> core::fmt::Result;
+    fn fmt_indent<W: Write>(&self, f: IndentFormatter<W>) -> core::fmt::Result;
 }

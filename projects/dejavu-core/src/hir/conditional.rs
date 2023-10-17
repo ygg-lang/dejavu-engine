@@ -12,8 +12,8 @@ pub struct DejavuConditional {
     pub body: Vec<DejavuStatement>,
 }
 
-impl Display for DejavuBranches {
-    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
+impl DisplayIndent for DejavuBranches {
+    fn fmt_indent<W: Write>(&self, mut f: IndentFormatter<W>) -> core::fmt::Result {
         for (i, c) in self.branches.iter().enumerate() {
             if i == 0 {
                 f.write_str("if ")?
@@ -27,23 +27,29 @@ impl Display for DejavuBranches {
             // f.write_str("}\n")?;
         }
         if !self.default.is_empty() {
-            f.write_str("else {\n")?;
+            f.write_str("else {")?;
+            f.indent();
+            f.write_newline()?;
             for rest in &self.default {
                 f.write_fmt(format_args!("{}", rest))?;
             }
-            f.write_str("}\n")?;
+            f.dedent();
+            f.write_str("}")?;
         }
         Ok(())
     }
 }
 
-impl Display for DejavuConditional {
-    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
+impl DisplayIndent for DejavuConditional {
+    fn fmt_indent<W: Write>(&self, mut f: IndentFormatter<W>) -> core::fmt::Result {
         f.write_fmt(format_args!("{}", self.condition))?;
-        f.write_str(" {\n")?;
+        f.write_str(" {")?;
+        f.indent();
+        f.write_newline()?;
         for s in &self.body {
             f.write_fmt(format_args!("{}", s))?;
         }
+        f.dedent();
         f.write_str("}")
     }
 }

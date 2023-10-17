@@ -6,7 +6,8 @@
 #![doc(html_favicon_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 
 mod formatter;
-mod macros;
 mod from_raw;
+#[macro_export]
+mod macros;
 
-pub use self::formatter::{IndentFormatter, IndentDisplay};
+pub use self::formatter::{DisplayIndent, IndentFormatter};
