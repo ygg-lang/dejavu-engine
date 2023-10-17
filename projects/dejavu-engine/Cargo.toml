@@ -14,7 +14,6 @@ name = "dejavu"
 path = "src/main.rs"
 
 [dependencies]
-askama = "0.12.1"
 
 [dependencies.dejavu-ir]
 version = "0.0.*"

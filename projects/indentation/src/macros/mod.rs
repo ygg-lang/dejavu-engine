@@ -21,7 +21,7 @@ macro_rules! display_wrap {
         $(
             impl Display for $t {
                 fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
-                    self.fmt_indent(IndentFormatter::new(f, "    "))
+                    self.fmt_indent(&mut IndentFormatter::new(f, "    "))
                 }
             }
         )*

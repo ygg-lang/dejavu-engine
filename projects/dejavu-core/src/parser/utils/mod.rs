@@ -1,12 +1,7 @@
 use super::*;
-use crate::hir::{DejavuStatement, DejavuText, DejavuTextTrim};
-use dejavu_parser::{
-    dejavu::{ElementNode, SpaceControlNode, TemplateLNode, TemplateRNode},
-    YggdrasilNode,
-};
 
-pub fn take_elements(s: &[ElementNode]) -> DejavuRoot {
-    let mut out = DejavuRoot::default();
+pub fn take_elements(s: &[ElementNode]) -> DejavuSequence {
+    let mut out = DejavuSequence::default();
     for x in s {
         match x {
             ElementNode::TemplateExport(_) => {}

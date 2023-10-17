@@ -67,11 +67,11 @@ impl<W> IndentFormatter<W> {
         Self { raw: f, indent_level: 0, indent_chars: indent }
     }
     /// Wrap an `IndentDisplay` in an `IndentFormatter`.
-    pub fn wrap<T: DisplayIndent>(item: &T, f: W) -> core::fmt::Result
+    pub fn wrap<T: DisplayIndent>(item: &T, f: &mut W) -> core::fmt::Result
     where
         W: Write,
     {
-        item.fmt_indent(IndentFormatter::new(f, "    "))
+        item.fmt_indent(&mut IndentFormatter::new(f, "    "))
     }
     /// Unwrap the `IndentFormatter` to get the underlying `Formatter`.
     pub fn unwrap(self) -> W {
@@ -120,5 +120,5 @@ impl<W> IndentFormatter<W> {
 /// A trait for types that can be displayed with indentation.
 pub trait DisplayIndent {
     /// Display the type with indentation.
-    fn fmt_indent<W: Write>(&self, f: IndentFormatter<W>) -> core::fmt::Result;
+    fn fmt_indent<W: Write>(&self, f: &mut IndentFormatter<W>) -> core::fmt::Result;
 }

@@ -15,12 +15,12 @@ impl<'i> From<&'i TemplateIfNode> for DejavuBranches {
                 Some(cond) => {
                     let mut body = take_elements(node);
                     body.trim_text(s, e);
-                    out += DejavuConditional { condition: DejavuExpression::from(*cond), body: body.statements }
+                    out += DejavuConditional { condition: DejavuExpression::from(*cond), body: body.clone() }
                 }
                 None => {
                     let mut body = take_elements(node);
                     body.trim_text(s, e);
-                    out.default = body.statements
+                    out.default = body.clone()
                 }
             }
         }

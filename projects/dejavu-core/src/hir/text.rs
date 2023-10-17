@@ -11,7 +11,7 @@ pub struct DejavuText {
 }
 
 impl DisplayIndent for DejavuText {
-    fn fmt_indent<W: Write>(&self, mut f: IndentFormatter<W>) -> core::fmt::Result {
+    fn fmt_indent<W: Write>(&self, f: &mut IndentFormatter<W>) -> core::fmt::Result {
         f.write_str("f.write_str(\"")?;
         for c in self.head.chars().chain(self.body.chars()).chain(self.tail.chars()) {
             match c {

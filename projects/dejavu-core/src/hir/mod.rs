@@ -18,6 +18,11 @@ mod text;
 
 #[derive(Clone, Debug)]
 pub struct DejavuRoot {
+    pub body: DejavuSequence,
+}
+
+#[derive(Clone, Debug, Default)]
+pub struct DejavuSequence {
     pub statements: Vec<DejavuStatement>,
 }
 
@@ -36,9 +41,49 @@ impl Debug for DejavuStatement {
     }
 }
 
-display_wrap![DejavuStatement, DejavuText, DejavuBranches, DejavuConditional];
+impl DisplayIndent for DejavuRoot {
+    /// use super::*;
+    //
+    // impl<'a> core::fmt::Display for HelloTemplate<'a> {
+    //     #[inline]
+    //     fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    // {% for node in self.statements %}
+    // {{ node }}
+    // {% endfor %}
+    //         Ok(())
+    //     }
+    // }
+    fn fmt_indent<W: Write>(&self, f: &mut IndentFormatter<W>) -> core::fmt::Result {
+        f.write_str("use super::*;\n\n")?;
+        f.write_str("impl core::fmt::Display for HelloTemplate {")?;
+        f.indent();
+        f.write_newline()?;
+        f.write_str("#[inline]")?;
+        f.write_newline()?;
+        f.write_str("fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result ")?;
+        self.body.fmt_indent(f)?;
+        f.write_str("\n        Ok(())\n    }\n}")
+    }
+}
+
+impl DisplayIndent for DejavuSequence {
+    fn fmt_indent<W: Write>(&self, f: &mut IndentFormatter<W>) -> core::fmt::Result {
+        f.indent();
+        f.write_str("{\n")?;
+        f.write_indent()?;
+        for e in &self.statements {
+            e.fmt_indent(f)?
+        }
+        f.write_str("}")?;
+        f.dedent();
+        Ok(())
+    }
+}
+
+display_wrap![DejavuRoot, DejavuStatement, DejavuText];
+display_wrap![DejavuBranches, DejavuConditional];
 impl DisplayIndent for DejavuStatement {
-    fn fmt_indent<W: Write>(&self, f: IndentFormatter<W>) -> core::fmt::Result {
+    fn fmt_indent<W: Write>(&self, f: &mut IndentFormatter<W>) -> core::fmt::Result {
         match self {
             DejavuStatement::Text(v) => v.fmt_indent(f),
             DejavuStatement::Branches(v) => v.fmt_indent(f),
@@ -46,13 +91,7 @@ impl DisplayIndent for DejavuStatement {
     }
 }
 
-impl Default for DejavuRoot {
-    fn default() -> Self {
-        Self { statements: Vec::new() }
-    }
-}
-
-impl<T> AddAssign<T> for DejavuRoot
+impl<T> AddAssign<T> for DejavuSequence
 where
     T: Into<DejavuStatement>,
 {
@@ -61,9 +100,13 @@ where
     }
 }
 
-impl DejavuRoot {
+impl DejavuSequence {
     pub fn new(capacity: usize) -> Self {
         Self { statements: Vec::with_capacity(capacity) }
+    }
+    #[inline]
+    pub fn is_empty(&self) -> bool {
+        self.statements.is_empty()
     }
     /// `%> ... <%`
     pub fn trim_text(&mut self, head: DejavuTextTrim, tail: DejavuTextTrim) {
