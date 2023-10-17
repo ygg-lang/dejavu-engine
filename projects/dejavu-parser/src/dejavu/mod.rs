@@ -3,8 +3,8 @@
 #![allow(clippy::unnecessary_cast)]
 #![doc = include_str!("readme.md")]
 
-mod parse_cst;
 mod parse_ast;
+mod parse_cst;
 
 use core::str::FromStr;
 use std::{borrow::Cow, ops::Range, sync::OnceLock};
@@ -69,6 +69,11 @@ pub enum DejavuRule {
     Atomic,
     String,
     Number,
+    Digits,
+    Unit,
+    BIN,
+    OCT,
+    HEX,
     NamepathFree,
     Namepath,
     Identifier,
@@ -126,6 +131,11 @@ impl YggdrasilRule for DejavuRule {
             Self::Atomic => "",
             Self::String => "",
             Self::Number => "",
+            Self::Digits => "",
+            Self::Unit => "",
+            Self::BIN => "",
+            Self::OCT => "",
+            Self::HEX => "",
             Self::NamepathFree => "",
             Self::Namepath => "",
             Self::Identifier => "",
@@ -387,7 +397,42 @@ pub enum StringNode {
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct NumberNode {
+pub enum NumberNode {
+    Number0 { digits: DigitsNode, unit: Option<UnitNode> },
+    Number1 { bin: BinNode, unit: Option<UnitNode> },
+    Number2 { oct: OctNode, unit: Option<UnitNode> },
+    Number3 { hex: HexNode, unit: Option<UnitNode> },
+}
+
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct DigitsNode {
+    pub text: String,
+    pub span: Range<u32>,
+}
+
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct UnitNode {
+    pub identifier: IdentifierNode,
+    pub span: Range<u32>,
+}
+
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct BinNode {
+    pub span: Range<u32>,
+}
+
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct OctNode {
+    pub span: Range<u32>,
+}
+
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct HexNode {
     pub span: Range<u32>,
 }
 #[derive(Clone, Debug, Hash)]

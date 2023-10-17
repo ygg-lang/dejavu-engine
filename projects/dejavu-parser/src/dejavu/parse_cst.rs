@@ -41,6 +41,11 @@ pub(super) fn parse_cst(input: &str, rule: DejavuRule) -> OutputResult<DejavuRul
         DejavuRule::Atomic => parse_atomic(state),
         DejavuRule::String => parse_string(state),
         DejavuRule::Number => parse_number(state),
+        DejavuRule::Digits => parse_digits(state),
+        DejavuRule::Unit => parse_unit(state),
+        DejavuRule::BIN => parse_bin(state),
+        DejavuRule::OCT => parse_oct(state),
+        DejavuRule::HEX => parse_hex(state),
         DejavuRule::NamepathFree => parse_namepath_free(state),
         DejavuRule::Namepath => parse_namepath(state),
         DejavuRule::Identifier => parse_identifier(state),
@@ -484,9 +489,101 @@ fn parse_string(state: Input) -> Output {
 #[inline]
 fn parse_number(state: Input) -> Output {
     state.rule(DejavuRule::Number, |s| {
+        Err(s)
+            .or_else(|s| {
+                s.sequence(|s| {
+                    Ok(s)
+                        .and_then(|s| parse_digits(s).and_then(|s| s.tag_node("digits")))
+                        .and_then(|s| s.optional(|s| parse_unit(s).and_then(|s| s.tag_node("unit"))))
+                })
+                .and_then(|s| s.tag_node("number_0"))
+            })
+            .or_else(|s| {
+                s.sequence(|s| {
+                    Ok(s)
+                        .and_then(|s| {
+                            builtin_regex(s, {
+                                static REGEX: OnceLock<Regex> = OnceLock::new();
+                                REGEX.get_or_init(|| Regex::new("^(0b)").unwrap())
+                            })
+                        })
+                        .and_then(|s| parse_bin(s).and_then(|s| s.tag_node("bin")))
+                        .and_then(|s| s.optional(|s| parse_unit(s).and_then(|s| s.tag_node("unit"))))
+                })
+                .and_then(|s| s.tag_node("number_1"))
+            })
+            .or_else(|s| {
+                s.sequence(|s| {
+                    Ok(s)
+                        .and_then(|s| {
+                            builtin_regex(s, {
+                                static REGEX: OnceLock<Regex> = OnceLock::new();
+                                REGEX.get_or_init(|| Regex::new("^(0o)").unwrap())
+                            })
+                        })
+                        .and_then(|s| parse_oct(s).and_then(|s| s.tag_node("oct")))
+                        .and_then(|s| s.optional(|s| parse_unit(s).and_then(|s| s.tag_node("unit"))))
+                })
+                .and_then(|s| s.tag_node("number_2"))
+            })
+            .or_else(|s| {
+                s.sequence(|s| {
+                    Ok(s)
+                        .and_then(|s| {
+                            builtin_regex(s, {
+                                static REGEX: OnceLock<Regex> = OnceLock::new();
+                                REGEX.get_or_init(|| Regex::new("^(0x)").unwrap())
+                            })
+                        })
+                        .and_then(|s| parse_hex(s).and_then(|s| s.tag_node("hex")))
+                        .and_then(|s| s.optional(|s| parse_unit(s).and_then(|s| s.tag_node("unit"))))
+                })
+                .and_then(|s| s.tag_node("number_3"))
+            })
+    })
+}
+
+#[inline]
+fn parse_digits(state: Input) -> Output {
+    state.rule(DejavuRule::Digits, |s| {
         s.match_regex({
             static REGEX: OnceLock<Regex> = OnceLock::new();
-            REGEX.get_or_init(|| Regex::new("^(0|[1-9][0-9])").unwrap())
+            REGEX.get_or_init(|| Regex::new("^((0|[1-9][0-9])(.[0-9]+)?)").unwrap())
+        })
+    })
+}
+
+#[inline]
+fn parse_unit(state: Input) -> Output {
+    state.rule(DejavuRule::Unit, |s| parse_identifier(s).and_then(|s| s.tag_node("identifier")))
+}
+
+#[inline]
+fn parse_bin(state: Input) -> Output {
+    state.rule(DejavuRule::BIN, |s| {
+        s.match_regex({
+            static REGEX: OnceLock<Regex> = OnceLock::new();
+            REGEX.get_or_init(|| Regex::new("^([0-1]+)").unwrap())
+        })
+    })
+}
+
+#[inline]
+fn parse_oct(state: Input) -> Output {
+    state.rule(DejavuRule::OCT, |s| {
+        s.match_regex({
+            static REGEX: OnceLock<Regex> = OnceLock::new();
+            REGEX.get_or_init(|| Regex::new("^([0-7]+)").unwrap())
+        })
+    })
+}
+
+#[inline]
+fn parse_hex(state: Input) -> Output {
+    state.rule(DejavuRule::HEX, |s| {
+        s.match_regex({
+            static REGEX: OnceLock<Regex> = OnceLock::new();
+            REGEX.get_or_init(|| Regex::new("^([0-9a-fA-F]+)").unwrap())
         })
     })
 }

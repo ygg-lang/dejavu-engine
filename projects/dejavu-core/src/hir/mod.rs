@@ -1,18 +1,18 @@
 use alloc::{string::String, vec::Vec};
 use core::{
-    fmt::{Debug, Display, Formatter},
+    fmt::{Debug, Display, Formatter, Write},
     ops::{AddAssign, Range},
 };
-
-mod conditional;
-mod expr;
-mod text;
 
 pub use self::{
     conditional::{DejavuBranches, DejavuConditional},
     expr::DejavuExpression,
     text::{DejavuText, DejavuTextTrim},
 };
+
+mod conditional;
+mod expr;
+mod text;
 
 #[derive(Clone, Debug)]
 pub struct DejavuRoot {
@@ -23,6 +23,11 @@ pub struct DejavuRoot {
 pub enum DejavuStatement {
     Text(DejavuText),
     Branches(DejavuBranches),
+}
+
+struct IndentAware<'i, W> {
+    buffer: &'i mut W,
+    indent: usize,
 }
 
 impl Debug for DejavuStatement {

@@ -141,8 +141,22 @@ union String {
     | '"' '"' #SingleQuote
 }
 // === number === ------------------------------------------------------------------------------------------------------
-class Number {
-    /0|[1-9][0-9]/
+atomic union Number {
+    | Digits Unit?    #Dec
+    | /0b/ BIN Unit?  #Bin
+    | /0o/ OCT Unit?  #Oct
+    | /0x/ HEX Unit?  #Hex
+}
+text class Digits {
+    /(0|[1-9][0-9])(.[0-9]+)?/
+}
+class Unit {
+    Identifier
+}
+token {
+    BIN: /[0-1]+/
+    OCT: /[0-7]+/
+    HEX: /[0-9a-fA-F]+/
 }
 // === identifier === --------------------------------------------------------------------------------------------------
 class NamepathFree -> Namepath {

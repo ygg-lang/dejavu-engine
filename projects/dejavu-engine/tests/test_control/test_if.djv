@@ -26,3 +26,12 @@
 <% else %>
    else text
 <% end %>
+
+# nested if statement
+<% if true %>
+    term 1
+    <% if false %>
+       term 2
+    <% end %>
+    term 3
+<% end %>

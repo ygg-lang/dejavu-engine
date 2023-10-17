@@ -9,12 +9,12 @@ atomic class Constants {
 }
 atomic union Repeats {
     | ANY | ANY{1}                      // 1
-    | ANY? | ANY{0,1}                  // 0 ~ 1
-    | ANY* | ANY{} | ANY{,} | ANY{0,} // 0 ~ ∞
-    | ANY+ | ANY{1,}                   // 1 ~ ∞
+    | ANY? | ANY{0, 1}                  // 0 ~ 1
+    | ANY* | ANY{} | ANY{, } | ANY{0, } // 0 ~ ∞
+    | ANY+ | ANY{1, }                   // 1 ~ ∞
     | ANY{2}                            // 2
-    | ANY{2,}                          // 2 ~ ∞
-    | ANY{,2} | ANY{0,2}              // 0 ~ 2
+    | ANY{, 2} | ANY{0, 2}              // 0 ~ 2
+    | ANY{2, }                          // 2 ~ ∞
 }
 
 macro paired(item, delimiter) {

@@ -41,6 +41,16 @@ impl<'a> core::fmt::Display for HelloTemplate<'a> {
             f.write_str("\n else text\n")?;
         }
 
+        f.write_str("\n\n# nested if statement\n")?;
+
+        if true {
+            f.write_str("\n    term 1\n    ")?;
+            if true {
+                f.write_str("\n     term 2\n    ")?;
+            }
+            f.write_str("\n term 3\n")?;
+        }
+
         Ok(())
     }
 }
