@@ -2,7 +2,7 @@ use super::*;
 use alloc::string::ToString;
 use core::fmt::{Display, Formatter, Write};
 
-#[derive(Debug, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct DejavuText {
     pub head: String,
     pub body: String,

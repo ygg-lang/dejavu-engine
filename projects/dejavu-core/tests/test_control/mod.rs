@@ -11,7 +11,7 @@ use std::{fs::File, io::Write, str::FromStr};
 fn test_unicode() {
     let cst = DejavuParser::parse_cst(include_str!("test_if.djv"), DejavuRule::Root).unwrap();
     println!("Short Form:\n{}", cst);
-    let ast = DejavuRoot::from_str(include_str!("test_if.djv"));
+    let ast = DejavuRoot::from_str(include_str!("test_if.djv")).unwrap();
     let mut file = File::create("tests/test_control/test_if.ron").unwrap();
     file.write_all(format!("{:#?}", ast).as_bytes()).unwrap();
     // file.write_all(out.to_string().as_bytes()).unwrap();

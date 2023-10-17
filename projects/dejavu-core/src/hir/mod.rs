@@ -1,26 +1,37 @@
 use alloc::{string::String, vec::Vec};
 use core::{
-    fmt::{Display, Formatter},
+    fmt::{Debug, Display, Formatter},
     ops::{AddAssign, Range},
 };
 
 mod conditional;
+mod expr;
 mod text;
 
 pub use self::{
     conditional::{DejavuBranches, DejavuConditional},
+    expr::DejavuExpression,
     text::{DejavuText, DejavuTextTrim},
 };
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct DejavuRoot {
     pub statements: Vec<DejavuStatement>,
 }
 
-#[derive(Debug)]
+#[derive(Clone)]
 pub enum DejavuStatement {
     Text(DejavuText),
     Branches(DejavuBranches),
+}
+
+impl Debug for DejavuStatement {
+    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
+        match self {
+            DejavuStatement::Text(v) => Debug::fmt(v, f),
+            DejavuStatement::Branches(v) => Debug::fmt(v, f),
+        }
+    }
 }
 
 impl Display for DejavuStatement {
@@ -59,15 +70,6 @@ impl DejavuRoot {
         if let Some(DejavuStatement::Text(v)) = self.statements.last_mut() {
             v.trim_tail(tail)
         }
-    }
-}
-
-#[derive(Debug, Default)]
-pub struct DejavuExpression {}
-
-impl Display for DejavuExpression {
-    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
-        f.write_str("true")
     }
 }
 

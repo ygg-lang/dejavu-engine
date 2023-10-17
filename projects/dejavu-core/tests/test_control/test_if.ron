@@ -1,81 +1,140 @@
-Ok(
-    DejavuRoot {
-        statements: [
-            Text(
-                DejavuText {
-                    head: "",
-                    body: "# simple if elements\n",
-                    tail: "",
-                    range: 0..0,
-                },
-            ),
-            Branches(
-                DejavuBranches {
-                    branches: [],
-                    default: None,
-                },
-            ),
-            Text(
-                DejavuText {
-                    head: "\n\n",
-                    body: "# if else element\n# simple if elements\n",
-                    tail: "",
-                    range: 0..0,
-                },
-            ),
-            Branches(
-                DejavuBranches {
-                    branches: [
-                        DejavuConditional {
-                            condition: DejavuExpression,
-                            body: [],
+DejavuRoot {
+    statements: [
+        DejavuText {
+            head: "",
+            body: "# simple if elements",
+            tail: "\n",
+            range: 0..21,
+        },
+        DejavuBranches {
+            branches: [
+                DejavuConditional {
+                    condition: Boolean(
+                        true,
+                    ),
+                    body: [
+                        DejavuText {
+                            head: "\n ",
+                            body: "if text",
+                            tail: "\n",
+                            range: 34..46,
                         },
                     ],
-                    default: None,
                 },
-            ),
-            Text(
-                DejavuText {
-                    head: "\n\n\n",
-                    body: "# if-else-if element\n# simple if elements\n",
-                    tail: "",
-                    range: 0..0,
-                },
-            ),
-            Branches(
-                DejavuBranches {
-                    branches: [
-                        DejavuConditional {
-                            condition: DejavuExpression,
-                            body: [],
+            ],
+            default: [],
+        },
+        DejavuText {
+            head: "\n\n",
+            body: "# if else element\n# simple if elements",
+            tail: "\n",
+            range: 55..96,
+        },
+        DejavuBranches {
+            branches: [
+                DejavuConditional {
+                    condition: Boolean(
+                        true,
+                    ),
+                    body: [
+                        DejavuText {
+                            head: "\n ",
+                            body: "if text",
+                            tail: "\n",
+                            range: 109..121,
                         },
                     ],
-                    default: None,
                 },
-            ),
-            Text(
+            ],
+            default: [
                 DejavuText {
-                    head: "\n\n",
-                    body: "# if-else-if element\n# simple if elements\n",
-                    tail: "",
-                    range: 0..0,
+                    head: "\n ",
+                    body: "else text",
+                    tail: "\n",
+                    range: 131..145,
                 },
-            ),
-            Branches(
-                DejavuBranches {
-                    branches: [
-                        DejavuConditional {
-                            condition: DejavuExpression,
-                            body: [],
-                        },
-                        DejavuConditional {
-                            condition: DejavuExpression,
-                            body: [],
+            ],
+        },
+        DejavuText {
+            head: "\n\n\n",
+            body: "# if-else-if element\n# simple if elements",
+            tail: "\n",
+            range: 154..199,
+        },
+        DejavuBranches {
+            branches: [
+                DejavuConditional {
+                    condition: Boolean(
+                        true,
+                    ),
+                    body: [
+                        DejavuText {
+                            head: "\n ",
+                            body: "if text",
+                            tail: "\n",
+                            range: 212..224,
                         },
                     ],
-                    default: None,
                 },
-            ),
-        ],
-    },
-)
+                DejavuConditional {
+                    condition: Boolean(
+                        false,
+                    ),
+                    body: [
+                        DejavuText {
+                            head: "\n ",
+                            body: "else if text",
+                            tail: "\n",
+                            range: 243..260,
+                        },
+                    ],
+                },
+            ],
+            default: [],
+        },
+        DejavuText {
+            head: "\n\n",
+            body: "# if-else-if element\n# simple if elements",
+            tail: "\n",
+            range: 269..313,
+        },
+        DejavuBranches {
+            branches: [
+                DejavuConditional {
+                    condition: Boolean(
+                        true,
+                    ),
+                    body: [
+                        DejavuText {
+                            head: "\n ",
+                            body: "if text",
+                            tail: "\n",
+                            range: 326..338,
+                        },
+                    ],
+                },
+                DejavuConditional {
+                    condition: Boolean(
+                        false,
+                    ),
+                    body: [
+                        DejavuText {
+                            head: "\n ",
+                            body: "else if text",
+                            tail: "\n",
+                            range: 357..374,
+                        },
+                    ],
+                },
+            ],
+            default: [
+                DejavuText {
+                    head: "\n ",
+                    body: "else text",
+                    tail: "\n",
+                    range: 384..398,
+                },
+            ],
+        },
+    ],
+}

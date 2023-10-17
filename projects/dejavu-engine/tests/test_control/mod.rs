@@ -7,6 +7,7 @@ mod test_if;
 #[test]
 fn test_codegen() {
     let cst = DejavuBuilder::new(include_str!("test_if.djv"));
+    println!("{cst:#?}");
     let text = cst.render().unwrap();
     let mut file = File::create("tests/test_control/test_if.rs").unwrap();
     file.write_all(text.as_bytes()).unwrap();

@@ -1,5 +1,5 @@
 grammar Dejavu {
-    file: '*.dejavu'
+file: '*.dejavu'
 }
 
 entry class Root {
@@ -28,139 +28,139 @@ class TEMPLATE_E {
 }
 
 text token {
-TEXT_SPACE: /\p{White_Space}+/
-TEXT_WORD:  /[^<\p{White_Space}]+/
+    TEXT_SPACE: /\p{White_Space}+/
+    TEXT_WORD:  /[^<\p{White_Space}]+/
 }
 // === template token === ----------------------------------------------------------------------------------------------
 @style(operator)
 atomic class TEMPLATE_L {
-// !'<%!'
-'<%' SpaceControl?
+    // !'<%!'
+    '<%' SpaceControl?
 }
 atomic class TEMPLATE_R {
-SpaceControl? '%>'
+    SpaceControl? '%>'
 }
 union SpaceControl {
-| '=' #E
-| '~' #D
-| '-' #C
-| '_' #B
-| '.' #A
+    | '=' #E
+    | '~' #D
+    | '-' #C
+    | '_' #B
+    | '.' #A
 }
 @style(keyword)
 token {
-KW_END: 'end'
+    KW_END: 'end'
 }
 // === template export === -------------------------------------------------------------------------------------------------
 class TemplateExport ^ {
-TEMPLATE_L exports:ExportItem* TEMPLATE_R
+    TEMPLATE_L exports:ExportItem* TEMPLATE_R
 }
 class ExportItem ^ {
-KW_EXPORT name:Identifier
-(KW_TO language:Identifier)?
-(KW_BY KW_CLASS class :NamepathFree)?
-(KW_BY KW_TRAIT trait:NamepathFree?)?
+    KW_EXPORT name:Identifier
+    (KW_TO language:Identifier)?
+    (KW_BY KW_CLASS class :NamepathFree)?
+    (KW_BY KW_TRAIT trait:NamepathFree?)?
 }
 @style(keyword)
 token {
-KW_EXPORT: 'export'
-KW_CLASS: 'class'
-KW_TRAIT: 'trait'
-KW_TO: 'to'
-KW_BY: 'by'
+    KW_EXPORT: 'export'
+    KW_CLASS: 'class'
+    KW_TRAIT: 'trait'
+    KW_TO: 'to'
+    KW_BY: 'by'
 }
 // === template if === -------------------------------------------------------------------------------------------------
 atomic class TemplateIf {
-IfBegin IfElseIf* IfElse? IfEnd
+    IfBegin IfElseIf* IfElse? IfEnd
 }
 atomic class IfBegin {
-TEMPLATE_L ~ ^KW_IF ~ condition:Expression ~ TEMPLATE_R body:Element*
+    TEMPLATE_L ~ ^KW_IF ~ Expression ~ TEMPLATE_R Element*
 }
 atomic class IfElse {
-TEMPLATE_L ~ ^KW_ELSE ~ TEMPLATE_R body:Element*
+    TEMPLATE_L ~ ^KW_ELSE ~ TEMPLATE_R Element*
 }
 atomic class IfElseIf {
-TEMPLATE_L ~ ^KW_ELSE ~ ^KW_IF ~ condition:Expression ~ TEMPLATE_R body:Element*
+    TEMPLATE_L ~ ^KW_ELSE ~ ^KW_IF ~ Expression ~ TEMPLATE_R Element*
 }
 atomic class IfEnd {
-TEMPLATE_L ~ ^KW_END ~ ^KW_IF? ~ TEMPLATE_R
+    TEMPLATE_L ~ ^KW_END ~ ^KW_IF? ~ TEMPLATE_R
 }
 @style(keyword)
 token {
-KW_IF: 'if'
-KW_ELSE: 'else'
+    KW_IF: 'if'
+    KW_ELSE: 'else'
 }
 // === template for === ------------------------------------------------------------------------------------------------
 atomic class TemplateFor {
-ForBegin ForElse? ForEnd
+    ForBegin ForElse? ForEnd
 }
 atomic class ForBegin {
-TEMPLATE_L ~ ^KW_FOR ~ condition:Expression ~ TEMPLATE_R body:Element*
+    TEMPLATE_L ~ ^KW_FOR ~ Expression ~ TEMPLATE_R Element*
 }
 atomic class ForElse {
-TEMPLATE_L ~ ^KW_ELSE ~ TEMPLATE_R body:Element*
+    TEMPLATE_L ~ ^KW_ELSE ~ TEMPLATE_R Element*
 }
 atomic class ForEnd {
-TEMPLATE_L ~ ^KW_END ~ ^KW_FOR? ~ TEMPLATE_R
+    TEMPLATE_L ~ ^KW_END ~ ^KW_FOR? ~ TEMPLATE_R
 }
 @style(keyword)
 token {
-KW_FOR: 'for'
+    KW_FOR: 'for'
 }
 // === text area === ---------------------------------------------------------------------------------------------------
 class Expression {
-Term ExpressionRest*
+    Term ExpressionRest*
 }
 class ExpressionRest {
-Infix Term
+    Infix Term
 }
 union Infix {
-| '+' #Add
-| '-' #Mul
+    | '+' #Add
+    | '-' #Mul
 }
 class Term {
-Prefix* Atomic Suffix*
+    Prefix* Atomic Suffix*
 }
 union Prefix {
-| '!' #Not
+    | '!' #Not
 }
 union Suffix {
-| '?' #Null
-| '.' Identifier
+    | '?' #Null
+    | '.' Identifier
 }
 // === string === ------------------------------------------------------------------------------------------------------
 union Atomic {
-| '(' @box(Expression) ')' #Group
-| Boolean                  #Boolean
-| Identifier               #Identifier
-| Number                   #Number
+    | '(' @box(Expression) ')' #Group
+    | Boolean                  #Boolean
+    | Identifier               #Identifier
+    | Number                   #Number
 }
 // === string === ------------------------------------------------------------------------------------------------------
 union String {
-| "'" "'" #DoubleQuote
-| '"' '"' #SingleQuote
+    | "'" "'" #DoubleQuote
+    | '"' '"' #SingleQuote
 }
 // === number === ------------------------------------------------------------------------------------------------------
 class Number {
-/0|[1-9][0-9]/
+    /0|[1-9][0-9]/
 }
 // === identifier === --------------------------------------------------------------------------------------------------
 class NamepathFree -> Namepath {
-Identifier (('.' | '::') Identifier)*
+    Identifier (('.' | '::') Identifier)*
 }
 class Namepath {
-Identifier ('::' Identifier)*
+    Identifier ('::' Identifier)*
 }
 class Identifier {
-/[_\p{XID_start}]\p{XID_continue}*/
+    /[_\p{XID_start}]\p{XID_continue}*/
 }
 union Boolean {
-| 'true'  #True
-| 'false' #False
+    | 'true'  #True
+    | 'false' #False
 }
 // === ignores === -----------------------------------------------------------------------------------------------------
 ignore class WhiteSpace {
-/\p{White_Space}+/
+    /\p{White_Space}+/
 }
 
 //@style(comment)

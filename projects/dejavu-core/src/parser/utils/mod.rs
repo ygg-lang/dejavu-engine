@@ -1,6 +1,9 @@
 use super::*;
 use crate::hir::{DejavuStatement, DejavuText, DejavuTextTrim};
-use dejavu_parser::dejavu::{ElementNode, SpaceControlNode, TemplateLNode, TemplateRNode};
+use dejavu_parser::{
+    dejavu::{ElementNode, SpaceControlNode, TemplateLNode, TemplateRNode},
+    YggdrasilNode,
+};
 
 pub fn take_elements(s: &[ElementNode]) -> DejavuRoot {
     let mut out = DejavuRoot::default();
@@ -32,11 +35,20 @@ pub fn take_text(texts: &[TextElementNode]) -> DejavuStatement {
             for term in middle {
                 term.write_buffer(&mut out.body)
             }
-            if tail.pure_space() { tail.write_buffer(&mut out.body) } else { tail.write_buffer(&mut out.body) }
+            if tail.pure_space() {
+                //
+                tail.write_buffer(&mut out.tail)
+            }
+            else {
+                tail.write_buffer(&mut out.body)
+            }
+            let start = head.get_range().unwrap_or_default().start;
+            let end = tail.get_range().unwrap_or_default().end;
+            out.range = start..end;
+            DejavuStatement::Text(out)
         }
         _ => panic!("many_text: {}", texts.len()),
     }
-    DejavuStatement::Text(out)
 }
 
 impl From<SpaceControlNode> for DejavuTextTrim {

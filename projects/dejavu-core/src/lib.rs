@@ -1,4 +1,4 @@
-#![no_std]
+// #![no_std]
 // pub use diagnostic_quick::{FileID, QError, QResult, TextStorage};
 //
 // pub use self::{
@@ -20,4 +20,3 @@ extern crate alloc;
 
 pub mod hir;
 mod parser;
-

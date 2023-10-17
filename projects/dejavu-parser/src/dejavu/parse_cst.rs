@@ -250,33 +250,14 @@ fn parse_if_begin(state: Input) -> Output {
     state.rule(DejavuRule::IfBegin, |s| {
         s.sequence(|s| {
             Ok(s)
-                .and_then(|s| {
-                    s.sequence(|s| {
-                        Ok(s)
-                            .and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l")))
-                            .and_then(|s| builtin_ignore(s))
-                            .and_then(|s| parse_kw_if(s))
-                    })
-                })
+                .and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l")))
                 .and_then(|s| builtin_ignore(s))
-                .and_then(|s| {
-                    s.sequence(|s| {
-                        Ok(s)
-                            .and_then(|s| {
-                                s.sequence(|s| {
-                                    Ok(s)
-                                        .and_then(|s| parse_expression(s).and_then(|s| s.tag_node("expression")))
-                                        .and_then(|s| builtin_ignore(s))
-                                        .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
-                                })
-                            })
-                            .and_then(|s| {
-                                s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element")))
-                                    .and_then(|s| s.tag_node("body"))
-                            })
-                    })
-                    .and_then(|s| s.tag_node("condition"))
-                })
+                .and_then(|s| parse_kw_if(s))
+                .and_then(|s| builtin_ignore(s))
+                .and_then(|s| parse_expression(s).and_then(|s| s.tag_node("expression")))
+                .and_then(|s| builtin_ignore(s))
+                .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
+                .and_then(|s| s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element"))))
         })
     })
 }
@@ -285,20 +266,12 @@ fn parse_if_else(state: Input) -> Output {
     state.rule(DejavuRule::IfElse, |s| {
         s.sequence(|s| {
             Ok(s)
-                .and_then(|s| {
-                    s.sequence(|s| {
-                        Ok(s)
-                            .and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l")))
-                            .and_then(|s| builtin_ignore(s))
-                            .and_then(|s| parse_kw_else(s))
-                            .and_then(|s| builtin_ignore(s))
-                            .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
-                    })
-                })
-                .and_then(|s| {
-                    s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element")))
-                        .and_then(|s| s.tag_node("body"))
-                })
+                .and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l")))
+                .and_then(|s| builtin_ignore(s))
+                .and_then(|s| parse_kw_else(s))
+                .and_then(|s| builtin_ignore(s))
+                .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
+                .and_then(|s| s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element"))))
         })
     })
 }
@@ -307,35 +280,16 @@ fn parse_if_else_if(state: Input) -> Output {
     state.rule(DejavuRule::IfElseIf, |s| {
         s.sequence(|s| {
             Ok(s)
-                .and_then(|s| {
-                    s.sequence(|s| {
-                        Ok(s)
-                            .and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l")))
-                            .and_then(|s| builtin_ignore(s))
-                            .and_then(|s| parse_kw_else(s))
-                            .and_then(|s| builtin_ignore(s))
-                            .and_then(|s| parse_kw_if(s))
-                    })
-                })
+                .and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l")))
                 .and_then(|s| builtin_ignore(s))
-                .and_then(|s| {
-                    s.sequence(|s| {
-                        Ok(s)
-                            .and_then(|s| {
-                                s.sequence(|s| {
-                                    Ok(s)
-                                        .and_then(|s| parse_expression(s).and_then(|s| s.tag_node("expression")))
-                                        .and_then(|s| builtin_ignore(s))
-                                        .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
-                                })
-                            })
-                            .and_then(|s| {
-                                s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element")))
-                                    .and_then(|s| s.tag_node("body"))
-                            })
-                    })
-                    .and_then(|s| s.tag_node("condition"))
-                })
+                .and_then(|s| parse_kw_else(s))
+                .and_then(|s| builtin_ignore(s))
+                .and_then(|s| parse_kw_if(s))
+                .and_then(|s| builtin_ignore(s))
+                .and_then(|s| parse_expression(s).and_then(|s| s.tag_node("expression")))
+                .and_then(|s| builtin_ignore(s))
+                .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
+                .and_then(|s| s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element"))))
         })
     })
 }
@@ -378,33 +332,14 @@ fn parse_for_begin(state: Input) -> Output {
     state.rule(DejavuRule::ForBegin, |s| {
         s.sequence(|s| {
             Ok(s)
-                .and_then(|s| {
-                    s.sequence(|s| {
-                        Ok(s)
-                            .and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l")))
-                            .and_then(|s| builtin_ignore(s))
-                            .and_then(|s| parse_kw_for(s))
-                    })
-                })
+                .and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l")))
                 .and_then(|s| builtin_ignore(s))
-                .and_then(|s| {
-                    s.sequence(|s| {
-                        Ok(s)
-                            .and_then(|s| {
-                                s.sequence(|s| {
-                                    Ok(s)
-                                        .and_then(|s| parse_expression(s).and_then(|s| s.tag_node("expression")))
-                                        .and_then(|s| builtin_ignore(s))
-                                        .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
-                                })
-                            })
-                            .and_then(|s| {
-                                s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element")))
-                                    .and_then(|s| s.tag_node("body"))
-                            })
-                    })
-                    .and_then(|s| s.tag_node("condition"))
-                })
+                .and_then(|s| parse_kw_for(s))
+                .and_then(|s| builtin_ignore(s))
+                .and_then(|s| parse_expression(s).and_then(|s| s.tag_node("expression")))
+                .and_then(|s| builtin_ignore(s))
+                .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
+                .and_then(|s| s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element"))))
         })
     })
 }
@@ -413,20 +348,12 @@ fn parse_for_else(state: Input) -> Output {
     state.rule(DejavuRule::ForElse, |s| {
         s.sequence(|s| {
             Ok(s)
-                .and_then(|s| {
-                    s.sequence(|s| {
-                        Ok(s)
-                            .and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l")))
-                            .and_then(|s| builtin_ignore(s))
-                            .and_then(|s| parse_kw_else(s))
-                            .and_then(|s| builtin_ignore(s))
-                            .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
-                    })
-                })
-                .and_then(|s| {
-                    s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element")))
-                        .and_then(|s| s.tag_node("body"))
-                })
+                .and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l")))
+                .and_then(|s| builtin_ignore(s))
+                .and_then(|s| parse_kw_else(s))
+                .and_then(|s| builtin_ignore(s))
+                .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
+                .and_then(|s| s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element"))))
         })
     })
 }

@@ -28,7 +28,10 @@ impl YggdrasilNode for ElementNode {
 
     fn get_range(&self) -> Option<Range<usize>> {
         match self {
-            _ => unimplemented!()
+            Self::TemplateExport(s) => s.get_range(),
+            Self::TemplateFor(s) => s.get_range(),
+            Self::TemplateIf(s) => s.get_range(),
+            Self::TextMany(s) => s.get_range(),
         }
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
@@ -85,7 +88,9 @@ impl YggdrasilNode for TextElementNode {
 
     fn get_range(&self) -> Option<Range<usize>> {
         match self {
-            _ => unimplemented!()
+            Self::TemplateE(s) => s.get_range(),
+            Self::TextSpace(s) => s.get_range(),
+            Self::TextWord(s) => s.get_range(),
         }
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
@@ -230,7 +235,11 @@ impl YggdrasilNode for SpaceControlNode {
 
     fn get_range(&self) -> Option<Range<usize>> {
         match self {
-            _ => unimplemented!()
+            Self::SpaceControl0 => None,
+            Self::SpaceControl1 => None,
+            Self::SpaceControl2 => None,
+            Self::SpaceControl3 => None,
+            Self::SpaceControl4 => None,
         }
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
@@ -787,7 +796,8 @@ impl YggdrasilNode for InfixNode {
 
     fn get_range(&self) -> Option<Range<usize>> {
         match self {
-            _ => unimplemented!()
+            Self::Infix0 => None,
+            Self::Infix1 => None,
         }
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
@@ -840,7 +850,7 @@ impl YggdrasilNode for PrefixNode {
 
     fn get_range(&self) -> Option<Range<usize>> {
         match self {
-            _ => unimplemented!()
+            Self::Prefix0 => None,
         }
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
@@ -865,7 +875,8 @@ impl YggdrasilNode for SuffixNode {
 
     fn get_range(&self) -> Option<Range<usize>> {
         match self {
-            _ => unimplemented!()
+            Self::Suffix0 => None,
+            Self::Suffix1(s) => s.get_range(),
         }
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
@@ -893,7 +904,10 @@ impl YggdrasilNode for AtomicNode {
 
     fn get_range(&self) -> Option<Range<usize>> {
         match self {
-            _ => unimplemented!()
+            Self::Atomic0 => None,
+            Self::Boolean(s) => s.get_range(),
+            Self::Identifier(s) => s.get_range(),
+            Self::Number(s) => s.get_range(),
         }
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
@@ -927,7 +941,8 @@ impl YggdrasilNode for StringNode {
 
     fn get_range(&self) -> Option<Range<usize>> {
         match self {
-            _ => unimplemented!()
+            Self::String0 => None,
+            Self::String1 => None,
         }
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
@@ -1045,7 +1060,8 @@ impl YggdrasilNode for BooleanNode {
 
     fn get_range(&self) -> Option<Range<usize>> {
         match self {
-            _ => unimplemented!()
+            Self::Boolean0 => None,
+            Self::Boolean1 => None,
         }
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {

@@ -1,46 +1,63 @@
 use super::*;
+use dejavu_parser::dejavu::{AtomicNode, BooleanNode, TermNode};
 
 impl<'i> From<&'i TemplateIfNode> for DejavuBranches {
-    /// ```dejavu
-    /// <% if %>
-    ///    text
-    /// <% else if %>
-    ///    text
-    /// <% else %>
-    ///    text
-    /// <% end %>
-    /// ```
     fn from(value: &TemplateIfNode) -> Self {
-        let mut out = DejavuBranches::default();
-        let mut left = take_control_r(&value.if_begin.template_r, true);
-        let mut right = DejavuTextTrim::Nothing;
-        let mut cond = DejavuExpression::from(&value.if_begin.expression);
-        let mut body = Default::default();
+        let mut out = DejavuBranches::new(value.if_else_if.len());
+        let cond = value.conditions();
+        let start = value.rights();
+        let end = value.lefts();
 
-        for i in &value.if_else_if {
-            right = take_control_l(&i.template_l, true);
-            body = take_elements(&value.if_begin.element);
-            body.trim_text(left, right);
-            out += DejavuConditional { condition: take(&mut cond), body: take(&mut body.statements) };
-            cond = (&i.expression).into();
-            left = take_control_r(&i.template_r, true);
-        }
-
-        match &value.if_else {
-            Some(otherwise) => {
-                right = take_control_l(&otherwise.template_l, true);
-                body = take_elements(&otherwise.element);
-                body.trim_text(left, right);
-                out += DejavuConditional { condition: take(&mut cond), body: take(&mut body.statements) };
+        for (index, node) in value.bodies().iter().enumerate() {
+            let s = unsafe { take_control_r(start.get_unchecked(index), true) };
+            let e = unsafe { take_control_l(end.get_unchecked(index), true) };
+            match cond.get(index) {
+                Some(cond) => {
+                    let mut body = take_elements(node);
+                    body.trim_text(s, e);
+                    out += DejavuConditional { condition: DejavuExpression::from(*cond), body: body.statements }
+                }
+                None => {
+                    let mut body = take_elements(node);
+                    body.trim_text(s, e);
+                    out.default = body.statements
+                }
             }
-            None => {}
         }
+
         out
     }
 }
 
 impl<'i> From<&'i ExpressionNode> for DejavuExpression {
     fn from(value: &ExpressionNode) -> Self {
-        Self {}
+        let base = Self::from(&value.term);
+        base
+    }
+}
+
+impl<'i> From<&'i TermNode> for DejavuExpression {
+    fn from(value: &TermNode) -> Self {
+        Self::from(&value.atomic)
+    }
+}
+
+impl<'i> From<&'i AtomicNode> for DejavuExpression {
+    fn from(value: &AtomicNode) -> Self {
+        match value {
+            AtomicNode::Atomic0 => Self::Null,
+            AtomicNode::Boolean(v) => Self::from(v),
+            AtomicNode::Identifier(_) => Self::Null,
+            AtomicNode::Number(_) => Self::Null,
+        }
+    }
+}
+
+impl<'i> From<&'i BooleanNode> for DejavuExpression {
+    fn from(value: &BooleanNode) -> Self {
+        match value {
+            BooleanNode::Boolean0 => Self::Boolean(true),
+            BooleanNode::Boolean1 => Self::Boolean(false),
+        }
     }
 }
