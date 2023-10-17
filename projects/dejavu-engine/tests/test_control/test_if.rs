@@ -14,6 +14,7 @@ impl core::fmt::Display for HelloTemplate {
         else {
             f.write_str("\n else text\n")?;
         }
+
         f.write_str("\n\n\n# if-else-if element\n")?;
         if true {
             f.write_str("\n if text\n")?;

@@ -17,7 +17,6 @@
 // mod value;
 
 extern crate alloc;
-extern crate core;
 
 pub mod hir;
 mod parser;

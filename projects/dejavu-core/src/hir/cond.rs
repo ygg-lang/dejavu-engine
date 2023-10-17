@@ -19,18 +19,13 @@ impl DisplayIndent for DejavuBranches {
                 f.write_str("if ")?
             }
             else {
-                f.write_str("else if ")?
+                f.write_str(" else if ")?
             }
-            f.write_fmt(format_args!("{}", c))?;
-            // f.write_str(" {\n")?;
-            //
-            // f.write_str("}\n")?;
+            c.fmt_indent(f)?;
         }
         if !self.default.is_empty() {
-            f.write_str("else ")?;
+            f.write_str(" else ")?;
             self.default.fmt_indent(f)?;
-            f.write_newline()?;
-            // f.write_str("}\n")?;
         }
         Ok(())
     }
@@ -41,7 +36,6 @@ impl DisplayIndent for DejavuConditional {
         f.write_fmt(format_args!("{}", self.condition))?;
         f.write_str(" ")?;
         self.body.fmt_indent(f)?;
-        f.write_newline()?;
         Ok(())
     }
 }

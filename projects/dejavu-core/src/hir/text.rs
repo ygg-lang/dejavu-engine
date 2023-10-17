@@ -20,7 +20,7 @@ impl DisplayIndent for DejavuText {
                 _ => f.write_char(c)?,
             }
         }
-        f.write_str("\")?;\n")
+        f.write_str("\")?;")
     }
 }
 

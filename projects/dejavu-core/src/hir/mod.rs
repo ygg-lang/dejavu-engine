@@ -7,13 +7,15 @@ use core::{
 use indentation::{display_wrap, DisplayIndent, IndentFormatter};
 
 pub use self::{
-    conditional::{DejavuBranches, DejavuConditional},
+    cond::{DejavuBranches, DejavuConditional},
     expr::DejavuExpression,
+    looping::DejavuForLoop,
     text::{DejavuText, DejavuTextTrim},
 };
 
-mod conditional;
+mod cond;
 mod expr;
+mod looping;
 mod text;
 
 #[derive(Clone, Debug)]
@@ -30,6 +32,7 @@ pub struct DejavuSequence {
 pub enum DejavuStatement {
     Text(DejavuText),
     Branches(DejavuBranches),
+    ForLoop(DejavuForLoop),
 }
 
 impl Debug for DejavuStatement {
@@ -42,17 +45,6 @@ impl Debug for DejavuStatement {
 }
 
 impl DisplayIndent for DejavuRoot {
-    /// use super::*;
-    //
-    // impl<'a> core::fmt::Display for HelloTemplate<'a> {
-    //     #[inline]
-    //     fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-    // {% for node in self.statements %}
-    // {{ node }}
-    // {% endfor %}
-    //         Ok(())
-    //     }
-    // }
     fn fmt_indent<W: Write>(&self, f: &mut IndentFormatter<W>) -> core::fmt::Result {
         f.write_str("use super::*;\n\n")?;
         f.write_str("impl core::fmt::Display for HelloTemplate {")?;
@@ -60,22 +52,28 @@ impl DisplayIndent for DejavuRoot {
         f.write_newline()?;
         f.write_str("#[inline]")?;
         f.write_newline()?;
-        f.write_str("fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result ")?;
-        self.body.fmt_indent(f)?;
+        f.write_str("fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {")?;
+        f.indent();
+        for e in &self.body.statements {
+            f.write_newline()?;
+            e.fmt_indent(f)?;
+        }
+        f.dedent();
         f.write_str("\n        Ok(())\n    }\n}")
     }
 }
 
 impl DisplayIndent for DejavuSequence {
     fn fmt_indent<W: Write>(&self, f: &mut IndentFormatter<W>) -> core::fmt::Result {
+        f.write_str("{")?;
         f.indent();
-        f.write_str("{\n")?;
-        f.write_indent()?;
         for e in &self.statements {
-            e.fmt_indent(f)?
+            f.write_newline()?;
+            e.fmt_indent(f)?;
         }
-        f.write_str("}")?;
         f.dedent();
+        f.write_newline()?;
+        f.write_str("}")?;
         Ok(())
     }
 }
