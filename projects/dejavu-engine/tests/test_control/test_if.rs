@@ -10,26 +10,21 @@ impl core::fmt::Display for HelloTemplate {
         f.write_str("\n\n# if-else element\n")?;
         if true {
             f.write_str("\n if text\n")?;
-        }
-        else {
+        } else {
             f.write_str("\n else text\n")?;
         }
-
         f.write_str("\n\n\n# if-else-if element\n")?;
         if true {
             f.write_str("\n if text\n")?;
-        }
-        else if true {
+        } else if true {
             f.write_str("\n else if text\n")?;
         }
         f.write_str("\n\n# if-else-if element\n")?;
         if true {
             f.write_str("\n if text\n")?;
-        }
-        else if true {
+        } else if true {
             f.write_str("\n else if text\n")?;
-        }
-        else {
+        } else {
             f.write_str("\n else text\n")?;
         }
         f.write_str("\n\n# nested if statement\n")?;

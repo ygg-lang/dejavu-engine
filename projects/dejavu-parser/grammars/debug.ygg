@@ -17,6 +17,14 @@ atomic union Repeats {
     | ANY{2, }                          // 2 ~ ∞
 }
 
+atomic union Stacks {
+    | PEEK(..=2)
+    | PEEK(..<2)
+    | PEEK(1..=2)
+    | PEEK(...)
+    | PUSH("  "+ | "\t"+)
+}
+
 macro paired(item, delimiter) {
     | '(' ')'
     | '(' item (delimiter item)* delimiter? ')'

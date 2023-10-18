@@ -40,6 +40,7 @@ impl Debug for DejavuStatement {
         match self {
             DejavuStatement::Text(v) => Debug::fmt(v, f),
             DejavuStatement::Branches(v) => Debug::fmt(v, f),
+            DejavuStatement::ForLoop(v) => Debug::fmt(v, f),
         }
     }
 }
@@ -85,6 +86,7 @@ impl DisplayIndent for DejavuStatement {
         match self {
             DejavuStatement::Text(v) => v.fmt_indent(f),
             DejavuStatement::Branches(v) => v.fmt_indent(f),
+            DejavuStatement::ForLoop(v) => v.fmt_indent(f),
         }
     }
 }

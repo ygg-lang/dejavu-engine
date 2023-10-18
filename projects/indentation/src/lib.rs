@@ -7,7 +7,6 @@
 
 mod formatter;
 mod from_raw;
-#[macro_export]
 mod macros;
 
 pub use self::formatter::{DisplayIndent, IndentFormatter};

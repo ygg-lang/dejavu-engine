@@ -1,0 +1,22 @@
+# for one pattern
+<% for i in self.terms %>
+   if text
+<% end %>
+
+# for two pattern
+<% for i, j in self.terms %>
+   if text
+<% end %>
+
+
+# for if pattern
+<% for i in self.terms if true %>
+   if text
+<% end %>
+
+# for else pattern
+<% for i in self.terms %>
+   if text
+<% else %>
+   else text
+<% end %>

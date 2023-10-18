@@ -11,7 +11,7 @@ use crate::hir::{DejavuExpression, DejavuSequence};
 ///
 /// <% end %>
 /// ```
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct DejavuForLoop {
     pub pattern: DejavuPattern,
     pub iterator: DejavuExpression,
@@ -20,7 +20,7 @@ pub struct DejavuForLoop {
     pub otherwise: Option<DejavuSequence>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum DejavuPattern {}
 
 impl DisplayIndent for DejavuForLoop {
