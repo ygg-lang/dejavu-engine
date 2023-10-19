@@ -4,14 +4,13 @@ use core::{
     ops::{AddAssign, Range},
 };
 
-use indentation::{display_wrap, DisplayIndent, IndentFormatter};
-
 pub use self::{
     cond::{DejavuBranches, DejavuConditional},
     expr::DejavuExpression,
     looping::{DejavuLoop, DejavuPattern},
     text::{DejavuText, DejavuTextTrim},
 };
+use indentation::{display_wrap, DisplayIndent, IndentFormatter};
 
 mod cond;
 mod expr;
@@ -39,6 +38,12 @@ pub enum DejavuStatement {
 pub struct DejavuIdentifier {
     pub text: String,
     pub range: Range<usize>,
+}
+
+impl Debug for DejavuIdentifier {
+    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
+        write!(f, "Identifier({}, {:?})", self.text, self.range)
+    }
 }
 
 impl Debug for DejavuStatement {

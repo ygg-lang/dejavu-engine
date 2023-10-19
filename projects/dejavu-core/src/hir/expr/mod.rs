@@ -4,6 +4,7 @@ use super::*;
 pub enum DejavuExpression {
     Null,
     Boolean(bool),
+    Identifier(DejavuIdentifier),
 }
 
 impl Default for DejavuExpression {

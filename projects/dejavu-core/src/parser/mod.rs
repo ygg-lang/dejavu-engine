@@ -2,16 +2,16 @@ use core::str::FromStr;
 
 use dejavu_parser::{
     dejavu::{
-        DejavuRule, ElementNode, ExpressionNode, RootNode, SpaceControlNode, TemplateIfNode, TemplateLNode, TemplateRNode,
-        TextElementNode,
+        BarePatternNode, DejavuRule, ElementNode, ExpressionNode, PatternNode, RootNode, SpaceControlNode, TemplateForNode,
+        TemplateIfNode, TemplateLNode, TemplateRNode, TextElementNode,
     },
     YggdrasilError, YggdrasilNode,
 };
 
 use crate::{
     hir::{
-        DejavuBranches, DejavuConditional, DejavuExpression, DejavuRoot, DejavuSequence, DejavuStatement, DejavuText,
-        DejavuTextTrim,
+        DejavuBranches, DejavuConditional, DejavuExpression, DejavuLoop, DejavuPattern, DejavuRoot, DejavuSequence,
+        DejavuStatement, DejavuText, DejavuTextTrim,
     },
     parser::utils::{take_control_l, take_control_r, take_elements},
 };

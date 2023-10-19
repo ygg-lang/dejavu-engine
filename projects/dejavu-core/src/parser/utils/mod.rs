@@ -5,7 +5,9 @@ pub fn take_elements(s: &[ElementNode]) -> DejavuSequence {
     for x in s {
         match x {
             ElementNode::Export(_) => {}
-            ElementNode::For(_) => {}
+            ElementNode::For(v) => {
+                out += DejavuStatement::ForLoop(v.into());
+            }
             ElementNode::If(v) => {
                 // out.trim_text(take_control_l(v.if_begin.template_l.space_control.clone(), true));
                 // last_trim = take_control_r(v.if_end.template_r.space_control.clone(), true);

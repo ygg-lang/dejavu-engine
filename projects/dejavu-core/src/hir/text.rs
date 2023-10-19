@@ -1,6 +1,6 @@
 use super::*;
 use alloc::string::ToString;
-use core::fmt::{Display, Formatter, Write};
+use core::fmt::Write;
 
 #[derive(Clone, Debug, Default)]
 pub struct DejavuText {

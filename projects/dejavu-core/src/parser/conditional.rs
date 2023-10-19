@@ -1,5 +1,8 @@
+use dejavu_parser::dejavu::{AtomicNode, BooleanNode, IdentifierNode, TermNode};
+
+use crate::hir::DejavuIdentifier;
+
 use super::*;
-use dejavu_parser::dejavu::{AtomicNode, BooleanNode, TermNode};
 
 impl<'i> From<&'i TemplateIfNode> for DejavuBranches {
     fn from(value: &TemplateIfNode) -> Self {
@@ -45,18 +48,16 @@ impl<'i> From<&'i TermNode> for DejavuExpression {
 impl<'i> From<&'i AtomicNode> for DejavuExpression {
     fn from(value: &AtomicNode) -> Self {
         match value {
-            AtomicNode::Boolean(v) => Self::from(v),
-            AtomicNode::Identifier(_) => Self::Null,
+            AtomicNode::Boolean(BooleanNode::True) => Self::Boolean(true),
+            AtomicNode::Boolean(BooleanNode::False) => Self::Boolean(false),
+            AtomicNode::Identifier(v) => Self::Identifier(DejavuIdentifier::from(v)),
             AtomicNode::Number(_) => Self::Null,
         }
     }
 }
 
-impl<'i> From<&'i BooleanNode> for DejavuExpression {
-    fn from(value: &BooleanNode) -> Self {
-        match value {
-            BooleanNode::True => Self::Boolean(true),
-            BooleanNode::False => Self::Boolean(false),
-        }
+impl<'i> From<&'i IdentifierNode> for DejavuIdentifier {
+    fn from(value: &IdentifierNode) -> Self {
+        Self { text: "".to_string(), range: value.get_range().unwrap_or_default() }
     }
 }
