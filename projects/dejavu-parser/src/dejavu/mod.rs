@@ -3,8 +3,8 @@
 #![allow(clippy::unnecessary_cast)]
 #![doc = include_str!("readme.md")]
 
-mod parse_ast;
 mod parse_cst;
+mod parse_ast;
 
 use core::str::FromStr;
 use std::{borrow::Cow, ops::Range, sync::OnceLock};
@@ -323,11 +323,12 @@ pub struct TemplateForNode {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ForBeginNode {
     pub element: Vec<ElementNode>,
-    pub expression: ExpressionNode,
-    pub kw_in: KwInNode,
+    pub kw_in: Vec<KwInNode>,
     pub pattern: PatternNode,
     pub template_l: TemplateLNode,
     pub template_r: TemplateRNode,
+    pub condition: Option<ExpressionNode>,
+    pub iterator: ExpressionNode,
     pub span: Range<u32>,
 }
 #[derive(Clone, Debug, Hash)]
@@ -350,19 +351,16 @@ pub struct ForEndNode {
 pub struct KwForNode {
     pub span: Range<u32>,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct KwInNode {
     pub span: Range<u32>,
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum PatternNode {
     BarePattern(BarePatternNode),
 }
-
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct BarePatternNode {

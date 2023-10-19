@@ -9,7 +9,7 @@ use indentation::{display_wrap, DisplayIndent, IndentFormatter};
 pub use self::{
     cond::{DejavuBranches, DejavuConditional},
     expr::DejavuExpression,
-    looping::DejavuForLoop,
+    looping::{DejavuLoop, DejavuPattern},
     text::{DejavuText, DejavuTextTrim},
 };
 
@@ -32,7 +32,13 @@ pub struct DejavuSequence {
 pub enum DejavuStatement {
     Text(DejavuText),
     Branches(DejavuBranches),
-    ForLoop(DejavuForLoop),
+    ForLoop(DejavuLoop),
+}
+
+#[derive(Clone)]
+pub struct DejavuIdentifier {
+    pub text: String,
+    pub range: Range<usize>,
 }
 
 impl Debug for DejavuStatement {

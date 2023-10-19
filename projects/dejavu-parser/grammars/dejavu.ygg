@@ -97,7 +97,8 @@ atomic class TemplateFor {
 atomic class ForBegin {
     TEMPLATE_L ~
     ^KW_FOR ~ (!KW_IN Pattern) ~
-    KW_IN ~ Expression ~
+    (^KW_IN ~ iterator:Expression) ~
+    (^KW_IF ~ condition:Expression)? ~
     TEMPLATE_R Element*
 }
 atomic class ForElse {

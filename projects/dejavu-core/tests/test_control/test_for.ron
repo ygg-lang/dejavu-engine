@@ -55,6 +55,634 @@ RootNode {
                 span: 0..18,
             },
         ),
+        For(
+            TemplateForNode {
+                for_begin: ForBeginNode {
+                    element: [
+                        Text(
+                            TextManyNode {
+                                text_element: [
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: "\n   ",
+                                            span: 43..47,
+                                        },
+                                    ),
+                                    TextWord(
+                                        TextWordNode {
+                                            text: "if",
+                                            span: 47..49,
+                                        },
+                                    ),
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: " ",
+                                            span: 49..50,
+                                        },
+                                    ),
+                                    TextWord(
+                                        TextWordNode {
+                                            text: "text",
+                                            span: 50..54,
+                                        },
+                                    ),
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: "\n",
+                                            span: 54..55,
+                                        },
+                                    ),
+                                ],
+                                span: 43..55,
+                            },
+                        ),
+                    ],
+                    kw_in: [],
+                    pattern: BarePattern(
+                        BarePatternNode {
+                            identifier: [
+                                IdentifierNode {
+                                    span: 25..26,
+                                },
+                            ],
+                            span: 25..27,
+                        },
+                    ),
+                    template_l: TemplateLNode {
+                        space_control: None,
+                        span: 18..20,
+                    },
+                    template_r: TemplateRNode {
+                        space_control: None,
+                        span: 41..43,
+                    },
+                    condition: None,
+                    iterator: ExpressionNode {
+                        expression_rest: [],
+                        term: TermNode {
+                            atomic: Identifier(
+                                IdentifierNode {
+                                    span: 30..34,
+                                },
+                            ),
+                            prefix: [],
+                            suffix: [
+                                DotCall(
+                                    IdentifierNode {
+                                        span: 35..40,
+                                    },
+                                ),
+                            ],
+                            span: 30..40,
+                        },
+                        span: 30..41,
+                    },
+                    span: 18..55,
+                },
+                for_else: None,
+                for_end: ForEndNode {
+                    template_l: TemplateLNode {
+                        space_control: None,
+                        span: 55..57,
+                    },
+                    template_r: TemplateRNode {
+                        space_control: None,
+                        span: 62..64,
+                    },
+                    span: 55..64,
+                },
+                span: 18..64,
+            },
+        ),
+        Text(
+            TextManyNode {
+                text_element: [
+                    TextWord(
+                        TextWordNode {
+                            text: "#",
+                            span: 66..67,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 67..68,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "for",
+                            span: 68..71,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 71..72,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "two",
+                            span: 72..75,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 75..76,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "pattern",
+                            span: 76..83,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: "\n",
+                            span: 83..84,
+                        },
+                    ),
+                ],
+                span: 66..84,
+            },
+        ),
+        For(
+            TemplateForNode {
+                for_begin: ForBeginNode {
+                    element: [
+                        Text(
+                            TextManyNode {
+                                text_element: [
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: "\n   ",
+                                            span: 112..116,
+                                        },
+                                    ),
+                                    TextWord(
+                                        TextWordNode {
+                                            text: "if",
+                                            span: 116..118,
+                                        },
+                                    ),
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: " ",
+                                            span: 118..119,
+                                        },
+                                    ),
+                                    TextWord(
+                                        TextWordNode {
+                                            text: "text",
+                                            span: 119..123,
+                                        },
+                                    ),
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: "\n",
+                                            span: 123..124,
+                                        },
+                                    ),
+                                ],
+                                span: 112..124,
+                            },
+                        ),
+                    ],
+                    kw_in: [],
+                    pattern: BarePattern(
+                        BarePatternNode {
+                            identifier: [
+                                IdentifierNode {
+                                    span: 91..92,
+                                },
+                                IdentifierNode {
+                                    span: 94..95,
+                                },
+                            ],
+                            span: 91..96,
+                        },
+                    ),
+                    template_l: TemplateLNode {
+                        space_control: None,
+                        span: 84..86,
+                    },
+                    template_r: TemplateRNode {
+                        space_control: None,
+                        span: 110..112,
+                    },
+                    condition: None,
+                    iterator: ExpressionNode {
+                        expression_rest: [],
+                        term: TermNode {
+                            atomic: Identifier(
+                                IdentifierNode {
+                                    span: 99..103,
+                                },
+                            ),
+                            prefix: [],
+                            suffix: [
+                                DotCall(
+                                    IdentifierNode {
+                                        span: 104..109,
+                                    },
+                                ),
+                            ],
+                            span: 99..109,
+                        },
+                        span: 99..110,
+                    },
+                    span: 84..124,
+                },
+                for_else: None,
+                for_end: ForEndNode {
+                    template_l: TemplateLNode {
+                        space_control: None,
+                        span: 124..126,
+                    },
+                    template_r: TemplateRNode {
+                        space_control: None,
+                        span: 131..133,
+                    },
+                    span: 124..133,
+                },
+                span: 84..133,
+            },
+        ),
+        Text(
+            TextManyNode {
+                text_element: [
+                    TextWord(
+                        TextWordNode {
+                            text: "#",
+                            span: 136..137,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 137..138,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "for",
+                            span: 138..141,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 141..142,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "if",
+                            span: 142..144,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 144..145,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "pattern",
+                            span: 145..152,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: "\n",
+                            span: 152..153,
+                        },
+                    ),
+                ],
+                span: 136..153,
+            },
+        ),
+        For(
+            TemplateForNode {
+                for_begin: ForBeginNode {
+                    element: [
+                        Text(
+                            TextManyNode {
+                                text_element: [
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: "\n   ",
+                                            span: 186..190,
+                                        },
+                                    ),
+                                    TextWord(
+                                        TextWordNode {
+                                            text: "if",
+                                            span: 190..192,
+                                        },
+                                    ),
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: " ",
+                                            span: 192..193,
+                                        },
+                                    ),
+                                    TextWord(
+                                        TextWordNode {
+                                            text: "text",
+                                            span: 193..197,
+                                        },
+                                    ),
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: "\n",
+                                            span: 197..198,
+                                        },
+                                    ),
+                                ],
+                                span: 186..198,
+                            },
+                        ),
+                    ],
+                    kw_in: [],
+                    pattern: BarePattern(
+                        BarePatternNode {
+                            identifier: [
+                                IdentifierNode {
+                                    span: 160..161,
+                                },
+                            ],
+                            span: 160..162,
+                        },
+                    ),
+                    template_l: TemplateLNode {
+                        space_control: None,
+                        span: 153..155,
+                    },
+                    template_r: TemplateRNode {
+                        space_control: None,
+                        span: 184..186,
+                    },
+                    condition: Some(
+                        ExpressionNode {
+                            expression_rest: [],
+                            term: TermNode {
+                                atomic: Boolean(
+                                    True,
+                                ),
+                                prefix: [],
+                                suffix: [],
+                                span: 179..184,
+                            },
+                            span: 179..184,
+                        },
+                    ),
+                    iterator: ExpressionNode {
+                        expression_rest: [],
+                        term: TermNode {
+                            atomic: Identifier(
+                                IdentifierNode {
+                                    span: 165..169,
+                                },
+                            ),
+                            prefix: [],
+                            suffix: [
+                                DotCall(
+                                    IdentifierNode {
+                                        span: 170..175,
+                                    },
+                                ),
+                            ],
+                            span: 165..175,
+                        },
+                        span: 165..176,
+                    },
+                    span: 153..198,
+                },
+                for_else: None,
+                for_end: ForEndNode {
+                    template_l: TemplateLNode {
+                        space_control: None,
+                        span: 198..200,
+                    },
+                    template_r: TemplateRNode {
+                        space_control: None,
+                        span: 205..207,
+                    },
+                    span: 198..207,
+                },
+                span: 153..207,
+            },
+        ),
+        Text(
+            TextManyNode {
+                text_element: [
+                    TextWord(
+                        TextWordNode {
+                            text: "#",
+                            span: 209..210,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 210..211,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "for",
+                            span: 211..214,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 214..215,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "else",
+                            span: 215..219,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 219..220,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "pattern",
+                            span: 220..227,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: "\n",
+                            span: 227..228,
+                        },
+                    ),
+                ],
+                span: 209..228,
+            },
+        ),
+        For(
+            TemplateForNode {
+                for_begin: ForBeginNode {
+                    element: [
+                        Text(
+                            TextManyNode {
+                                text_element: [
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: "\n   ",
+                                            span: 253..257,
+                                        },
+                                    ),
+                                    TextWord(
+                                        TextWordNode {
+                                            text: "if",
+                                            span: 257..259,
+                                        },
+                                    ),
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: " ",
+                                            span: 259..260,
+                                        },
+                                    ),
+                                    TextWord(
+                                        TextWordNode {
+                                            text: "text",
+                                            span: 260..264,
+                                        },
+                                    ),
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: "\n",
+                                            span: 264..265,
+                                        },
+                                    ),
+                                ],
+                                span: 253..265,
+                            },
+                        ),
+                    ],
+                    kw_in: [],
+                    pattern: BarePattern(
+                        BarePatternNode {
+                            identifier: [
+                                IdentifierNode {
+                                    span: 235..236,
+                                },
+                            ],
+                            span: 235..237,
+                        },
+                    ),
+                    template_l: TemplateLNode {
+                        space_control: None,
+                        span: 228..230,
+                    },
+                    template_r: TemplateRNode {
+                        space_control: None,
+                        span: 251..253,
+                    },
+                    condition: None,
+                    iterator: ExpressionNode {
+                        expression_rest: [],
+                        term: TermNode {
+                            atomic: Identifier(
+                                IdentifierNode {
+                                    span: 240..244,
+                                },
+                            ),
+                            prefix: [],
+                            suffix: [
+                                DotCall(
+                                    IdentifierNode {
+                                        span: 245..250,
+                                    },
+                                ),
+                            ],
+                            span: 240..250,
+                        },
+                        span: 240..251,
+                    },
+                    span: 228..265,
+                },
+                for_else: Some(
+                    ForElseNode {
+                        element: [
+                            Text(
+                                TextManyNode {
+                                    text_element: [
+                                        TextSpace(
+                                            TextSpaceNode {
+                                                text: "\n   ",
+                                                span: 275..279,
+                                            },
+                                        ),
+                                        TextWord(
+                                            TextWordNode {
+                                                text: "else",
+                                                span: 279..283,
+                                            },
+                                        ),
+                                        TextSpace(
+                                            TextSpaceNode {
+                                                text: " ",
+                                                span: 283..284,
+                                            },
+                                        ),
+                                        TextWord(
+                                            TextWordNode {
+                                                text: "text",
+                                                span: 284..288,
+                                            },
+                                        ),
+                                        TextSpace(
+                                            TextSpaceNode {
+                                                text: "\n",
+                                                span: 288..289,
+                                            },
+                                        ),
+                                    ],
+                                    span: 275..289,
+                                },
+                            ),
+                        ],
+                        template_l: TemplateLNode {
+                            space_control: None,
+                            span: 265..267,
+                        },
+                        template_r: TemplateRNode {
+                            space_control: None,
+                            span: 273..275,
+                        },
+                        span: 265..289,
+                    },
+                ),
+                for_end: ForEndNode {
+                    template_l: TemplateLNode {
+                        space_control: None,
+                        span: 289..291,
+                    },
+                    template_r: TemplateRNode {
+                        space_control: None,
+                        span: 296..298,
+                    },
+                    span: 289..298,
+                },
+                span: 228..298,
+            },
+        ),
     ],
-    span: 0..18,
+    span: 0..298,
 }

@@ -1,5 +1,6 @@
 use core::fmt::Write;
 
+use dejavu_parser::dejavu::IdentifierNode;
 use indentation::{DisplayIndent, IndentFormatter};
 
 use crate::hir::{DejavuExpression, DejavuSequence};
@@ -12,7 +13,7 @@ use crate::hir::{DejavuExpression, DejavuSequence};
 /// <% end %>
 /// ```
 #[derive(Clone, Debug)]
-pub struct DejavuForLoop {
+pub struct DejavuLoop {
     pub pattern: DejavuPattern,
     pub iterator: DejavuExpression,
     pub condition: Option<DejavuExpression>,
@@ -21,9 +22,11 @@ pub struct DejavuForLoop {
 }
 
 #[derive(Clone, Debug)]
-pub enum DejavuPattern {}
+pub enum DejavuPattern {
+    Bare(Vec<IdentifierNode>),
+}
 
-impl DisplayIndent for DejavuForLoop {
+impl DisplayIndent for DejavuLoop {
     /// ```dejavu
     /// let mut _looped = false;
     /// for i in j {
@@ -60,5 +63,11 @@ impl DisplayIndent for DejavuForLoop {
         }
 
         Ok(())
+    }
+}
+
+impl DejavuLoop {
+    pub fn new(pattern: DejavuPattern) -> Self {
+        Self { pattern, iterator: Default::default(), condition: None, body: Default::default(), otherwise: None }
     }
 }

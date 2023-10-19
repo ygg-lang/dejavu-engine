@@ -352,9 +352,20 @@ fn parse_for_begin(state: Input) -> Output {
                 .and_then(|s| s.lookahead(false, |s| parse_kw_in(s).and_then(|s| s.tag_node("kw_in"))))
                 .and_then(|s| parse_pattern(s).and_then(|s| s.tag_node("pattern")))
                 .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_kw_in(s).and_then(|s| s.tag_node("kw_in")))
+                .and_then(|s| parse_kw_in(s))
                 .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_expression(s).and_then(|s| s.tag_node("expression")))
+                .and_then(|s| parse_expression(s).and_then(|s| s.tag_node("iterator")))
+                .and_then(|s| builtin_ignore(s))
+                .and_then(|s| {
+                    s.optional(|s| {
+                        s.sequence(|s| {
+                            Ok(s)
+                                .and_then(|s| parse_kw_if(s))
+                                .and_then(|s| builtin_ignore(s))
+                                .and_then(|s| parse_expression(s).and_then(|s| s.tag_node("condition")))
+                        })
+                    })
+                })
                 .and_then(|s| builtin_ignore(s))
                 .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
                 .and_then(|s| s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element"))))
@@ -394,17 +405,14 @@ fn parse_for_end(state: Input) -> Output {
 fn parse_kw_for(state: Input) -> Output {
     state.rule(DejavuRule::KW_FOR, |s| s.match_string("for", false))
 }
-
 #[inline]
 fn parse_kw_in(state: Input) -> Output {
     state.rule(DejavuRule::KW_IN, |s| s.match_string("in", false))
 }
-
 #[inline]
 fn parse_pattern(state: Input) -> Output {
     state.rule(DejavuRule::Pattern, |s| Err(s).or_else(|s| parse_bare_pattern(s).and_then(|s| s.tag_node("bare_pattern"))))
 }
-
 #[inline]
 fn parse_bare_pattern(state: Input) -> Output {
     state.rule(DejavuRule::BarePattern, |s| {
