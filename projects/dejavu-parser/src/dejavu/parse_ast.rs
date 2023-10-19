@@ -235,29 +235,29 @@ impl YggdrasilNode for SpaceControlNode {
 
     fn get_range(&self) -> Option<Range<usize>> {
         match self {
-            Self::A => None,
-            Self::B => None,
-            Self::C => None,
-            Self::D => None,
-            Self::E => None,
+            Self::Break0 => None,
+            Self::Break1 => None,
+            Self::Delete0 => None,
+            Self::Delete1 => None,
+            Self::Nothing => None,
         }
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
-        if let Some(_) = pair.find_first_tag("a") {
-            return Ok(Self::A)
+        if let Some(_) = pair.find_first_tag("break_0") {
+            return Ok(Self::Break0)
         }
-        if let Some(_) = pair.find_first_tag("b") {
-            return Ok(Self::B)
+        if let Some(_) = pair.find_first_tag("break_1") {
+            return Ok(Self::Break1)
         }
-        if let Some(_) = pair.find_first_tag("c") {
-            return Ok(Self::C)
+        if let Some(_) = pair.find_first_tag("delete_0") {
+            return Ok(Self::Delete0)
         }
-        if let Some(_) = pair.find_first_tag("d") {
-            return Ok(Self::D)
+        if let Some(_) = pair.find_first_tag("delete_1") {
+            return Ok(Self::Delete1)
         }
-        if let Some(_) = pair.find_first_tag("e") {
-            return Ok(Self::E)
+        if let Some(_) = pair.find_first_tag("nothing") {
+            return Ok(Self::Nothing)
         }
         Err(YggdrasilError::invalid_node(DejavuRule::SpaceControl, _span))
     }
@@ -875,17 +875,17 @@ impl YggdrasilNode for SuffixNode {
 
     fn get_range(&self) -> Option<Range<usize>> {
         match self {
+            Self::DotCall(s) => s.get_range(),
             Self::Null => None,
-            Self::Suffix1(s) => s.get_range(),
         }
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
+        if let Ok(s) = pair.take_tagged_one::<IdentifierNode>(Cow::Borrowed("dot_call")) {
+            return Ok(Self::DotCall(s));
+        }
         if let Some(_) = pair.find_first_tag("null") {
             return Ok(Self::Null)
-        }
-        if let Ok(s) = pair.take_tagged_one::<IdentifierNode>(Cow::Borrowed("suffix_1")) {
-            return Ok(Self::Suffix1(s));
         }
         Err(YggdrasilError::invalid_node(DejavuRule::Suffix, _span))
     }
@@ -966,13 +966,25 @@ impl YggdrasilNode for NumberNode {
 
     fn get_range(&self) -> Option<Range<usize>> {
         match self {
+            Self::Bin(s) => s.get_range(),
             Self::Dec(s) => s.get_range(),
+            Self::Hex(s) => s.get_range(),
+            Self::Oct(s) => s.get_range(),
         }
     }
     fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
         let _span = pair.get_span();
+        if let Ok(s) = pair.take_tagged_one::<BinNode>(Cow::Borrowed("bin")) {
+            return Ok(Self::Bin(s));
+        }
         if let Ok(s) = pair.take_tagged_one::<DigitsNode>(Cow::Borrowed("dec")) {
             return Ok(Self::Dec(s));
+        }
+        if let Ok(s) = pair.take_tagged_one::<HexNode>(Cow::Borrowed("hex")) {
+            return Ok(Self::Hex(s));
+        }
+        if let Ok(s) = pair.take_tagged_one::<OctNode>(Cow::Borrowed("oct")) {
+            return Ok(Self::Oct(s));
         }
         Err(YggdrasilError::invalid_node(DejavuRule::Number, _span))
     }

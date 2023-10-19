@@ -1,4 +1,4 @@
-use crate::dejavu::{ElementNode, ExpressionNode, IfElseNode, TemplateIfNode, TemplateLNode, TemplateRNode, TextElementNode};
+use crate::dejavu::{ElementNode, ExpressionNode, TemplateIfNode, TemplateLNode, TemplateRNode, TextElementNode};
 
 impl TextElementNode {
     pub fn pure_space(&self) -> bool {
@@ -6,7 +6,7 @@ impl TextElementNode {
     }
     pub fn write_buffer(&self, w: &mut String) {
         match self {
-            TextElementNode::TemplateE(_) => w.push_str("<%"),
+            TextElementNode::Escape(_) => w.push_str("<%"),
             TextElementNode::TextSpace(s) => w.push_str(&s.text),
             TextElementNode::TextWord(s) => w.push_str(&s.text),
         }
@@ -68,5 +68,3 @@ impl TemplateIfNode {
         out
     }
 }
-
-

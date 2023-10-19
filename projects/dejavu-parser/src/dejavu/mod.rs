@@ -204,11 +204,11 @@ pub struct TemplateRNode {
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum SpaceControlNode {
-    A,
-    B,
-    C,
-    D,
-    E,
+    Break0,
+    Break1,
+    Delete0,
+    Delete1,
+    Nothing,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -378,8 +378,8 @@ pub enum PrefixNode {
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum SuffixNode {
+    DotCall(IdentifierNode),
     Null,
-    Suffix1(IdentifierNode),
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -397,7 +397,10 @@ pub enum StringNode {
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum NumberNode {
+    Bin(BinNode),
     Dec(DigitsNode),
+    Hex(HexNode),
+    Oct(OctNode),
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]

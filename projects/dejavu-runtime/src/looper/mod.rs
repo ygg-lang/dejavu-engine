@@ -13,9 +13,7 @@ where
 {
     #[inline]
     pub fn new(iter: I) -> Self {
-        TemplateLoop {
-            iter: iter.enumerate().peekable(),
-        }
+        TemplateLoop { iter: iter.enumerate().peekable() }
     }
 }
 
@@ -27,16 +25,7 @@ where
 
     #[inline]
     fn next(&mut self) -> Option<(<I as Iterator>::Item, LoopItem)> {
-        self.iter.next().map(|(index, item)| {
-            (
-                item,
-                LoopItem {
-                    index,
-                    first: index == 0,
-                    last: self.iter.peek().is_none(),
-                },
-            )
-        })
+        self.iter.next().map(|(index, item)| (item, LoopItem { index, first: index == 0, last: self.iter.peek().is_none() }))
     }
 }
 

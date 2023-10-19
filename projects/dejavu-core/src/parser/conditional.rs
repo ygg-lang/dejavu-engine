@@ -45,7 +45,6 @@ impl<'i> From<&'i TermNode> for DejavuExpression {
 impl<'i> From<&'i AtomicNode> for DejavuExpression {
     fn from(value: &AtomicNode) -> Self {
         match value {
-            AtomicNode::Atomic0 => Self::Null,
             AtomicNode::Boolean(v) => Self::from(v),
             AtomicNode::Identifier(_) => Self::Null,
             AtomicNode::Number(_) => Self::Null,
@@ -56,8 +55,8 @@ impl<'i> From<&'i AtomicNode> for DejavuExpression {
 impl<'i> From<&'i BooleanNode> for DejavuExpression {
     fn from(value: &BooleanNode) -> Self {
         match value {
-            BooleanNode::Boolean0 => Self::Boolean(true),
-            BooleanNode::Boolean1 => Self::Boolean(false),
+            BooleanNode::True => Self::Boolean(true),
+            BooleanNode::False => Self::Boolean(false),
         }
     }
 }

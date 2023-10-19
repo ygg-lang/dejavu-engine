@@ -4,8 +4,8 @@ pub struct Html;
 
 impl Escaper for Html {
     fn write_escaped<W>(&self, mut fmt: W, string: &str) -> core::fmt::Result
-        where
-            W: Write,
+    where
+        W: Write,
     {
         let mut last = 0;
         for (index, byte) in string.bytes().enumerate() {

@@ -28,7 +28,7 @@ impl DisplayIndent for DejavuForLoop {
     /// let mut _looped = false;
     /// for i in j {
     ///     if !k {
-    /// continue;
+    ///         continue;
     ///     }
     /// }
     /// if !_looped {}

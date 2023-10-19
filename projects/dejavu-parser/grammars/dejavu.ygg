@@ -17,7 +17,7 @@ class TextMany {
     TextElement+
 }
 union TextElement {
-    | TEMPLATE_E #Escape
+    | ^TEMPLATE_E #Escape
     | TEXT_SPACE #TextSpace
     | TEXT_WORD  #TextWord
 }
@@ -41,11 +41,11 @@ atomic class TEMPLATE_R {
     SpaceControl? '%>'
 }
 union SpaceControl {
-    | '=' #E
-    | '~' #D
-    | '-' #C
-    | '_' #B
-    | '.' #A
+    | '=' #Nothing
+    | '~' #Break0
+    | '-' #Break1
+    | '_' #Delete0
+    | '.' #Delete1
 }
 @style(keyword)
 token {
@@ -143,9 +143,9 @@ union String {
 // === number === ------------------------------------------------------------------------------------------------------
 atomic union Number {
     | Digits     #Dec
-//    | /0b/ BIN Unit?  #Bin
-//    | /0o/ OCT Unit?  #Oct
-//    | /0x/ HEX Unit?  #Hex
+    | /0b/ BIN   #Bin
+    | /0o/ OCT   #Oct
+    | /0x/ HEX   #Hex
 }
 text class Digits {
     /(0|[1-9][0-9])(.[0-9]+)?/

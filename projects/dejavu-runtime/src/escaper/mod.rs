@@ -1,12 +1,6 @@
-use core::fmt::Write;
+pub use self::{html::Html, text::Text};
 use crate::Escaper;
-pub use self::text::Text;
-pub use self::html::Html;
+use core::fmt::Write;
 
-
-mod text;
 mod html;
-
-
-
-
+mod text;

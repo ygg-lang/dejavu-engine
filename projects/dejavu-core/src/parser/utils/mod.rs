@@ -4,14 +4,14 @@ pub fn take_elements(s: &[ElementNode]) -> DejavuSequence {
     let mut out = DejavuSequence::default();
     for x in s {
         match x {
-            ElementNode::TemplateExport(_) => {}
-            ElementNode::TextMany(v) => out += take_text(&v.text_element),
-            ElementNode::TemplateIf(v) => {
+            ElementNode::Export(_) => {}
+            ElementNode::For(_) => {}
+            ElementNode::If(v) => {
                 // out.trim_text(take_control_l(v.if_begin.template_l.space_control.clone(), true));
                 // last_trim = take_control_r(v.if_end.template_r.space_control.clone(), true);
                 out += DejavuStatement::Branches(v.into());
             }
-            ElementNode::TemplateFor(_) => {}
+            ElementNode::Text(v) => out += take_text(&v.text_element),
         }
     }
     out
@@ -49,11 +49,11 @@ pub fn take_text(texts: &[TextElementNode]) -> DejavuStatement {
 impl From<SpaceControlNode> for DejavuTextTrim {
     fn from(value: SpaceControlNode) -> Self {
         match value {
-            SpaceControlNode::SpaceControl0 => DejavuTextTrim::Nothing,
-            SpaceControlNode::SpaceControl1 => DejavuTextTrim::UntilLineBreak,
-            SpaceControlNode::SpaceControl2 => DejavuTextTrim::RecentLineBreak,
-            SpaceControlNode::SpaceControl3 => DejavuTextTrim::FurthestLineBreak,
-            SpaceControlNode::SpaceControl4 => DejavuTextTrim::AllLineBreaks,
+            SpaceControlNode::Nothing => DejavuTextTrim::Nothing,
+            SpaceControlNode::Break0 => DejavuTextTrim::UntilLineBreak,
+            SpaceControlNode::Break1 => DejavuTextTrim::RecentLineBreak,
+            SpaceControlNode::Delete0 => DejavuTextTrim::FurthestLineBreak,
+            SpaceControlNode::Delete1 => DejavuTextTrim::FurthestLineBreak,
         }
     }
 }
