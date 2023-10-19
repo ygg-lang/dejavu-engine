@@ -32,6 +32,9 @@ pub(super) fn parse_cst(input: &str, rule: DejavuRule) -> OutputResult<DejavuRul
         DejavuRule::ForElse => parse_for_else(state),
         DejavuRule::ForEnd => parse_for_end(state),
         DejavuRule::KW_FOR => parse_kw_for(state),
+        DejavuRule::KW_IN => parse_kw_in(state),
+        DejavuRule::Pattern => parse_pattern(state),
+        DejavuRule::BarePattern => parse_bare_pattern(state),
         DejavuRule::Expression => parse_expression(state),
         DejavuRule::ExpressionRest => parse_expression_rest(state),
         DejavuRule::Infix => parse_infix(state),
@@ -346,6 +349,11 @@ fn parse_for_begin(state: Input) -> Output {
                 .and_then(|s| builtin_ignore(s))
                 .and_then(|s| parse_kw_for(s))
                 .and_then(|s| builtin_ignore(s))
+                .and_then(|s| s.lookahead(false, |s| parse_kw_in(s).and_then(|s| s.tag_node("kw_in"))))
+                .and_then(|s| parse_pattern(s).and_then(|s| s.tag_node("pattern")))
+                .and_then(|s| builtin_ignore(s))
+                .and_then(|s| parse_kw_in(s).and_then(|s| s.tag_node("kw_in")))
+                .and_then(|s| builtin_ignore(s))
                 .and_then(|s| parse_expression(s).and_then(|s| s.tag_node("expression")))
                 .and_then(|s| builtin_ignore(s))
                 .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
@@ -385,6 +393,43 @@ fn parse_for_end(state: Input) -> Output {
 #[inline]
 fn parse_kw_for(state: Input) -> Output {
     state.rule(DejavuRule::KW_FOR, |s| s.match_string("for", false))
+}
+
+#[inline]
+fn parse_kw_in(state: Input) -> Output {
+    state.rule(DejavuRule::KW_IN, |s| s.match_string("in", false))
+}
+
+#[inline]
+fn parse_pattern(state: Input) -> Output {
+    state.rule(DejavuRule::Pattern, |s| Err(s).or_else(|s| parse_bare_pattern(s).and_then(|s| s.tag_node("bare_pattern"))))
+}
+
+#[inline]
+fn parse_bare_pattern(state: Input) -> Output {
+    state.rule(DejavuRule::BarePattern, |s| {
+        s.sequence(|s| {
+            Ok(s)
+                .and_then(|s| parse_identifier(s).and_then(|s| s.tag_node("identifier")))
+                .and_then(|s| builtin_ignore(s))
+                .and_then(|s| {
+                    s.repeat(0..4294967295, |s| {
+                        s.sequence(|s| {
+                            Ok(s).and_then(|s| builtin_ignore(s)).and_then(|s| {
+                                s.sequence(|s| {
+                                    Ok(s)
+                                        .and_then(|s| builtin_text(s, ",", false))
+                                        .and_then(|s| builtin_ignore(s))
+                                        .and_then(|s| parse_identifier(s).and_then(|s| s.tag_node("identifier")))
+                                })
+                            })
+                        })
+                    })
+                })
+                .and_then(|s| builtin_ignore(s))
+                .and_then(|s| s.optional(|s| builtin_text(s, ",", false)))
+        })
+    })
 }
 #[inline]
 fn parse_expression(state: Input) -> Output {

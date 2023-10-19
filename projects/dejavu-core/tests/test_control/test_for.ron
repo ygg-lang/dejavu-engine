@@ -1,0 +1,60 @@
+RootNode {
+    element: [
+        Text(
+            TextManyNode {
+                text_element: [
+                    TextWord(
+                        TextWordNode {
+                            text: "#",
+                            span: 0..1,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 1..2,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "for",
+                            span: 2..5,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 5..6,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "one",
+                            span: 6..9,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 9..10,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "pattern",
+                            span: 10..17,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: "\n",
+                            span: 17..18,
+                        },
+                    ),
+                ],
+                span: 0..18,
+            },
+        ),
+    ],
+    span: 0..18,
+}

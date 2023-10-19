@@ -95,7 +95,10 @@ atomic class TemplateFor {
     ForBegin ForElse? ForEnd
 }
 atomic class ForBegin {
-    TEMPLATE_L ~ ^KW_FOR ~ Expression ~ TEMPLATE_R Element*
+    TEMPLATE_L ~
+    ^KW_FOR ~ (!KW_IN Pattern) ~
+    KW_IN ~ Expression ~
+    TEMPLATE_R Element*
 }
 atomic class ForElse {
     TEMPLATE_L ~ ^KW_ELSE ~ TEMPLATE_R Element*
@@ -106,6 +109,14 @@ atomic class ForEnd {
 @style(keyword)
 token {
     KW_FOR: 'for'
+    KW_IN: 'in'
+}
+// === pattern === ---------------------------------------------------------------------------------------------------
+union Pattern {
+    | BarePattern
+}
+class BarePattern {
+    Identifier (',' Identifier)* ','?
 }
 // === text area === ---------------------------------------------------------------------------------------------------
 class Expression {

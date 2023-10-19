@@ -3,8 +3,8 @@
 #![allow(clippy::unnecessary_cast)]
 #![doc = include_str!("readme.md")]
 
-mod parse_cst;
 mod parse_ast;
+mod parse_cst;
 
 use core::str::FromStr;
 use std::{borrow::Cow, ops::Range, sync::OnceLock};
@@ -60,6 +60,9 @@ pub enum DejavuRule {
     ForElse,
     ForEnd,
     KW_FOR,
+    KW_IN,
+    Pattern,
+    BarePattern,
     Expression,
     ExpressionRest,
     Infix,
@@ -122,6 +125,9 @@ impl YggdrasilRule for DejavuRule {
             Self::ForElse => "",
             Self::ForEnd => "",
             Self::KW_FOR => "",
+            Self::KW_IN => "",
+            Self::Pattern => "",
+            Self::BarePattern => "",
             Self::Expression => "",
             Self::ExpressionRest => "",
             Self::Infix => "",
@@ -318,6 +324,8 @@ pub struct TemplateForNode {
 pub struct ForBeginNode {
     pub element: Vec<ElementNode>,
     pub expression: ExpressionNode,
+    pub kw_in: KwInNode,
+    pub pattern: PatternNode,
     pub template_l: TemplateLNode,
     pub template_r: TemplateRNode,
     pub span: Range<u32>,
@@ -340,6 +348,25 @@ pub struct ForEndNode {
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct KwForNode {
+    pub span: Range<u32>,
+}
+
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct KwInNode {
+    pub span: Range<u32>,
+}
+
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub enum PatternNode {
+    BarePattern(BarePatternNode),
+}
+
+#[derive(Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct BarePatternNode {
+    pub identifier: Vec<IdentifierNode>,
     pub span: Range<u32>,
 }
 #[derive(Clone, Debug, Hash)]

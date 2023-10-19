@@ -5,13 +5,22 @@ use dejavu_parser::{
 use std::{fs::File, io::Write, str::FromStr};
 
 #[test]
-fn test_unicode() {
+fn test_if_ast() {
     let cst = DejavuParser::parse_cst(include_str!("test_if.djv"), DejavuRule::Root).unwrap();
     println!("Short Form:\n{}", cst);
     let ast = RootNode::from_str(include_str!("test_if.djv")).unwrap();
     let mut file = File::create("tests/test_control/test_if.ron").unwrap();
     file.write_all(format!("{:#?}", ast).as_bytes()).unwrap();
-    // file.write_all(out.to_string().as_bytes()).unwrap();
+}
+
+#[test]
+fn test_for_ast() {
+    let input = include_str!("test_for.djv");
+    let cst = DejavuParser::parse_cst(input, DejavuRule::Root).unwrap();
+    println!("Short Form:\n{}", cst);
+    let ast = RootNode::from_str(input).unwrap();
+    let mut file = File::create("tests/test_control/test_for.ron").unwrap();
+    file.write_all(format!("{:#?}", ast).as_bytes()).unwrap();
 }
 
 #[test]
@@ -23,6 +32,12 @@ fn test_if() {
         DejavuRule::TemplateIf,
     )
     .unwrap();
+    println!("Short Form:\n{}", cst);
+}
+
+#[test]
+fn test_for_begin() {
+    let cst = DejavuParser::parse_cst("<%= for i in j -%>", DejavuRule::ForBegin).unwrap();
     println!("Short Form:\n{}", cst);
 }
 
