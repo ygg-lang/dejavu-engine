@@ -1,5 +1,5 @@
 grammar Dejavu {
-file: '*.dejavu'
+
 }
 
 entry class Root {
@@ -126,11 +126,11 @@ union Prefix {
 }
 union Suffix {
     | '?' #Null
-    | '.' Identifier
+    | '.' Identifier #DotCall
 }
 // === string === ------------------------------------------------------------------------------------------------------
 union Atomic {
-    | '(' @box(Expression) ')' #Group
+//  | '(' @box(Expression) ')' #Group
     | Boolean                  #Boolean
     | Identifier               #Identifier
     | Number                   #Number

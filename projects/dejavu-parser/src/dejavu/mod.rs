@@ -154,10 +154,10 @@ pub struct RootNode {
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum ElementNode {
-    TemplateExport(TemplateExportNode),
-    TemplateFor(TemplateForNode),
-    TemplateIf(TemplateIfNode),
-    TextMany(TextManyNode),
+    Export(TemplateExportNode),
+    For(TemplateForNode),
+    If(TemplateIfNode),
+    Text(TextManyNode),
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -168,7 +168,7 @@ pub struct TextManyNode {
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum TextElementNode {
-    TemplateE(TemplateENode),
+    Escape(TemplateENode),
     TextSpace(TextSpaceNode),
     TextWord(TextWordNode),
 }
@@ -204,11 +204,11 @@ pub struct TemplateRNode {
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum SpaceControlNode {
-    SpaceControl0,
-    SpaceControl1,
-    SpaceControl2,
-    SpaceControl3,
-    SpaceControl4,
+    A,
+    B,
+    C,
+    D,
+    E,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -223,9 +223,9 @@ pub struct TemplateExportNode {
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ExportItemNode {
-    pub class: NamepathFreeNode,
-    pub language: IdentifierNode,
-    pub r#trait: Option<NamepathFreeNode>,
+    pub class: Option<NamepathFreeNode>,
+    pub language: Option<IdentifierNode>,
+    pub name: IdentifierNode,
     pub span: Range<u32>,
 }
 #[derive(Clone, Debug, Hash)]
@@ -359,8 +359,8 @@ pub struct ExpressionRestNode {
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum InfixNode {
-    Infix0,
-    Infix1,
+    Add,
+    Mul,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -373,18 +373,17 @@ pub struct TermNode {
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum PrefixNode {
-    Prefix0,
+    Not,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum SuffixNode {
-    Suffix0,
+    Null,
     Suffix1(IdentifierNode),
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum AtomicNode {
-    Atomic0,
     Boolean(BooleanNode),
     Identifier(IdentifierNode),
     Number(NumberNode),
@@ -392,13 +391,13 @@ pub enum AtomicNode {
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum StringNode {
-    String0,
-    String1,
+    DoubleQuote,
+    SingleQuote,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum NumberNode {
-    Digits(DigitsNode),
+    Dec(DigitsNode),
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -447,8 +446,8 @@ pub struct IdentifierNode {
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum BooleanNode {
-    Boolean0,
-    Boolean1,
+    False,
+    True,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
