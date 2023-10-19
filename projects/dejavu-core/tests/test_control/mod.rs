@@ -20,7 +20,7 @@ fn test_if() {
         r###"<% if true %>
    if text
 <% end %>"###,
-        DejavuRule::IfBegin,
+        DejavuRule::TemplateIf,
     )
     .unwrap();
     println!("Short Form:\n{}", cst);

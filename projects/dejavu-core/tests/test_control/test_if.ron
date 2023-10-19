@@ -9,10 +9,22 @@ RootNode {
                             span: 0..1,
                         },
                     ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 1..2,
+                        },
+                    ),
                     TextWord(
                         TextWordNode {
                             text: "simple",
                             span: 2..8,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 8..9,
                         },
                     ),
                     TextWord(
@@ -21,16 +33,885 @@ RootNode {
                             span: 9..11,
                         },
                     ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 11..12,
+                        },
+                    ),
                     TextWord(
                         TextWordNode {
                             text: "elements",
                             span: 12..20,
                         },
                     ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: "\n",
+                            span: 20..21,
+                        },
+                    ),
                 ],
-                span: 0..20,
+                span: 0..21,
+            },
+        ),
+        If(
+            TemplateIfNode {
+                if_begin: IfBeginNode {
+                    element: [
+                        Text(
+                            TextManyNode {
+                                text_element: [
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: "\n   ",
+                                            span: 34..38,
+                                        },
+                                    ),
+                                    TextWord(
+                                        TextWordNode {
+                                            text: "if",
+                                            span: 38..40,
+                                        },
+                                    ),
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: " ",
+                                            span: 40..41,
+                                        },
+                                    ),
+                                    TextWord(
+                                        TextWordNode {
+                                            text: "text",
+                                            span: 41..45,
+                                        },
+                                    ),
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: "\n",
+                                            span: 45..46,
+                                        },
+                                    ),
+                                ],
+                                span: 34..46,
+                            },
+                        ),
+                    ],
+                    expression: ExpressionNode {
+                        expression_rest: [],
+                        term: TermNode {
+                            atomic: Boolean(
+                                True,
+                            ),
+                            prefix: [],
+                            suffix: [],
+                            span: 27..32,
+                        },
+                        span: 27..32,
+                    },
+                    template_l: TemplateLNode {
+                        space_control: None,
+                        span: 21..23,
+                    },
+                    template_r: TemplateRNode {
+                        space_control: None,
+                        span: 32..34,
+                    },
+                    span: 21..46,
+                },
+                if_else: None,
+                if_else_if: [],
+                if_end: IfEndNode {
+                    template_l: TemplateLNode {
+                        space_control: None,
+                        span: 46..48,
+                    },
+                    template_r: TemplateRNode {
+                        space_control: None,
+                        span: 53..55,
+                    },
+                    span: 46..55,
+                },
+                span: 21..55,
+            },
+        ),
+        Text(
+            TextManyNode {
+                text_element: [
+                    TextWord(
+                        TextWordNode {
+                            text: "#",
+                            span: 57..58,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 58..59,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "if",
+                            span: 59..61,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 61..62,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "else",
+                            span: 62..66,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 66..67,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "element",
+                            span: 67..74,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: "\n",
+                            span: 74..75,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "#",
+                            span: 75..76,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 76..77,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "simple",
+                            span: 77..83,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 83..84,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "if",
+                            span: 84..86,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 86..87,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "elements",
+                            span: 87..95,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: "\n",
+                            span: 95..96,
+                        },
+                    ),
+                ],
+                span: 57..96,
+            },
+        ),
+        If(
+            TemplateIfNode {
+                if_begin: IfBeginNode {
+                    element: [
+                        Text(
+                            TextManyNode {
+                                text_element: [
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: "\n   ",
+                                            span: 109..113,
+                                        },
+                                    ),
+                                    TextWord(
+                                        TextWordNode {
+                                            text: "if",
+                                            span: 113..115,
+                                        },
+                                    ),
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: " ",
+                                            span: 115..116,
+                                        },
+                                    ),
+                                    TextWord(
+                                        TextWordNode {
+                                            text: "text",
+                                            span: 116..120,
+                                        },
+                                    ),
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: "\n",
+                                            span: 120..121,
+                                        },
+                                    ),
+                                ],
+                                span: 109..121,
+                            },
+                        ),
+                    ],
+                    expression: ExpressionNode {
+                        expression_rest: [],
+                        term: TermNode {
+                            atomic: Boolean(
+                                True,
+                            ),
+                            prefix: [],
+                            suffix: [],
+                            span: 102..107,
+                        },
+                        span: 102..107,
+                    },
+                    template_l: TemplateLNode {
+                        space_control: None,
+                        span: 96..98,
+                    },
+                    template_r: TemplateRNode {
+                        space_control: None,
+                        span: 107..109,
+                    },
+                    span: 96..121,
+                },
+                if_else: Some(
+                    IfElseNode {
+                        element: [
+                            Text(
+                                TextManyNode {
+                                    text_element: [
+                                        TextSpace(
+                                            TextSpaceNode {
+                                                text: "\n   ",
+                                                span: 131..135,
+                                            },
+                                        ),
+                                        TextWord(
+                                            TextWordNode {
+                                                text: "else",
+                                                span: 135..139,
+                                            },
+                                        ),
+                                        TextSpace(
+                                            TextSpaceNode {
+                                                text: " ",
+                                                span: 139..140,
+                                            },
+                                        ),
+                                        TextWord(
+                                            TextWordNode {
+                                                text: "text",
+                                                span: 140..144,
+                                            },
+                                        ),
+                                        TextSpace(
+                                            TextSpaceNode {
+                                                text: "\n",
+                                                span: 144..145,
+                                            },
+                                        ),
+                                    ],
+                                    span: 131..145,
+                                },
+                            ),
+                        ],
+                        template_l: TemplateLNode {
+                            space_control: None,
+                            span: 121..123,
+                        },
+                        template_r: TemplateRNode {
+                            space_control: None,
+                            span: 129..131,
+                        },
+                        span: 121..145,
+                    },
+                ),
+                if_else_if: [],
+                if_end: IfEndNode {
+                    template_l: TemplateLNode {
+                        space_control: None,
+                        span: 145..147,
+                    },
+                    template_r: TemplateRNode {
+                        space_control: None,
+                        span: 152..154,
+                    },
+                    span: 145..154,
+                },
+                span: 96..154,
+            },
+        ),
+        Text(
+            TextManyNode {
+                text_element: [
+                    TextWord(
+                        TextWordNode {
+                            text: "#",
+                            span: 157..158,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 158..159,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "if-else-if",
+                            span: 159..169,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 169..170,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "element",
+                            span: 170..177,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: "\n",
+                            span: 177..178,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "#",
+                            span: 178..179,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 179..180,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "simple",
+                            span: 180..186,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 186..187,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "if",
+                            span: 187..189,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 189..190,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "elements",
+                            span: 190..198,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: "\n",
+                            span: 198..199,
+                        },
+                    ),
+                ],
+                span: 157..199,
+            },
+        ),
+        If(
+            TemplateIfNode {
+                if_begin: IfBeginNode {
+                    element: [
+                        Text(
+                            TextManyNode {
+                                text_element: [
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: "\n   ",
+                                            span: 212..216,
+                                        },
+                                    ),
+                                    TextWord(
+                                        TextWordNode {
+                                            text: "if",
+                                            span: 216..218,
+                                        },
+                                    ),
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: " ",
+                                            span: 218..219,
+                                        },
+                                    ),
+                                    TextWord(
+                                        TextWordNode {
+                                            text: "text",
+                                            span: 219..223,
+                                        },
+                                    ),
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: "\n",
+                                            span: 223..224,
+                                        },
+                                    ),
+                                ],
+                                span: 212..224,
+                            },
+                        ),
+                    ],
+                    expression: ExpressionNode {
+                        expression_rest: [],
+                        term: TermNode {
+                            atomic: Boolean(
+                                True,
+                            ),
+                            prefix: [],
+                            suffix: [],
+                            span: 205..210,
+                        },
+                        span: 205..210,
+                    },
+                    template_l: TemplateLNode {
+                        space_control: None,
+                        span: 199..201,
+                    },
+                    template_r: TemplateRNode {
+                        space_control: None,
+                        span: 210..212,
+                    },
+                    span: 199..224,
+                },
+                if_else: None,
+                if_else_if: [
+                    IfElseIfNode {
+                        element: [
+                            Text(
+                                TextManyNode {
+                                    text_element: [
+                                        TextSpace(
+                                            TextSpaceNode {
+                                                text: "\n   ",
+                                                span: 243..247,
+                                            },
+                                        ),
+                                        TextWord(
+                                            TextWordNode {
+                                                text: "else",
+                                                span: 247..251,
+                                            },
+                                        ),
+                                        TextSpace(
+                                            TextSpaceNode {
+                                                text: " ",
+                                                span: 251..252,
+                                            },
+                                        ),
+                                        TextWord(
+                                            TextWordNode {
+                                                text: "if",
+                                                span: 252..254,
+                                            },
+                                        ),
+                                        TextSpace(
+                                            TextSpaceNode {
+                                                text: " ",
+                                                span: 254..255,
+                                            },
+                                        ),
+                                        TextWord(
+                                            TextWordNode {
+                                                text: "text",
+                                                span: 255..259,
+                                            },
+                                        ),
+                                        TextSpace(
+                                            TextSpaceNode {
+                                                text: "\n",
+                                                span: 259..260,
+                                            },
+                                        ),
+                                    ],
+                                    span: 243..260,
+                                },
+                            ),
+                        ],
+                        expression: ExpressionNode {
+                            expression_rest: [],
+                            term: TermNode {
+                                atomic: Boolean(
+                                    False,
+                                ),
+                                prefix: [],
+                                suffix: [],
+                                span: 235..241,
+                            },
+                            span: 235..241,
+                        },
+                        template_l: TemplateLNode {
+                            space_control: None,
+                            span: 224..226,
+                        },
+                        template_r: TemplateRNode {
+                            space_control: None,
+                            span: 241..243,
+                        },
+                        span: 224..260,
+                    },
+                ],
+                if_end: IfEndNode {
+                    template_l: TemplateLNode {
+                        space_control: None,
+                        span: 260..262,
+                    },
+                    template_r: TemplateRNode {
+                        space_control: None,
+                        span: 267..269,
+                    },
+                    span: 260..269,
+                },
+                span: 199..269,
+            },
+        ),
+        Text(
+            TextManyNode {
+                text_element: [
+                    TextWord(
+                        TextWordNode {
+                            text: "#",
+                            span: 271..272,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 272..273,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "if-else-if",
+                            span: 273..283,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 283..284,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "element",
+                            span: 284..291,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: "\n",
+                            span: 291..292,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "#",
+                            span: 292..293,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 293..294,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "simple",
+                            span: 294..300,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 300..301,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "if",
+                            span: 301..303,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: " ",
+                            span: 303..304,
+                        },
+                    ),
+                    TextWord(
+                        TextWordNode {
+                            text: "elements",
+                            span: 304..312,
+                        },
+                    ),
+                    TextSpace(
+                        TextSpaceNode {
+                            text: "\n",
+                            span: 312..313,
+                        },
+                    ),
+                ],
+                span: 271..313,
+            },
+        ),
+        If(
+            TemplateIfNode {
+                if_begin: IfBeginNode {
+                    element: [
+                        Text(
+                            TextManyNode {
+                                text_element: [
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: "\n   ",
+                                            span: 326..330,
+                                        },
+                                    ),
+                                    TextWord(
+                                        TextWordNode {
+                                            text: "if",
+                                            span: 330..332,
+                                        },
+                                    ),
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: " ",
+                                            span: 332..333,
+                                        },
+                                    ),
+                                    TextWord(
+                                        TextWordNode {
+                                            text: "text",
+                                            span: 333..337,
+                                        },
+                                    ),
+                                    TextSpace(
+                                        TextSpaceNode {
+                                            text: "\n",
+                                            span: 337..338,
+                                        },
+                                    ),
+                                ],
+                                span: 326..338,
+                            },
+                        ),
+                    ],
+                    expression: ExpressionNode {
+                        expression_rest: [],
+                        term: TermNode {
+                            atomic: Boolean(
+                                True,
+                            ),
+                            prefix: [],
+                            suffix: [],
+                            span: 319..324,
+                        },
+                        span: 319..324,
+                    },
+                    template_l: TemplateLNode {
+                        space_control: None,
+                        span: 313..315,
+                    },
+                    template_r: TemplateRNode {
+                        space_control: None,
+                        span: 324..326,
+                    },
+                    span: 313..338,
+                },
+                if_else: Some(
+                    IfElseNode {
+                        element: [
+                            Text(
+                                TextManyNode {
+                                    text_element: [
+                                        TextSpace(
+                                            TextSpaceNode {
+                                                text: "\n   ",
+                                                span: 384..388,
+                                            },
+                                        ),
+                                        TextWord(
+                                            TextWordNode {
+                                                text: "else",
+                                                span: 388..392,
+                                            },
+                                        ),
+                                        TextSpace(
+                                            TextSpaceNode {
+                                                text: " ",
+                                                span: 392..393,
+                                            },
+                                        ),
+                                        TextWord(
+                                            TextWordNode {
+                                                text: "text",
+                                                span: 393..397,
+                                            },
+                                        ),
+                                        TextSpace(
+                                            TextSpaceNode {
+                                                text: "\n",
+                                                span: 397..398,
+                                            },
+                                        ),
+                                    ],
+                                    span: 384..398,
+                                },
+                            ),
+                        ],
+                        template_l: TemplateLNode {
+                            space_control: None,
+                            span: 374..376,
+                        },
+                        template_r: TemplateRNode {
+                            space_control: None,
+                            span: 382..384,
+                        },
+                        span: 374..398,
+                    },
+                ),
+                if_else_if: [
+                    IfElseIfNode {
+                        element: [
+                            Text(
+                                TextManyNode {
+                                    text_element: [
+                                        TextSpace(
+                                            TextSpaceNode {
+                                                text: "\n   ",
+                                                span: 357..361,
+                                            },
+                                        ),
+                                        TextWord(
+                                            TextWordNode {
+                                                text: "else",
+                                                span: 361..365,
+                                            },
+                                        ),
+                                        TextSpace(
+                                            TextSpaceNode {
+                                                text: " ",
+                                                span: 365..366,
+                                            },
+                                        ),
+                                        TextWord(
+                                            TextWordNode {
+                                                text: "if",
+                                                span: 366..368,
+                                            },
+                                        ),
+                                        TextSpace(
+                                            TextSpaceNode {
+                                                text: " ",
+                                                span: 368..369,
+                                            },
+                                        ),
+                                        TextWord(
+                                            TextWordNode {
+                                                text: "text",
+                                                span: 369..373,
+                                            },
+                                        ),
+                                        TextSpace(
+                                            TextSpaceNode {
+                                                text: "\n",
+                                                span: 373..374,
+                                            },
+                                        ),
+                                    ],
+                                    span: 357..374,
+                                },
+                            ),
+                        ],
+                        expression: ExpressionNode {
+                            expression_rest: [],
+                            term: TermNode {
+                                atomic: Boolean(
+                                    False,
+                                ),
+                                prefix: [],
+                                suffix: [],
+                                span: 349..355,
+                            },
+                            span: 349..355,
+                        },
+                        template_l: TemplateLNode {
+                            space_control: None,
+                            span: 338..340,
+                        },
+                        template_r: TemplateRNode {
+                            space_control: None,
+                            span: 355..357,
+                        },
+                        span: 338..374,
+                    },
+                ],
+                if_end: IfEndNode {
+                    template_l: TemplateLNode {
+                        space_control: None,
+                        span: 398..400,
+                    },
+                    template_r: TemplateRNode {
+                        space_control: None,
+                        span: 405..407,
+                    },
+                    span: 398..407,
+                },
+                span: 313..407,
             },
         ),
     ],
-    span: 0..20,
+    span: 0..407,
 }

@@ -13,7 +13,7 @@ union Element {
     | TemplateFor    #For
 }
 // === text area === ---------------------------------------------------------------------------------------------------
-class TextMany {
+atomic class TextMany {
     TextElement+
 }
 union TextElement {

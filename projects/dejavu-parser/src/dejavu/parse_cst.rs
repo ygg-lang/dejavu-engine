@@ -78,13 +78,7 @@ fn parse_element(state: Input) -> Output {
 #[inline]
 fn parse_text_many(state: Input) -> Output {
     state.rule(DejavuRule::TextMany, |s| {
-        s.repeat(1..4294967295, |s| {
-            s.sequence(|s| {
-                Ok(s)
-                    .and_then(|s| builtin_ignore(s))
-                    .and_then(|s| parse_text_element(s).and_then(|s| s.tag_node("text_element")))
-            })
-        })
+        s.repeat(1..4294967295, |s| parse_text_element(s).and_then(|s| s.tag_node("text_element")))
     })
 }
 #[inline]
