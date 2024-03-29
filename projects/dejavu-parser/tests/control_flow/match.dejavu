@@ -1,6 +1,27 @@
 <% match i %>
 
+<% end match %>
+
+
+
+
+<% match i %>
 <% case i %>
 
-<% match end %>
+<% end match %>
 
+
+
+
+<% match i %>
+<% else %>
+    default branch
+<% end match %>
+
+
+<% match i %>
+<% case i %>
+
+<% else %>
+
+<% end match %>
