@@ -1,0 +1,11 @@
+<% while i %>
+    loop body
+<% while end %>
+
+
+
+<% while i %>
+    loop body
+<% else %>
+    empty body
+<% for end %>

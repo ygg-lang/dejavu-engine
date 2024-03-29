@@ -1,0 +1,14 @@
+<% for i in j %>
+    loop body
+<% end for %>
+
+
+
+<% for i in j %>
+    loop body
+<% else %>
+    empty body
+<% end for %>
+
+
+
