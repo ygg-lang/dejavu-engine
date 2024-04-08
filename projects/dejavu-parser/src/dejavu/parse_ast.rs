@@ -130,8 +130,7 @@ impl<'i> YggdrasilNode<'i> for TemplateENode<'i> {
     }
 }
 
-impl<'i> TemplateENode<'i> {
-}
+impl<'i> TemplateENode<'i> {}
 #[automatically_derived]
 impl<'i> YggdrasilNode<'i> for TextSpaceNode<'i> {
     type Rule = DejavuRule;
@@ -156,8 +155,7 @@ impl<'i> YggdrasilNode<'i> for TextSpaceNode<'i> {
     }
 }
 
-impl<'i> TextSpaceNode<'i> {
-}
+impl<'i> TextSpaceNode<'i> {}
 #[automatically_derived]
 impl<'i> YggdrasilNode<'i> for TextWordNode<'i> {
     type Rule = DejavuRule;
@@ -182,8 +180,7 @@ impl<'i> YggdrasilNode<'i> for TextWordNode<'i> {
     }
 }
 
-impl<'i> TextWordNode<'i> {
-}
+impl<'i> TextWordNode<'i> {}
 #[automatically_derived]
 impl<'i> YggdrasilNode<'i> for TemplateLNode<'i> {
     type Rule = DejavuRule;
@@ -290,8 +287,7 @@ impl<'i> YggdrasilNode<'i> for KwEndNode<'i> {
     }
 }
 
-impl<'i> KwEndNode<'i> {
-}
+impl<'i> KwEndNode<'i> {}
 #[automatically_derived]
 impl<'i> YggdrasilNode<'i> for TemplateExportNode<'i> {
     type Rule = DejavuRule;
@@ -316,8 +312,7 @@ impl<'i> YggdrasilNode<'i> for TemplateExportNode<'i> {
     }
 }
 
-impl<'i> TemplateExportNode<'i> {
-}
+impl<'i> TemplateExportNode<'i> {}
 #[automatically_derived]
 impl<'i> YggdrasilNode<'i> for ExportItemNode<'i> {
     type Rule = DejavuRule;
@@ -377,8 +372,7 @@ impl<'i> YggdrasilNode<'i> for KwExportNode<'i> {
     }
 }
 
-impl<'i> KwExportNode<'i> {
-}
+impl<'i> KwExportNode<'i> {}
 #[automatically_derived]
 impl<'i> YggdrasilNode<'i> for KwClassNode<'i> {
     type Rule = DejavuRule;
@@ -403,8 +397,7 @@ impl<'i> YggdrasilNode<'i> for KwClassNode<'i> {
     }
 }
 
-impl<'i> KwClassNode<'i> {
-}
+impl<'i> KwClassNode<'i> {}
 #[automatically_derived]
 impl<'i> YggdrasilNode<'i> for KwTraitNode<'i> {
     type Rule = DejavuRule;
@@ -429,8 +422,7 @@ impl<'i> YggdrasilNode<'i> for KwTraitNode<'i> {
     }
 }
 
-impl<'i> KwTraitNode<'i> {
-}
+impl<'i> KwTraitNode<'i> {}
 #[automatically_derived]
 impl<'i> YggdrasilNode<'i> for KwToNode<'i> {
     type Rule = DejavuRule;
@@ -455,8 +447,7 @@ impl<'i> YggdrasilNode<'i> for KwToNode<'i> {
     }
 }
 
-impl<'i> KwToNode<'i> {
-}
+impl<'i> KwToNode<'i> {}
 #[automatically_derived]
 impl<'i> YggdrasilNode<'i> for KwByNode<'i> {
     type Rule = DejavuRule;
@@ -481,8 +472,7 @@ impl<'i> YggdrasilNode<'i> for KwByNode<'i> {
     }
 }
 
-impl<'i> KwByNode<'i> {
-}
+impl<'i> KwByNode<'i> {}
 #[automatically_derived]
 impl<'i> YggdrasilNode<'i> for TemplateIfNode<'i> {
     type Rule = DejavuRule;
@@ -688,8 +678,7 @@ impl<'i> YggdrasilNode<'i> for KwIfNode<'i> {
     }
 }
 
-impl<'i> KwIfNode<'i> {
-}
+impl<'i> KwIfNode<'i> {}
 #[automatically_derived]
 impl<'i> YggdrasilNode<'i> for KwElseNode<'i> {
     type Rule = DejavuRule;
@@ -714,8 +703,7 @@ impl<'i> YggdrasilNode<'i> for KwElseNode<'i> {
     }
 }
 
-impl<'i> KwElseNode<'i> {
-}
+impl<'i> KwElseNode<'i> {}
 #[automatically_derived]
 impl<'i> YggdrasilNode<'i> for TemplateForNode<'i> {
     type Rule = DejavuRule;
@@ -889,8 +877,7 @@ impl<'i> YggdrasilNode<'i> for KwForNode<'i> {
     }
 }
 
-impl<'i> KwForNode<'i> {
-}
+impl<'i> KwForNode<'i> {}
 #[automatically_derived]
 impl<'i> YggdrasilNode<'i> for KwInNode<'i> {
     type Rule = DejavuRule;
@@ -915,8 +902,7 @@ impl<'i> YggdrasilNode<'i> for KwInNode<'i> {
     }
 }
 
-impl<'i> KwInNode<'i> {
-}
+impl<'i> KwInNode<'i> {}
 #[automatically_derived]
 impl<'i> YggdrasilNode<'i> for PatternNode<'i> {
     type Rule = DejavuRule;
@@ -1237,8 +1223,7 @@ impl<'i> YggdrasilNode<'i> for DigitsNode<'i> {
     }
 }
 
-impl<'i> DigitsNode<'i> {
-}
+impl<'i> DigitsNode<'i> {}
 #[automatically_derived]
 impl<'i> YggdrasilNode<'i> for UnitNode<'i> {
     type Rule = DejavuRule;
@@ -1292,8 +1277,7 @@ impl<'i> YggdrasilNode<'i> for BinNode<'i> {
     }
 }
 
-impl<'i> BinNode<'i> {
-}
+impl<'i> BinNode<'i> {}
 #[automatically_derived]
 impl<'i> YggdrasilNode<'i> for OctNode<'i> {
     type Rule = DejavuRule;
@@ -1318,8 +1302,7 @@ impl<'i> YggdrasilNode<'i> for OctNode<'i> {
     }
 }
 
-impl<'i> OctNode<'i> {
-}
+impl<'i> OctNode<'i> {}
 #[automatically_derived]
 impl<'i> YggdrasilNode<'i> for HexNode<'i> {
     type Rule = DejavuRule;
@@ -1344,8 +1327,7 @@ impl<'i> YggdrasilNode<'i> for HexNode<'i> {
     }
 }
 
-impl<'i> HexNode<'i> {
-}
+impl<'i> HexNode<'i> {}
 #[automatically_derived]
 impl<'i> YggdrasilNode<'i> for NamepathFreeNode<'i> {
     type Rule = DejavuRule;
@@ -1428,8 +1410,7 @@ impl<'i> YggdrasilNode<'i> for IdentifierNode<'i> {
     }
 }
 
-impl<'i> IdentifierNode<'i> {
-}
+impl<'i> IdentifierNode<'i> {}
 #[automatically_derived]
 impl<'i> YggdrasilNode<'i> for BooleanNode<'i> {
     type Rule = DejavuRule;
@@ -1478,5 +1459,4 @@ impl<'i> YggdrasilNode<'i> for WhiteSpaceNode<'i> {
     }
 }
 
-impl<'i> WhiteSpaceNode<'i> {
-}
+impl<'i> WhiteSpaceNode<'i> {}

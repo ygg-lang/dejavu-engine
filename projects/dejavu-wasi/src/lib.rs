@@ -1,16 +1,16 @@
 #![allow(unused_braces)]
 
-pub struct NotedownHost {}
+pub struct DejavuHost {}
 
-pub use crate::bindings::UrlNative;
+pub use crate::{bindings::UrlNative, exports::dejavu::core::types::DejavuError};
 
 include!("exports/host.rs");
-export!(NotedownHost);
+export!(DejavuHost);
 
 mod bindings;
 pub mod helpers;
 mod traits;
 
-pub use crate::exports::notedown::core::types::NotedownError;
+pub mod backends;
 
-pub type Result<T> = std::result::Result<T, NotedownError>;
+pub type Result<T> = std::result::Result<T, DejavuError>;

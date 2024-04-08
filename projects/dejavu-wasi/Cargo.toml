@@ -22,5 +22,10 @@ wit-bindgen = "0.24.0"
 toml = { version = "0.8.12", optional = true }
 serde_json = { version = "1.0.115", optional = true }
 
+
+[dependencies.indentation]
+version = "0.1.*"
+path = "../indentation"
+
 [features]
 default = []
