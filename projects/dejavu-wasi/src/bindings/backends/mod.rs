@@ -1,7 +1,5 @@
 use crate::{
-    exports::dejavu::core::backends::{
-        DejavuError, DejavuRoot, GuestJavaScriptVanilla, GuestRustDejavu, GuestRustVanilla, GuestTypeScriptVanilla,
-    },
+    backends::{JsVanilla, RsDejavu, RsVanilla, TsVanilla},
     DejavuHost,
 };
 

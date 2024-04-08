@@ -12,8 +12,35 @@ pub mod exports {
                 #[doc(hidden)]
                 #[cfg(target_arch = "wasm32")]
                 static __FORCE_SECTION_REF: fn() = super::super::super::super::__link_custom_section_describing_imports;
-
                 use super::super::super::super::_rt;
+                #[derive(Clone)]
+                pub enum Value {
+                    Null,
+                    Bool(bool),
+                    Integer(i64),
+                    Decimal(f64),
+                    String(_rt::String),
+                }
+                impl ::core::fmt::Debug for Value {
+                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+                        match self {
+                            Value::Null => f.debug_tuple("Value::Null").finish(),
+                            Value::Bool(e) => f.debug_tuple("Value::Bool").field(e).finish(),
+                            Value::Integer(e) => f.debug_tuple("Value::Integer").field(e).finish(),
+                            Value::Decimal(e) => f.debug_tuple("Value::Decimal").field(e).finish(),
+                            Value::String(e) => f.debug_tuple("Value::String").field(e).finish(),
+                        }
+                    }
+                }
+                #[derive(Clone)]
+                pub struct Object {
+                    pub map: _rt::Vec<(_rt::String, Value)>,
+                }
+                impl ::core::fmt::Debug for Object {
+                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+                        f.debug_struct("Object").field("map", &self.map).finish()
+                    }
+                }
 
                 #[derive(Debug)]
                 #[repr(transparent)]
@@ -147,45 +174,12 @@ pub mod exports {
                     }
                 }
 
-                pub enum Value {
-                    Null,
-                    Bool(bool),
-                    Integer(i64),
-                    Decimal(f64),
-                    String(_rt::String),
-                    Url(Url),
-                }
-
-                impl ::core::fmt::Debug for Value {
-                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-                        match self {
-                            Value::Null => f.debug_tuple("Value::Null").finish(),
-                            Value::Bool(e) => f.debug_tuple("Value::Bool").field(e).finish(),
-                            Value::Integer(e) => f.debug_tuple("Value::Integer").field(e).finish(),
-                            Value::Decimal(e) => f.debug_tuple("Value::Decimal").field(e).finish(),
-                            Value::String(e) => f.debug_tuple("Value::String").field(e).finish(),
-                            Value::Url(e) => f.debug_tuple("Value::Url").field(e).finish(),
-                        }
-                    }
-                }
-
-                pub struct Object {
-                    pub map: _rt::Vec<(_rt::String, Value)>,
-                }
-
-                impl ::core::fmt::Debug for Object {
-                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-                        f.debug_struct("Object").field("map", &self.map).finish()
-                    }
-                }
-
                 #[repr(C)]
                 #[derive(Clone, Copy)]
                 pub struct TextRange {
                     pub head_offset: u32,
                     pub tail_offset: u32,
                 }
-
                 impl ::core::fmt::Debug for TextRange {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         f.debug_struct("TextRange")
@@ -194,13 +188,11 @@ pub mod exports {
                             .finish()
                     }
                 }
-
                 pub struct SyntaxError {
                     pub reason: _rt::String,
                     pub file: Option<Url>,
                     pub range: TextRange,
                 }
-
                 impl ::core::fmt::Debug for SyntaxError {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         f.debug_struct("SyntaxError")
@@ -210,11 +202,9 @@ pub mod exports {
                             .finish()
                     }
                 }
-
                 pub enum DejavuError {
                     Syntax(SyntaxError),
                 }
-
                 impl ::core::fmt::Debug for DejavuError {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         match self {
@@ -222,7 +212,6 @@ pub mod exports {
                         }
                     }
                 }
-
                 impl ::core::fmt::Display for DejavuError {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         write!(f, "{:?}", self)
@@ -230,11 +219,9 @@ pub mod exports {
                 }
 
                 impl std::error::Error for DejavuError {}
-
                 pub trait Guest {
                     type Url: GuestUrl;
                 }
-
                 pub trait GuestUrl: 'static {
                     #[doc(hidden)]
                     unsafe fn _resource_new(val: *mut u8) -> u32
@@ -282,7 +269,7 @@ pub mod exports {
                 }
                 #[doc(hidden)]
 
-                macro_rules! __export_dejavu_core_types_0_1_0_cabi {
+                macro_rules! __export_dejavu_core_types_0_1_0_cabi{
           ($ty:ident with_types_in $($path_to_types:tt)*) => (const _: () = {
 
 
@@ -309,51 +296,43 @@ pub mod exports {
                 #[doc(hidden)]
                 #[cfg(target_arch = "wasm32")]
                 static __FORCE_SECTION_REF: fn() = super::super::super::super::__link_custom_section_describing_imports;
-
                 use super::super::super::super::_rt;
-
                 pub type TextRange = super::super::super::super::exports::dejavu::core::types::TextRange;
                 pub type Url = super::super::super::super::exports::dejavu::core::types::Url;
                 pub type UrlBorrow<'a> = super::super::super::super::exports::dejavu::core::types::UrlBorrow<'a>;
                 pub type Object = super::super::super::super::exports::dejavu::core::types::Object;
                 pub type DejavuError = super::super::super::super::exports::dejavu::core::types::DejavuError;
-
                 #[derive(Clone)]
                 pub struct TextElement {
                     pub body: _rt::String,
                     pub range: TextRange,
                 }
-
                 impl ::core::fmt::Debug for TextElement {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         f.debug_struct("TextElement").field("body", &self.body).field("range", &self.range).finish()
                     }
                 }
-
                 #[derive(Clone)]
-                pub enum RootItem {
+                pub enum TemplateItem {
                     Placeholder,
                     Text(TextElement),
                 }
-
-                impl ::core::fmt::Debug for RootItem {
+                impl ::core::fmt::Debug for TemplateItem {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         match self {
-                            RootItem::Placeholder => f.debug_tuple("RootItem::Placeholder").finish(),
-                            RootItem::Text(e) => f.debug_tuple("RootItem::Text").field(e).finish(),
+                            TemplateItem::Placeholder => f.debug_tuple("TemplateItem::Placeholder").finish(),
+                            TemplateItem::Text(e) => f.debug_tuple("TemplateItem::Text").field(e).finish(),
                         }
                     }
                 }
-
-                pub struct DejavuRoot {
-                    pub blocks: _rt::Vec<RootItem>,
+                pub struct DejavuTemplate {
+                    pub blocks: _rt::Vec<TemplateItem>,
                     pub config: Object,
                     pub path: Option<Url>,
                 }
-
-                impl ::core::fmt::Debug for DejavuRoot {
+                impl ::core::fmt::Debug for DejavuTemplate {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-                        f.debug_struct("DejavuRoot")
+                        f.debug_struct("DejavuTemplate")
                             .field("blocks", &self.blocks)
                             .field("config", &self.config)
                             .field("path", &self.path)
@@ -377,10 +356,8 @@ pub mod exports {
                 #[doc(hidden)]
                 #[cfg(target_arch = "wasm32")]
                 static __FORCE_SECTION_REF: fn() = super::super::super::super::__link_custom_section_describing_imports;
-
                 use super::super::super::super::_rt;
-
-                pub type DejavuRoot = super::super::super::super::exports::dejavu::core::syntax_tree::DejavuRoot;
+                pub type DejavuTemplate = super::super::super::super::exports::dejavu::core::syntax_tree::DejavuTemplate;
                 pub type TextRange = super::super::super::super::exports::dejavu::core::types::TextRange;
                 pub type Url = super::super::super::super::exports::dejavu::core::types::Url;
                 pub type UrlBorrow<'a> = super::super::super::super::exports::dejavu::core::types::UrlBorrow<'a>;
@@ -925,7 +902,6 @@ pub mod exports {
                     let result1 = RustVanilla::new(T::new(_rt::string_lift(bytes0)));
                     (result1).take_handle() as i32
                 }
-
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
                 pub unsafe fn _export_method_rust_vanilla_finalize_cabi<T: GuestRustVanilla>(
@@ -946,7 +922,7 @@ pub mod exports {
                         let base = base7.add(i * 20);
                         let e7 = {
                             let l0 = i32::from(*base.add(0).cast::<u8>());
-                            use super::super::super::super::exports::dejavu::core::syntax_tree::RootItem as V6;
+                            use super::super::super::super::exports::dejavu::core::syntax_tree::TemplateItem as V6;
                             let v6 = match l0 {
                                 0 => V6::Placeholder,
                                 n => {
@@ -976,46 +952,47 @@ pub mod exports {
                         result7.push(e7);
                     }
                     _rt::cabi_dealloc(base7, len7 * 20, 4);
-                    let base20 = arg3;
-                    let len20 = arg4;
-                    let mut result20 = _rt::Vec::with_capacity(len20);
-                    for i in 0..len20 {
-                        let base = base20.add(i * 24);
-                        let e20 = {
+                    let base19 = arg3;
+                    let len19 = arg4;
+                    let mut result19 = _rt::Vec::with_capacity(len19);
+                    for i in 0..len19 {
+                        let base = base19.add(i * 24);
+                        let e19 = {
                             let l8 = *base.add(0).cast::<*mut u8>();
                             let l9 = *base.add(4).cast::<usize>();
                             let len10 = l9;
                             let bytes10 = _rt::Vec::from_raw_parts(l8.cast(), len10, len10);
                             let l11 = i32::from(*base.add(8).cast::<u8>());
-                            use super::super::super::super::exports::dejavu::core::types::Value as V19;
-                            let v19 = match l11 {
-                                0 => V19::Null,
+                            use super::super::super::super::exports::dejavu::core::types::Value as V18;
+                            let v18 = match l11 {
+                                0 => V18::Null,
                                 1 => {
-                                    let e19 = {
+                                    let e18 = {
                                         let l12 = i32::from(*base.add(16).cast::<u8>());
 
                                         _rt::bool_lift(l12 as u8)
                                     };
-                                    V19::Bool(e19)
+                                    V18::Bool(e18)
                                 }
                                 2 => {
-                                    let e19 = {
+                                    let e18 = {
                                         let l13 = *base.add(16).cast::<i64>();
 
                                         l13
                                     };
-                                    V19::Integer(e19)
+                                    V18::Integer(e18)
                                 }
                                 3 => {
-                                    let e19 = {
+                                    let e18 = {
                                         let l14 = *base.add(16).cast::<f64>();
 
                                         l14
                                     };
-                                    V19::Decimal(e19)
+                                    V18::Decimal(e18)
                                 }
-                                4 => {
-                                    let e19 = {
+                                n => {
+                                    debug_assert_eq!(n, 4, "invalid enum discriminant");
+                                    let e18 = {
                                         let l15 = *base.add(16).cast::<*mut u8>();
                                         let l16 = *base.add(20).cast::<usize>();
                                         let len17 = l16;
@@ -1023,29 +1000,20 @@ pub mod exports {
 
                                         _rt::string_lift(bytes17)
                                     };
-                                    V19::String(e19)
-                                }
-                                n => {
-                                    debug_assert_eq!(n, 5, "invalid enum discriminant");
-                                    let e19 = {
-                                        let l18 = *base.add(16).cast::<i32>();
-
-                                        super::super::super::super::exports::dejavu::core::types::Url::from_handle(l18 as u32)
-                                    };
-                                    V19::Url(e19)
+                                    V18::String(e18)
                                 }
                             };
 
-                            (_rt::string_lift(bytes10), v19)
+                            (_rt::string_lift(bytes10), v18)
                         };
-                        result20.push(e20);
+                        result19.push(e19);
                     }
-                    _rt::cabi_dealloc(base20, len20 * 24, 8);
-                    let result21 = T::finalize(
+                    _rt::cabi_dealloc(base19, len19 * 24, 8);
+                    let result20 = T::finalize(
                         RustVanillaBorrow::lift(arg0 as u32 as usize).get(),
-                        super::super::super::super::exports::dejavu::core::syntax_tree::DejavuRoot {
+                        super::super::super::super::exports::dejavu::core::syntax_tree::DejavuTemplate {
                             blocks: result7,
-                            config: super::super::super::super::exports::dejavu::core::types::Object { map: result20 },
+                            config: super::super::super::super::exports::dejavu::core::types::Object { map: result19 },
                             path: match arg5 {
                                 0 => None,
                                 1 => {
@@ -1057,50 +1025,49 @@ pub mod exports {
                             },
                         },
                     );
-                    let ptr22 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
-                    match result21 {
+                    let ptr21 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
+                    match result20 {
                         Ok(_) => {
-                            *ptr22.add(0).cast::<u8>() = (0i32) as u8;
+                            *ptr21.add(0).cast::<u8>() = (0i32) as u8;
                         }
                         Err(e) => {
-                            *ptr22.add(0).cast::<u8>() = (1i32) as u8;
-                            use super::super::super::super::exports::dejavu::core::types::DejavuError as V26;
+                            *ptr21.add(0).cast::<u8>() = (1i32) as u8;
+                            use super::super::super::super::exports::dejavu::core::types::DejavuError as V25;
                             match e {
-                                V26::Syntax(e) => {
-                                    *ptr22.add(4).cast::<u8>() = (0i32) as u8;
+                                V25::Syntax(e) => {
+                                    *ptr21.add(4).cast::<u8>() = (0i32) as u8;
                                     let super::super::super::super::exports::dejavu::core::types::SyntaxError {
-                                        reason: reason23,
-                                        file: file23,
-                                        range: range23,
+                                        reason: reason22,
+                                        file: file22,
+                                        range: range22,
                                     } = e;
-                                    let vec24 = (reason23.into_bytes()).into_boxed_slice();
-                                    let ptr24 = vec24.as_ptr().cast::<u8>();
-                                    let len24 = vec24.len();
-                                    ::core::mem::forget(vec24);
-                                    *ptr22.add(12).cast::<usize>() = len24;
-                                    *ptr22.add(8).cast::<*mut u8>() = ptr24.cast_mut();
-                                    match file23 {
+                                    let vec23 = (reason22.into_bytes()).into_boxed_slice();
+                                    let ptr23 = vec23.as_ptr().cast::<u8>();
+                                    let len23 = vec23.len();
+                                    ::core::mem::forget(vec23);
+                                    *ptr21.add(12).cast::<usize>() = len23;
+                                    *ptr21.add(8).cast::<*mut u8>() = ptr23.cast_mut();
+                                    match file22 {
                                         Some(e) => {
-                                            *ptr22.add(16).cast::<u8>() = (1i32) as u8;
-                                            *ptr22.add(20).cast::<i32>() = (e).take_handle() as i32;
+                                            *ptr21.add(16).cast::<u8>() = (1i32) as u8;
+                                            *ptr21.add(20).cast::<i32>() = (e).take_handle() as i32;
                                         }
                                         None => {
-                                            *ptr22.add(16).cast::<u8>() = (0i32) as u8;
+                                            *ptr21.add(16).cast::<u8>() = (0i32) as u8;
                                         }
                                     };
                                     let super::super::super::super::exports::dejavu::core::types::TextRange {
-                                        head_offset: head_offset25,
-                                        tail_offset: tail_offset25,
-                                    } = range23;
-                                    *ptr22.add(24).cast::<i32>() = _rt::as_i32(head_offset25);
-                                    *ptr22.add(28).cast::<i32>() = _rt::as_i32(tail_offset25);
+                                        head_offset: head_offset24,
+                                        tail_offset: tail_offset24,
+                                    } = range22;
+                                    *ptr21.add(24).cast::<i32>() = _rt::as_i32(head_offset24);
+                                    *ptr21.add(28).cast::<i32>() = _rt::as_i32(tail_offset24);
                                 }
                             }
                         }
                     };
-                    ptr22
+                    ptr21
                 }
-
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
                 pub unsafe fn __post_return_method_rust_vanilla_finalize<T: GuestRustVanilla>(arg0: *mut u8) {
@@ -1119,7 +1086,6 @@ pub mod exports {
                         }
                     }
                 }
-
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
                 pub unsafe fn _export_constructor_rust_dejavu_cabi<T: GuestRustDejavu>(arg0: *mut u8, arg1: usize) -> i32 {
@@ -1130,7 +1096,6 @@ pub mod exports {
                     let result1 = RustDejavu::new(T::new(_rt::string_lift(bytes0)));
                     (result1).take_handle() as i32
                 }
-
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
                 pub unsafe fn _export_method_rust_dejavu_generate_cabi<T: GuestRustDejavu>(
@@ -1151,7 +1116,7 @@ pub mod exports {
                         let base = base7.add(i * 20);
                         let e7 = {
                             let l0 = i32::from(*base.add(0).cast::<u8>());
-                            use super::super::super::super::exports::dejavu::core::syntax_tree::RootItem as V6;
+                            use super::super::super::super::exports::dejavu::core::syntax_tree::TemplateItem as V6;
                             let v6 = match l0 {
                                 0 => V6::Placeholder,
                                 n => {
@@ -1181,46 +1146,47 @@ pub mod exports {
                         result7.push(e7);
                     }
                     _rt::cabi_dealloc(base7, len7 * 20, 4);
-                    let base20 = arg3;
-                    let len20 = arg4;
-                    let mut result20 = _rt::Vec::with_capacity(len20);
-                    for i in 0..len20 {
-                        let base = base20.add(i * 24);
-                        let e20 = {
+                    let base19 = arg3;
+                    let len19 = arg4;
+                    let mut result19 = _rt::Vec::with_capacity(len19);
+                    for i in 0..len19 {
+                        let base = base19.add(i * 24);
+                        let e19 = {
                             let l8 = *base.add(0).cast::<*mut u8>();
                             let l9 = *base.add(4).cast::<usize>();
                             let len10 = l9;
                             let bytes10 = _rt::Vec::from_raw_parts(l8.cast(), len10, len10);
                             let l11 = i32::from(*base.add(8).cast::<u8>());
-                            use super::super::super::super::exports::dejavu::core::types::Value as V19;
-                            let v19 = match l11 {
-                                0 => V19::Null,
+                            use super::super::super::super::exports::dejavu::core::types::Value as V18;
+                            let v18 = match l11 {
+                                0 => V18::Null,
                                 1 => {
-                                    let e19 = {
+                                    let e18 = {
                                         let l12 = i32::from(*base.add(16).cast::<u8>());
 
                                         _rt::bool_lift(l12 as u8)
                                     };
-                                    V19::Bool(e19)
+                                    V18::Bool(e18)
                                 }
                                 2 => {
-                                    let e19 = {
+                                    let e18 = {
                                         let l13 = *base.add(16).cast::<i64>();
 
                                         l13
                                     };
-                                    V19::Integer(e19)
+                                    V18::Integer(e18)
                                 }
                                 3 => {
-                                    let e19 = {
+                                    let e18 = {
                                         let l14 = *base.add(16).cast::<f64>();
 
                                         l14
                                     };
-                                    V19::Decimal(e19)
+                                    V18::Decimal(e18)
                                 }
-                                4 => {
-                                    let e19 = {
+                                n => {
+                                    debug_assert_eq!(n, 4, "invalid enum discriminant");
+                                    let e18 = {
                                         let l15 = *base.add(16).cast::<*mut u8>();
                                         let l16 = *base.add(20).cast::<usize>();
                                         let len17 = l16;
@@ -1228,29 +1194,20 @@ pub mod exports {
 
                                         _rt::string_lift(bytes17)
                                     };
-                                    V19::String(e19)
-                                }
-                                n => {
-                                    debug_assert_eq!(n, 5, "invalid enum discriminant");
-                                    let e19 = {
-                                        let l18 = *base.add(16).cast::<i32>();
-
-                                        super::super::super::super::exports::dejavu::core::types::Url::from_handle(l18 as u32)
-                                    };
-                                    V19::Url(e19)
+                                    V18::String(e18)
                                 }
                             };
 
-                            (_rt::string_lift(bytes10), v19)
+                            (_rt::string_lift(bytes10), v18)
                         };
-                        result20.push(e20);
+                        result19.push(e19);
                     }
-                    _rt::cabi_dealloc(base20, len20 * 24, 8);
-                    let result21 = T::generate(
+                    _rt::cabi_dealloc(base19, len19 * 24, 8);
+                    let result20 = T::generate(
                         RustDejavuBorrow::lift(arg0 as u32 as usize).get(),
-                        super::super::super::super::exports::dejavu::core::syntax_tree::DejavuRoot {
+                        super::super::super::super::exports::dejavu::core::syntax_tree::DejavuTemplate {
                             blocks: result7,
-                            config: super::super::super::super::exports::dejavu::core::types::Object { map: result20 },
+                            config: super::super::super::super::exports::dejavu::core::types::Object { map: result19 },
                             path: match arg5 {
                                 0 => None,
                                 1 => {
@@ -1262,50 +1219,49 @@ pub mod exports {
                             },
                         },
                     );
-                    let ptr22 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
-                    match result21 {
+                    let ptr21 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
+                    match result20 {
                         Ok(_) => {
-                            *ptr22.add(0).cast::<u8>() = (0i32) as u8;
+                            *ptr21.add(0).cast::<u8>() = (0i32) as u8;
                         }
                         Err(e) => {
-                            *ptr22.add(0).cast::<u8>() = (1i32) as u8;
-                            use super::super::super::super::exports::dejavu::core::types::DejavuError as V26;
+                            *ptr21.add(0).cast::<u8>() = (1i32) as u8;
+                            use super::super::super::super::exports::dejavu::core::types::DejavuError as V25;
                             match e {
-                                V26::Syntax(e) => {
-                                    *ptr22.add(4).cast::<u8>() = (0i32) as u8;
+                                V25::Syntax(e) => {
+                                    *ptr21.add(4).cast::<u8>() = (0i32) as u8;
                                     let super::super::super::super::exports::dejavu::core::types::SyntaxError {
-                                        reason: reason23,
-                                        file: file23,
-                                        range: range23,
+                                        reason: reason22,
+                                        file: file22,
+                                        range: range22,
                                     } = e;
-                                    let vec24 = (reason23.into_bytes()).into_boxed_slice();
-                                    let ptr24 = vec24.as_ptr().cast::<u8>();
-                                    let len24 = vec24.len();
-                                    ::core::mem::forget(vec24);
-                                    *ptr22.add(12).cast::<usize>() = len24;
-                                    *ptr22.add(8).cast::<*mut u8>() = ptr24.cast_mut();
-                                    match file23 {
+                                    let vec23 = (reason22.into_bytes()).into_boxed_slice();
+                                    let ptr23 = vec23.as_ptr().cast::<u8>();
+                                    let len23 = vec23.len();
+                                    ::core::mem::forget(vec23);
+                                    *ptr21.add(12).cast::<usize>() = len23;
+                                    *ptr21.add(8).cast::<*mut u8>() = ptr23.cast_mut();
+                                    match file22 {
                                         Some(e) => {
-                                            *ptr22.add(16).cast::<u8>() = (1i32) as u8;
-                                            *ptr22.add(20).cast::<i32>() = (e).take_handle() as i32;
+                                            *ptr21.add(16).cast::<u8>() = (1i32) as u8;
+                                            *ptr21.add(20).cast::<i32>() = (e).take_handle() as i32;
                                         }
                                         None => {
-                                            *ptr22.add(16).cast::<u8>() = (0i32) as u8;
+                                            *ptr21.add(16).cast::<u8>() = (0i32) as u8;
                                         }
                                     };
                                     let super::super::super::super::exports::dejavu::core::types::TextRange {
-                                        head_offset: head_offset25,
-                                        tail_offset: tail_offset25,
-                                    } = range23;
-                                    *ptr22.add(24).cast::<i32>() = _rt::as_i32(head_offset25);
-                                    *ptr22.add(28).cast::<i32>() = _rt::as_i32(tail_offset25);
+                                        head_offset: head_offset24,
+                                        tail_offset: tail_offset24,
+                                    } = range22;
+                                    *ptr21.add(24).cast::<i32>() = _rt::as_i32(head_offset24);
+                                    *ptr21.add(28).cast::<i32>() = _rt::as_i32(tail_offset24);
                                 }
                             }
                         }
                     };
-                    ptr22
+                    ptr21
                 }
-
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
                 pub unsafe fn __post_return_method_rust_dejavu_generate<T: GuestRustDejavu>(arg0: *mut u8) {
@@ -1324,7 +1280,6 @@ pub mod exports {
                         }
                     }
                 }
-
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
                 pub unsafe fn _export_constructor_java_script_vanilla_cabi<T: GuestJavaScriptVanilla>(
@@ -1338,7 +1293,6 @@ pub mod exports {
                     let result1 = JavaScriptVanilla::new(T::new(_rt::string_lift(bytes0)));
                     (result1).take_handle() as i32
                 }
-
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
                 pub unsafe fn _export_method_java_script_vanilla_finalize_cabi<T: GuestJavaScriptVanilla>(
@@ -1359,7 +1313,7 @@ pub mod exports {
                         let base = base7.add(i * 20);
                         let e7 = {
                             let l0 = i32::from(*base.add(0).cast::<u8>());
-                            use super::super::super::super::exports::dejavu::core::syntax_tree::RootItem as V6;
+                            use super::super::super::super::exports::dejavu::core::syntax_tree::TemplateItem as V6;
                             let v6 = match l0 {
                                 0 => V6::Placeholder,
                                 n => {
@@ -1389,46 +1343,47 @@ pub mod exports {
                         result7.push(e7);
                     }
                     _rt::cabi_dealloc(base7, len7 * 20, 4);
-                    let base20 = arg3;
-                    let len20 = arg4;
-                    let mut result20 = _rt::Vec::with_capacity(len20);
-                    for i in 0..len20 {
-                        let base = base20.add(i * 24);
-                        let e20 = {
+                    let base19 = arg3;
+                    let len19 = arg4;
+                    let mut result19 = _rt::Vec::with_capacity(len19);
+                    for i in 0..len19 {
+                        let base = base19.add(i * 24);
+                        let e19 = {
                             let l8 = *base.add(0).cast::<*mut u8>();
                             let l9 = *base.add(4).cast::<usize>();
                             let len10 = l9;
                             let bytes10 = _rt::Vec::from_raw_parts(l8.cast(), len10, len10);
                             let l11 = i32::from(*base.add(8).cast::<u8>());
-                            use super::super::super::super::exports::dejavu::core::types::Value as V19;
-                            let v19 = match l11 {
-                                0 => V19::Null,
+                            use super::super::super::super::exports::dejavu::core::types::Value as V18;
+                            let v18 = match l11 {
+                                0 => V18::Null,
                                 1 => {
-                                    let e19 = {
+                                    let e18 = {
                                         let l12 = i32::from(*base.add(16).cast::<u8>());
 
                                         _rt::bool_lift(l12 as u8)
                                     };
-                                    V19::Bool(e19)
+                                    V18::Bool(e18)
                                 }
                                 2 => {
-                                    let e19 = {
+                                    let e18 = {
                                         let l13 = *base.add(16).cast::<i64>();
 
                                         l13
                                     };
-                                    V19::Integer(e19)
+                                    V18::Integer(e18)
                                 }
                                 3 => {
-                                    let e19 = {
+                                    let e18 = {
                                         let l14 = *base.add(16).cast::<f64>();
 
                                         l14
                                     };
-                                    V19::Decimal(e19)
+                                    V18::Decimal(e18)
                                 }
-                                4 => {
-                                    let e19 = {
+                                n => {
+                                    debug_assert_eq!(n, 4, "invalid enum discriminant");
+                                    let e18 = {
                                         let l15 = *base.add(16).cast::<*mut u8>();
                                         let l16 = *base.add(20).cast::<usize>();
                                         let len17 = l16;
@@ -1436,29 +1391,20 @@ pub mod exports {
 
                                         _rt::string_lift(bytes17)
                                     };
-                                    V19::String(e19)
-                                }
-                                n => {
-                                    debug_assert_eq!(n, 5, "invalid enum discriminant");
-                                    let e19 = {
-                                        let l18 = *base.add(16).cast::<i32>();
-
-                                        super::super::super::super::exports::dejavu::core::types::Url::from_handle(l18 as u32)
-                                    };
-                                    V19::Url(e19)
+                                    V18::String(e18)
                                 }
                             };
 
-                            (_rt::string_lift(bytes10), v19)
+                            (_rt::string_lift(bytes10), v18)
                         };
-                        result20.push(e20);
+                        result19.push(e19);
                     }
-                    _rt::cabi_dealloc(base20, len20 * 24, 8);
-                    let result21 = T::finalize(
+                    _rt::cabi_dealloc(base19, len19 * 24, 8);
+                    let result20 = T::finalize(
                         JavaScriptVanillaBorrow::lift(arg0 as u32 as usize).get(),
-                        super::super::super::super::exports::dejavu::core::syntax_tree::DejavuRoot {
+                        super::super::super::super::exports::dejavu::core::syntax_tree::DejavuTemplate {
                             blocks: result7,
-                            config: super::super::super::super::exports::dejavu::core::types::Object { map: result20 },
+                            config: super::super::super::super::exports::dejavu::core::types::Object { map: result19 },
                             path: match arg5 {
                                 0 => None,
                                 1 => {
@@ -1470,50 +1416,49 @@ pub mod exports {
                             },
                         },
                     );
-                    let ptr22 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
-                    match result21 {
+                    let ptr21 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
+                    match result20 {
                         Ok(_) => {
-                            *ptr22.add(0).cast::<u8>() = (0i32) as u8;
+                            *ptr21.add(0).cast::<u8>() = (0i32) as u8;
                         }
                         Err(e) => {
-                            *ptr22.add(0).cast::<u8>() = (1i32) as u8;
-                            use super::super::super::super::exports::dejavu::core::types::DejavuError as V26;
+                            *ptr21.add(0).cast::<u8>() = (1i32) as u8;
+                            use super::super::super::super::exports::dejavu::core::types::DejavuError as V25;
                             match e {
-                                V26::Syntax(e) => {
-                                    *ptr22.add(4).cast::<u8>() = (0i32) as u8;
+                                V25::Syntax(e) => {
+                                    *ptr21.add(4).cast::<u8>() = (0i32) as u8;
                                     let super::super::super::super::exports::dejavu::core::types::SyntaxError {
-                                        reason: reason23,
-                                        file: file23,
-                                        range: range23,
+                                        reason: reason22,
+                                        file: file22,
+                                        range: range22,
                                     } = e;
-                                    let vec24 = (reason23.into_bytes()).into_boxed_slice();
-                                    let ptr24 = vec24.as_ptr().cast::<u8>();
-                                    let len24 = vec24.len();
-                                    ::core::mem::forget(vec24);
-                                    *ptr22.add(12).cast::<usize>() = len24;
-                                    *ptr22.add(8).cast::<*mut u8>() = ptr24.cast_mut();
-                                    match file23 {
+                                    let vec23 = (reason22.into_bytes()).into_boxed_slice();
+                                    let ptr23 = vec23.as_ptr().cast::<u8>();
+                                    let len23 = vec23.len();
+                                    ::core::mem::forget(vec23);
+                                    *ptr21.add(12).cast::<usize>() = len23;
+                                    *ptr21.add(8).cast::<*mut u8>() = ptr23.cast_mut();
+                                    match file22 {
                                         Some(e) => {
-                                            *ptr22.add(16).cast::<u8>() = (1i32) as u8;
-                                            *ptr22.add(20).cast::<i32>() = (e).take_handle() as i32;
+                                            *ptr21.add(16).cast::<u8>() = (1i32) as u8;
+                                            *ptr21.add(20).cast::<i32>() = (e).take_handle() as i32;
                                         }
                                         None => {
-                                            *ptr22.add(16).cast::<u8>() = (0i32) as u8;
+                                            *ptr21.add(16).cast::<u8>() = (0i32) as u8;
                                         }
                                     };
                                     let super::super::super::super::exports::dejavu::core::types::TextRange {
-                                        head_offset: head_offset25,
-                                        tail_offset: tail_offset25,
-                                    } = range23;
-                                    *ptr22.add(24).cast::<i32>() = _rt::as_i32(head_offset25);
-                                    *ptr22.add(28).cast::<i32>() = _rt::as_i32(tail_offset25);
+                                        head_offset: head_offset24,
+                                        tail_offset: tail_offset24,
+                                    } = range22;
+                                    *ptr21.add(24).cast::<i32>() = _rt::as_i32(head_offset24);
+                                    *ptr21.add(28).cast::<i32>() = _rt::as_i32(tail_offset24);
                                 }
                             }
                         }
                     };
-                    ptr22
+                    ptr21
                 }
-
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
                 pub unsafe fn __post_return_method_java_script_vanilla_finalize<T: GuestJavaScriptVanilla>(arg0: *mut u8) {
@@ -1532,7 +1477,6 @@ pub mod exports {
                         }
                     }
                 }
-
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
                 pub unsafe fn _export_constructor_type_script_vanilla_cabi<T: GuestTypeScriptVanilla>(
@@ -1546,7 +1490,6 @@ pub mod exports {
                     let result1 = TypeScriptVanilla::new(T::new(_rt::string_lift(bytes0)));
                     (result1).take_handle() as i32
                 }
-
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
                 pub unsafe fn _export_method_type_script_vanilla_finalize_cabi<T: GuestTypeScriptVanilla>(
@@ -1567,7 +1510,7 @@ pub mod exports {
                         let base = base7.add(i * 20);
                         let e7 = {
                             let l0 = i32::from(*base.add(0).cast::<u8>());
-                            use super::super::super::super::exports::dejavu::core::syntax_tree::RootItem as V6;
+                            use super::super::super::super::exports::dejavu::core::syntax_tree::TemplateItem as V6;
                             let v6 = match l0 {
                                 0 => V6::Placeholder,
                                 n => {
@@ -1597,46 +1540,47 @@ pub mod exports {
                         result7.push(e7);
                     }
                     _rt::cabi_dealloc(base7, len7 * 20, 4);
-                    let base20 = arg3;
-                    let len20 = arg4;
-                    let mut result20 = _rt::Vec::with_capacity(len20);
-                    for i in 0..len20 {
-                        let base = base20.add(i * 24);
-                        let e20 = {
+                    let base19 = arg3;
+                    let len19 = arg4;
+                    let mut result19 = _rt::Vec::with_capacity(len19);
+                    for i in 0..len19 {
+                        let base = base19.add(i * 24);
+                        let e19 = {
                             let l8 = *base.add(0).cast::<*mut u8>();
                             let l9 = *base.add(4).cast::<usize>();
                             let len10 = l9;
                             let bytes10 = _rt::Vec::from_raw_parts(l8.cast(), len10, len10);
                             let l11 = i32::from(*base.add(8).cast::<u8>());
-                            use super::super::super::super::exports::dejavu::core::types::Value as V19;
-                            let v19 = match l11 {
-                                0 => V19::Null,
+                            use super::super::super::super::exports::dejavu::core::types::Value as V18;
+                            let v18 = match l11 {
+                                0 => V18::Null,
                                 1 => {
-                                    let e19 = {
+                                    let e18 = {
                                         let l12 = i32::from(*base.add(16).cast::<u8>());
 
                                         _rt::bool_lift(l12 as u8)
                                     };
-                                    V19::Bool(e19)
+                                    V18::Bool(e18)
                                 }
                                 2 => {
-                                    let e19 = {
+                                    let e18 = {
                                         let l13 = *base.add(16).cast::<i64>();
 
                                         l13
                                     };
-                                    V19::Integer(e19)
+                                    V18::Integer(e18)
                                 }
                                 3 => {
-                                    let e19 = {
+                                    let e18 = {
                                         let l14 = *base.add(16).cast::<f64>();
 
                                         l14
                                     };
-                                    V19::Decimal(e19)
+                                    V18::Decimal(e18)
                                 }
-                                4 => {
-                                    let e19 = {
+                                n => {
+                                    debug_assert_eq!(n, 4, "invalid enum discriminant");
+                                    let e18 = {
                                         let l15 = *base.add(16).cast::<*mut u8>();
                                         let l16 = *base.add(20).cast::<usize>();
                                         let len17 = l16;
@@ -1644,29 +1588,20 @@ pub mod exports {
 
                                         _rt::string_lift(bytes17)
                                     };
-                                    V19::String(e19)
-                                }
-                                n => {
-                                    debug_assert_eq!(n, 5, "invalid enum discriminant");
-                                    let e19 = {
-                                        let l18 = *base.add(16).cast::<i32>();
-
-                                        super::super::super::super::exports::dejavu::core::types::Url::from_handle(l18 as u32)
-                                    };
-                                    V19::Url(e19)
+                                    V18::String(e18)
                                 }
                             };
 
-                            (_rt::string_lift(bytes10), v19)
+                            (_rt::string_lift(bytes10), v18)
                         };
-                        result20.push(e20);
+                        result19.push(e19);
                     }
-                    _rt::cabi_dealloc(base20, len20 * 24, 8);
-                    let result21 = T::finalize(
+                    _rt::cabi_dealloc(base19, len19 * 24, 8);
+                    let result20 = T::finalize(
                         TypeScriptVanillaBorrow::lift(arg0 as u32 as usize).get(),
-                        super::super::super::super::exports::dejavu::core::syntax_tree::DejavuRoot {
+                        super::super::super::super::exports::dejavu::core::syntax_tree::DejavuTemplate {
                             blocks: result7,
-                            config: super::super::super::super::exports::dejavu::core::types::Object { map: result20 },
+                            config: super::super::super::super::exports::dejavu::core::types::Object { map: result19 },
                             path: match arg5 {
                                 0 => None,
                                 1 => {
@@ -1678,50 +1613,49 @@ pub mod exports {
                             },
                         },
                     );
-                    let ptr22 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
-                    match result21 {
+                    let ptr21 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
+                    match result20 {
                         Ok(_) => {
-                            *ptr22.add(0).cast::<u8>() = (0i32) as u8;
+                            *ptr21.add(0).cast::<u8>() = (0i32) as u8;
                         }
                         Err(e) => {
-                            *ptr22.add(0).cast::<u8>() = (1i32) as u8;
-                            use super::super::super::super::exports::dejavu::core::types::DejavuError as V26;
+                            *ptr21.add(0).cast::<u8>() = (1i32) as u8;
+                            use super::super::super::super::exports::dejavu::core::types::DejavuError as V25;
                             match e {
-                                V26::Syntax(e) => {
-                                    *ptr22.add(4).cast::<u8>() = (0i32) as u8;
+                                V25::Syntax(e) => {
+                                    *ptr21.add(4).cast::<u8>() = (0i32) as u8;
                                     let super::super::super::super::exports::dejavu::core::types::SyntaxError {
-                                        reason: reason23,
-                                        file: file23,
-                                        range: range23,
+                                        reason: reason22,
+                                        file: file22,
+                                        range: range22,
                                     } = e;
-                                    let vec24 = (reason23.into_bytes()).into_boxed_slice();
-                                    let ptr24 = vec24.as_ptr().cast::<u8>();
-                                    let len24 = vec24.len();
-                                    ::core::mem::forget(vec24);
-                                    *ptr22.add(12).cast::<usize>() = len24;
-                                    *ptr22.add(8).cast::<*mut u8>() = ptr24.cast_mut();
-                                    match file23 {
+                                    let vec23 = (reason22.into_bytes()).into_boxed_slice();
+                                    let ptr23 = vec23.as_ptr().cast::<u8>();
+                                    let len23 = vec23.len();
+                                    ::core::mem::forget(vec23);
+                                    *ptr21.add(12).cast::<usize>() = len23;
+                                    *ptr21.add(8).cast::<*mut u8>() = ptr23.cast_mut();
+                                    match file22 {
                                         Some(e) => {
-                                            *ptr22.add(16).cast::<u8>() = (1i32) as u8;
-                                            *ptr22.add(20).cast::<i32>() = (e).take_handle() as i32;
+                                            *ptr21.add(16).cast::<u8>() = (1i32) as u8;
+                                            *ptr21.add(20).cast::<i32>() = (e).take_handle() as i32;
                                         }
                                         None => {
-                                            *ptr22.add(16).cast::<u8>() = (0i32) as u8;
+                                            *ptr21.add(16).cast::<u8>() = (0i32) as u8;
                                         }
                                     };
                                     let super::super::super::super::exports::dejavu::core::types::TextRange {
-                                        head_offset: head_offset25,
-                                        tail_offset: tail_offset25,
-                                    } = range23;
-                                    *ptr22.add(24).cast::<i32>() = _rt::as_i32(head_offset25);
-                                    *ptr22.add(28).cast::<i32>() = _rt::as_i32(tail_offset25);
+                                        head_offset: head_offset24,
+                                        tail_offset: tail_offset24,
+                                    } = range22;
+                                    *ptr21.add(24).cast::<i32>() = _rt::as_i32(head_offset24);
+                                    *ptr21.add(28).cast::<i32>() = _rt::as_i32(tail_offset24);
                                 }
                             }
                         }
                     };
-                    ptr22
+                    ptr21
                 }
-
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
                 pub unsafe fn __post_return_method_type_script_vanilla_finalize<T: GuestTypeScriptVanilla>(arg0: *mut u8) {
@@ -1740,14 +1674,12 @@ pub mod exports {
                         }
                     }
                 }
-
                 pub trait Guest {
                     type RustVanilla: GuestRustVanilla;
                     type RustDejavu: GuestRustDejavu;
                     type JavaScriptVanilla: GuestJavaScriptVanilla;
                     type TypeScriptVanilla: GuestTypeScriptVanilla;
                 }
-
                 pub trait GuestRustVanilla: 'static {
                     #[doc(hidden)]
                     unsafe fn _resource_new(val: *mut u8) -> u32
@@ -1794,9 +1726,8 @@ pub mod exports {
                     }
 
                     fn new(directory: _rt::String) -> Self;
-                    fn finalize(&self, ast: DejavuRoot) -> Result<(), DejavuError>;
+                    fn finalize(&self, ast: DejavuTemplate) -> Result<(), DejavuError>;
                 }
-
                 pub trait GuestRustDejavu: 'static {
                     #[doc(hidden)]
                     unsafe fn _resource_new(val: *mut u8) -> u32
@@ -1843,9 +1774,8 @@ pub mod exports {
                     }
 
                     fn new(directory: _rt::String) -> Self;
-                    fn generate(&self, ast: DejavuRoot) -> Result<(), DejavuError>;
+                    fn generate(&self, ast: DejavuTemplate) -> Result<(), DejavuError>;
                 }
-
                 pub trait GuestJavaScriptVanilla: 'static {
                     #[doc(hidden)]
                     unsafe fn _resource_new(val: *mut u8) -> u32
@@ -1892,9 +1822,8 @@ pub mod exports {
                     }
 
                     fn new(directory: _rt::String) -> Self;
-                    fn finalize(&self, ast: DejavuRoot) -> Result<(), DejavuError>;
+                    fn finalize(&self, ast: DejavuTemplate) -> Result<(), DejavuError>;
                 }
-
                 pub trait GuestTypeScriptVanilla: 'static {
                     #[doc(hidden)]
                     unsafe fn _resource_new(val: *mut u8) -> u32
@@ -1941,11 +1870,11 @@ pub mod exports {
                     }
 
                     fn new(directory: _rt::String) -> Self;
-                    fn finalize(&self, ast: DejavuRoot) -> Result<(), DejavuError>;
+                    fn finalize(&self, ast: DejavuTemplate) -> Result<(), DejavuError>;
                 }
                 #[doc(hidden)]
 
-                macro_rules! __export_dejavu_core_backends_0_1_0_cabi {
+                macro_rules! __export_dejavu_core_backends_0_1_0_cabi{
   ($ty:ident with_types_in $($path_to_types:tt)*) => (const _: () = {
 
     #[export_name = "dejavu:core/backends@0.1.0#[constructor]rust-vanilla"]
@@ -2048,16 +1977,16 @@ pub mod exports {
 }
                 #[doc(hidden)]
                 pub(crate) use __export_dejavu_core_backends_0_1_0_cabi;
-
                 #[repr(align(4))]
                 struct _RetArea([::core::mem::MaybeUninit<u8>; 32]);
-
                 static mut _RET_AREA: _RetArea = _RetArea([::core::mem::MaybeUninit::uninit(); 32]);
             }
         }
     }
 }
 mod _rt {
+    pub use alloc_crate::{string::String, vec::Vec};
+
     use core::{
         fmt, marker,
         sync::atomic::{AtomicU32, Ordering::Relaxed},
@@ -2147,18 +2076,15 @@ mod _rt {
             }
         }
     }
-
-    pub use alloc_crate::{boxed::Box, string::String, vec::Vec};
+    pub use alloc_crate::boxed::Box;
 
     #[cfg(target_arch = "wasm32")]
     pub fn run_ctors_once() {
         wit_bindgen::rt::run_ctors_once();
     }
-
     pub unsafe fn string_lift(bytes: Vec<u8>) -> String {
         if cfg!(debug_assertions) { String::from_utf8(bytes).unwrap() } else { String::from_utf8_unchecked(bytes) }
     }
-
     pub unsafe fn cabi_dealloc(ptr: *mut u8, size: usize, align: usize) {
         if size == 0 {
             return;
@@ -2166,7 +2092,6 @@ mod _rt {
         let layout = alloc::Layout::from_size_align_unchecked(size, align);
         alloc::dealloc(ptr as *mut u8, layout);
     }
-
     pub unsafe fn bool_lift(val: u8) -> bool {
         if cfg!(debug_assertions) {
             match val {
@@ -2179,7 +2104,6 @@ mod _rt {
             val != 0
         }
     }
-
     pub unsafe fn invalid_enum_discriminant<T>() -> T {
         if cfg!(debug_assertions) { panic!("invalid enum discriminant") } else { core::hint::unreachable_unchecked() }
     }
@@ -2253,9 +2177,7 @@ mod _rt {
             self as i32
         }
     }
-
     extern crate alloc as alloc_crate;
-
     pub use alloc_crate::alloc;
 }
 
@@ -2292,28 +2214,28 @@ pub(crate) use __export_host_impl as export;
 #[cfg(target_arch = "wasm32")]
 #[link_section = "component-type:wit-bindgen:0.24.0:host:encoded world"]
 #[doc(hidden)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 1370] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xdf\x09\x01A\x02\x01\
-A\x0b\x01B\x0f\x04\0\x03url\x03\x01\x01i\0\x01q\x06\x04null\0\0\x04bool\x01\x7f\0\
-\x07integer\x01x\0\x07decimal\x01u\0\x06string\x01s\0\x03url\x01\x01\0\x04\0\x05\
-value\x03\0\x02\x01o\x02s\x03\x01p\x04\x01r\x01\x03map\x05\x04\0\x06object\x03\0\
-\x06\x01r\x02\x0bhead-offsety\x0btail-offsety\x04\0\x0atext-range\x03\0\x08\x01k\
-\x01\x01r\x03\x06reasons\x04file\x0a\x05range\x09\x04\0\x0csyntax-error\x03\0\x0b\
-\x01q\x01\x06syntax\x01\x0c\0\x04\0\x0cdejavu-error\x03\0\x0d\x04\x01\x17dejavu:\
-core/types@0.1.0\x05\0\x02\x03\0\0\x0atext-range\x02\x03\0\0\x03url\x02\x03\0\0\x06\
-object\x02\x03\0\0\x0cdejavu-error\x01B\x11\x02\x03\x02\x01\x01\x04\0\x0atext-ra\
-nge\x03\0\0\x02\x03\x02\x01\x02\x04\0\x03url\x03\0\x02\x02\x03\x02\x01\x03\x04\0\
-\x06object\x03\0\x04\x02\x03\x02\x01\x04\x04\0\x0cdejavu-error\x03\0\x06\x01r\x02\
-\x04bodys\x05range\x01\x04\0\x0ctext-element\x03\0\x08\x01q\x02\x0bplaceholder\0\
-\0\x04text\x01\x09\0\x04\0\x09root-item\x03\0\x0a\x01p\x0b\x01i\x03\x01k\x0d\x01\
-r\x03\x06blocks\x0c\x06config\x05\x04path\x0e\x04\0\x0bdejavu-root\x03\0\x0f\x04\
-\x01\x1ddejavu:core/syntax-tree@0.1.0\x05\x05\x02\x03\0\x01\x0bdejavu-root\x01B'\
-\x02\x03\x02\x01\x06\x04\0\x0bdejavu-root\x03\0\0\x02\x03\x02\x01\x01\x04\0\x0at\
-ext-range\x03\0\x02\x02\x03\x02\x01\x02\x04\0\x03url\x03\0\x04\x02\x03\x02\x01\x03\
-\x04\0\x06object\x03\0\x06\x02\x03\x02\x01\x04\x04\0\x0cdejavu-error\x03\0\x08\x04\
-\0\x0crust-vanilla\x03\x01\x04\0\x0brust-dejavu\x03\x01\x04\0\x13java-script-van\
-illa\x03\x01\x04\0\x13type-script-vanilla\x03\x01\x01i\x0a\x01@\x01\x09directory\
-s\0\x0e\x04\0\x19[constructor]rust-vanilla\x01\x0f\x01h\x0a\x01j\0\x01\x09\x01@\x02\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 1379] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xe8\x09\x01A\x02\x01\
+A\x0b\x01B\x0f\x01q\x05\x04null\0\0\x04bool\x01\x7f\0\x07integer\x01x\0\x07decim\
+al\x01u\0\x06string\x01s\0\x04\0\x05value\x03\0\0\x01o\x02s\x01\x01p\x02\x01r\x01\
+\x03map\x03\x04\0\x06object\x03\0\x04\x04\0\x03url\x03\x01\x01r\x02\x0bhead-offs\
+ety\x0btail-offsety\x04\0\x0atext-range\x03\0\x07\x01i\x06\x01k\x09\x01r\x03\x06\
+reasons\x04file\x0a\x05range\x08\x04\0\x0csyntax-error\x03\0\x0b\x01q\x01\x06syn\
+tax\x01\x0c\0\x04\0\x0cdejavu-error\x03\0\x0d\x04\x01\x17dejavu:core/types@0.1.0\
+\x05\0\x02\x03\0\0\x0atext-range\x02\x03\0\0\x03url\x02\x03\0\0\x06object\x02\x03\
+\0\0\x0cdejavu-error\x01B\x11\x02\x03\x02\x01\x01\x04\0\x0atext-range\x03\0\0\x02\
+\x03\x02\x01\x02\x04\0\x03url\x03\0\x02\x02\x03\x02\x01\x03\x04\0\x06object\x03\0\
+\x04\x02\x03\x02\x01\x04\x04\0\x0cdejavu-error\x03\0\x06\x01r\x02\x04bodys\x05ra\
+nge\x01\x04\0\x0ctext-element\x03\0\x08\x01q\x02\x0bplaceholder\0\0\x04text\x01\x09\
+\0\x04\0\x0dtemplate-item\x03\0\x0a\x01p\x0b\x01i\x03\x01k\x0d\x01r\x03\x06block\
+s\x0c\x06config\x05\x04path\x0e\x04\0\x0fdejavu-template\x03\0\x0f\x04\x01\x1dde\
+javu:core/syntax-tree@0.1.0\x05\x05\x02\x03\0\x01\x0fdejavu-template\x01B'\x02\x03\
+\x02\x01\x06\x04\0\x0fdejavu-template\x03\0\0\x02\x03\x02\x01\x01\x04\0\x0atext-\
+range\x03\0\x02\x02\x03\x02\x01\x02\x04\0\x03url\x03\0\x04\x02\x03\x02\x01\x03\x04\
+\0\x06object\x03\0\x06\x02\x03\x02\x01\x04\x04\0\x0cdejavu-error\x03\0\x08\x04\0\
+\x0crust-vanilla\x03\x01\x04\0\x0brust-dejavu\x03\x01\x04\0\x13java-script-vanil\
+la\x03\x01\x04\0\x13type-script-vanilla\x03\x01\x01i\x0a\x01@\x01\x09directorys\0\
+\x0e\x04\0\x19[constructor]rust-vanilla\x01\x0f\x01h\x0a\x01j\0\x01\x09\x01@\x02\
 \x04self\x10\x03ast\x01\0\x11\x04\0\x1d[method]rust-vanilla.finalize\x01\x12\x01\
 i\x0b\x01@\x01\x09directorys\0\x13\x04\0\x18[constructor]rust-dejavu\x01\x14\x01\
 h\x0b\x01@\x02\x04self\x15\x03ast\x01\0\x11\x04\0\x1c[method]rust-dejavu.generat\

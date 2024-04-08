@@ -1,9 +1,4 @@
-use crate::exports::dejavu::core::{
-    backends::{DejavuError, DejavuRoot, GuestRustDejavu},
-    syntax_tree::{RootItem, TextElement},
-};
-use indentation::IndentFormatter;
-use std::fmt::Write;
+use super::*;
 
 pub struct RsDejavu {}
 
@@ -12,21 +7,22 @@ impl GuestRustDejavu for RsDejavu {
         todo!()
     }
 
-    fn generate(&self, ast: DejavuRoot) -> Result<(), DejavuError> {
+    fn generate(&self, ast: DejavuTemplate) -> Result<(), DejavuError> {
         let mut f = IndentFormatter::new(String::new(), "    ");
+        self.rs_dejavu(&mut f).unwrap();
         ast.rs_dejavu(&mut f).unwrap();
         Ok(())
     }
 }
 
-pub trait RsDejavuBuilder {
-    /// Display the type with indentation.
-    fn rs_dejavu<W: Write>(&self, f: &mut IndentFormatter<W>) -> core::fmt::Result;
+impl RsDejavuBuilder for RsDejavu {
+    fn rs_dejavu<W: Write>(&self, f: &mut IndentFormatter<W>) -> std::fmt::Result {
+        f.write_str("use super::*;\n\n")
+    }
 }
 
-impl RsDejavuBuilder for DejavuRoot {
+impl RsDejavuBuilder for DejavuTemplate {
     fn rs_dejavu<W: Write>(&self, f: &mut IndentFormatter<W>) -> std::fmt::Result {
-        f.write_str("use super::*;\n\n")?;
         f.write_str("impl core::fmt::Display for HelloTemplate {")?;
         f.indent();
         f.write_newline()?;
@@ -43,7 +39,7 @@ impl RsDejavuBuilder for DejavuRoot {
     }
 }
 
-impl RsDejavuBuilder for RootItem {
+impl RsDejavuBuilder for TemplateItem {
     fn rs_dejavu<W: Write>(&self, f: &mut IndentFormatter<W>) -> std::fmt::Result {
         match self {
             Self::Placeholder => {}

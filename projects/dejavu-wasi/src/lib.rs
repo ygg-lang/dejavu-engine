@@ -9,6 +9,7 @@ export!(DejavuHost);
 
 mod bindings;
 pub mod helpers;
+mod renderer;
 mod traits;
 
 pub mod backends;

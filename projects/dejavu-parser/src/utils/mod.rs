@@ -1,6 +1,6 @@
 use crate::dejavu::{ElementNode, ExpressionNode, TemplateIfNode, TemplateLNode, TemplateRNode, TextElementNode};
 
-impl TextElementNode {
+impl<'i> TextElementNode<'i> {
     pub fn pure_space(&self) -> bool {
         matches!(self, Self::TextSpace { .. })
     }
@@ -22,7 +22,7 @@ impl TextElementNode {
 ///    text
 /// <% end %>
 /// ```
-impl TemplateIfNode {
+impl<'i> TemplateIfNode<'i> {
     pub fn rights(&self) -> Vec<&TemplateRNode> {
         let mut out = Vec::with_capacity(self.if_else_if.len() + 1);
         out.push(&self.if_begin.template_r);

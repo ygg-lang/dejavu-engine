@@ -1,3 +1,4 @@
+use dejavu_runtime::escaper::Html;
 use std::string::ToString;
 
 #[test]

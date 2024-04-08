@@ -1,11 +1,7 @@
-use crate::exports::notedown::core::syntax_tree::NotedownRoot;
+use indentation::IndentFormatter;
+use std::fmt::Write;
 
-pub trait ToNotedown
-    where
-        Self: Sized,
-{
-    fn into_notedown(self) -> NotedownRoot;
-    fn into_notedown_list(self) -> Vec<NotedownRoot> {
-        vec![self.into_notedown()]
-    }
+pub trait RsDejavuBuilder {
+    /// Display the type with indentation.
+    fn rs_dejavu<W: Write>(&self, f: &mut IndentFormatter<W>) -> core::fmt::Result;
 }

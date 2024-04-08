@@ -1,6 +1,13 @@
-use crate::exports::dejavu::core::backends::{
-    DejavuError, DejavuRoot, GuestJavaScriptVanilla, GuestRustDejavu, GuestRustVanilla, GuestTypeScriptVanilla,
+use crate::{
+    exports::dejavu::core::{
+        backends::{DejavuError, GuestJavaScriptVanilla, GuestRustDejavu, GuestRustVanilla, GuestTypeScriptVanilla},
+        syntax_tree::{DejavuTemplate, TemplateItem, TextElement},
+    },
+    traits::RsDejavuBuilder,
 };
+pub use build_rust::RsDejavu;
+use indentation::IndentFormatter;
+use std::fmt::Write;
 
 mod build_rust;
 
@@ -11,7 +18,7 @@ impl GuestRustVanilla for RsVanilla {
         todo!()
     }
 
-    fn finalize(&self, ast: DejavuRoot) -> Result<(), DejavuError> {
+    fn finalize(&self, ast: DejavuTemplate) -> Result<(), DejavuError> {
         todo!()
     }
 }
@@ -23,7 +30,7 @@ impl GuestJavaScriptVanilla for JsVanilla {
         todo!()
     }
 
-    fn finalize(&self, ast: DejavuRoot) -> Result<(), DejavuError> {
+    fn finalize(&self, ast: DejavuTemplate) -> Result<(), DejavuError> {
         todo!()
     }
 }
@@ -35,7 +42,7 @@ impl GuestTypeScriptVanilla for TsVanilla {
         todo!()
     }
 
-    fn finalize(&self, ast: DejavuRoot) -> Result<(), DejavuError> {
+    fn finalize(&self, ast: DejavuTemplate) -> Result<(), DejavuError> {
         todo!()
     }
 }

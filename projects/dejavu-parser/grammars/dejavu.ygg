@@ -1,5 +1,5 @@
 grammar Dejavu {
-file: "*.dejavu"
+    file: "*.dejavu"
 }
 
 entry class Root {
@@ -10,7 +10,7 @@ union Element {
     | TextMany       #Text
     | TemplateExport #Export
     | IfBlock        #If
-| ForBlock       #For
+    | ForBlock       #For
 }
 // === text area === ---------------------------------------------------------------------------------------------------
 atomic class TextMany {
@@ -22,17 +22,17 @@ union TextElement {
 }
 // === template export === -------------------------------------------------------------------------------------------------
 class TemplateExport ^ {
-TEMPLATE_L exports=ExportItem* TEMPLATE_R
+    TEMPLATE_L exports=ExportItem* TEMPLATE_R
 }
 class ExportItem ^ {
-KW_EXPORT name=Identifier
-(KW_TO language=Identifier)?
-(KW_BY KW_CLASS class=NamepathFree)?
-(KW_BY KW_TRAIT trait=NamepathFree?)?
+    KW_EXPORT name=Identifier
+    (KW_TO language=Identifier)?
+    (KW_BY KW_CLASS class=NamepathFree)?
+    (KW_BY KW_TRAIT trait=NamepathFree?)?
 }
 // === template if === -------------------------------------------------------------------------------------------------
 atomic class IfBlock {
-TemplateIf TemplateElseIf* TemplateElse? TemplateEnd
+    TemplateIf TemplateElseIf* TemplateElse? TemplateEnd
 }
 atomic class TemplateIf {
     TEMPLATE_L ~ ^KW_IF ~ Expression ~ TEMPLATE_R Element*
@@ -41,19 +41,19 @@ atomic class TemplateElseIf {
     TEMPLATE_L ~ ^KW_ELSE ~ ^KW_IF ~ Expression ~ TEMPLATE_R Element*
 }
 atomic class TemplateElse {
-TEMPLATE_L ~ ^KW_ELSE ~ TEMPLATE_R Element*
+    TEMPLATE_L ~ ^KW_ELSE ~ TEMPLATE_R Element*
 }
 // === template for === ------------------------------------------------------------------------------------------------
 atomic class ForBlock {
-TemplateFor TemplateElse? TemplateEnd
+    TemplateFor TemplateElse? TemplateEnd
 }
 atomic class TemplateFor {
-TEMPLATE_L ~ ^KW_FOR ~ (!KW_IN Pattern) ~ (^KW_IN ~ iterator=Expression) ~ (^KW_IF ~ condition=Expression)? ~ TEMPLATE_R Element*
+    TEMPLATE_L ~ ^KW_FOR ~ (!KW_IN Pattern) ~ (^KW_IN ~ iterator=Expression) ~ (^KW_IF ~ condition=Expression)? ~ TEMPLATE_R Element*
 }
 // === template enj === ------------------------------------------------------------------------------------------------
 atomic class TemplateEnd {
-| TEMPLATE_L ~ ^KW_END ~ Identifier? ~ TEMPLATE_R
-| TEMPLATE_L ~ Identifier? ~ ^KW_END ~ TEMPLATE_R
+    | TEMPLATE_L ~ ^KW_END ~ Identifier? ~ TEMPLATE_R
+    | TEMPLATE_L ~ Identifier? ~ ^KW_END ~ TEMPLATE_R
 }
 // === pattern === -----------------------------------------------------------------------------------------------------
 union Pattern {
@@ -61,7 +61,7 @@ union Pattern {
     | Identifier
 }
 class BarePattern {
-Pattern (COMMA Pattern)* COMMA?
+    Pattern (COMMA Pattern)* COMMA?
 }
 // === text area === ---------------------------------------------------------------------------------------------------
 class Expression {
@@ -86,59 +86,59 @@ union Suffix {
 }
 // === calls === -------------------------------------------------------------------------------------------------------
 class FunctionCall {
-Namepath Tuple?
+    Namepath Tuple?
 }
 class DotCall {
-'.' Identifier Tuple?
+    '.' Identifier Tuple?
 }
 class Tuple {
-| '(' ')'
-| '(' Arguement COMMA ')'
-| '(' Arguement (COMMA Expression)* COMMA? ')'
+    | '(' ')'
+    | '(' Arguement COMMA ')'
+    | '(' Arguement (COMMA Expression)* COMMA? ')'
 }
 class Arguement {
-Key COLON Expression
+    Key COLON Expression
 }
 union Key {
-| Identifier #Identifier
+    | Identifier #Identifier
 }
 // === atomic === ------------------------------------------------------------------------------------------------------
 union Atomic {
-| GroupExpression #Group
-| Tuple           #Tuple
-| Special         #Boolean
-| FunctionCall    #Function
-| Identifier      #Identifier
-| Number          #Number
+    | GroupExpression #Group
+    | Tuple           #Tuple
+    | Special         #Boolean
+    | FunctionCall    #Function
+    | Identifier      #Identifier
+    | Number          #Number
 }
 class GroupExpression {
-'(' Expression ')'
+    '(' Expression ')'
 }
 
 // === special === -----------------------------------------------------------------------------------------------------
 #railway(false)
 #style(keyword)
 union Special {
-| 'null'  #Null
-| 'true'  #True
-| 'false' #False
+    | 'null'  #Null
+    | 'true'  #True
+    | 'false' #False
 }
 // === number === ------------------------------------------------------------------------------------------------------
 #railway(false)
 #style(number)
 union Number {
-| DEC #Dec
-| BIN #Bin
-| HEX #Hex
+    | DEC #Dec
+    | BIN #Bin
+    | HEX #Hex
 }
 token {
-DEC: /(0|[1-9][0-9])(.[0-9]+)?/
-BIN: /0b[0-1]+/
-OCT: /0o[0-7]+/
-HEX: /0x[0-9a-fA-F]+/
+    DEC: /(0|[1-9][0-9])(.[0-9]+)?/
+    BIN: /0b[0-1]+/
+    OCT: /0o[0-7]+/
+    HEX: /0x[0-9a-fA-F]+/
 }
 class Unit {
-Identifier
+    Identifier
 }
 // === string === ------------------------------------------------------------------------------------------------------
 union String {
@@ -159,40 +159,40 @@ class Identifier {
 #railway(false)
 #style(keyword)
 token {
-KW_EXPORT: 'export'
-KW_CLASS: 'class'
-KW_TRAIT: 'trait'
-KW_TO: 'to'
-KW_BY: 'by'
+    KW_EXPORT: 'export'
+    KW_CLASS: 'class'
+    KW_TRAIT: 'trait'
+    KW_TO: 'to'
+    KW_BY: 'by'
 
-KW_FOR: 'for'
-KW_IN: 'in'
-KW_IF: 'if'
-KW_ELSE: 'else'
-KW_END: 'end'
+    KW_FOR: 'for'
+    KW_IN: 'in'
+    KW_IF: 'if'
+    KW_ELSE: 'else'
+    KW_END: 'end'
 }
 #style(operator)
 atomic token {
-TEMPLATE_L: ('<%' SpaceControl?)
-TEMPLATE_R: (SpaceControl? '%>')
+    TEMPLATE_L: ('<%' SpaceControl?)
+    TEMPLATE_R: (SpaceControl? '%>')
 }
 union SpaceControl {
-| '=' #Nothing
-| '~' #Break0
-| '-' #Break1
-| '_' #Delete0
-| '.' #Delete1
+    | '=' #Nothing
+    | '~' #Break0
+    | '-' #Break1
+    | '_' #Delete0
+    | '.' #Delete1
 }
 #railway(false)
 token {
-DOT:   '.'
-COMMA: ','
-COLON: ':'
+    DOT:   '.'
+    COMMA: ','
+    COLON: ':'
 }
 #railway(false)
 token {
-TEXT_SPACE: /\p{White_Space}+/
-TEXT_WORD:  /[^<\p{White_Space}]+/
+    TEXT_SPACE: /\p{White_Space}+/
+    TEXT_WORD:  /[^<\p{White_Space}]+/
 }
 // === ignores === -----------------------------------------------------------------------------------------------------
 #railway(false)

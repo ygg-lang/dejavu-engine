@@ -16,13 +16,10 @@ interface types {
         %integer(s64),
         %decimal(f64),
         %string(string),
-        %url(url),
     }
     variant dejavu-error {
         syntax(syntax-error),
     }
-
-
     resource url {
 
     }
@@ -57,28 +54,28 @@ interface syntax-tree {
 }
 
 interface backends {
-    use syntax-tree.{dejavu-root};
+    use syntax-tree.{dejavu-template};
     use types.{text-range, url, object, dejavu-error};
 
     ///
     resource rust-vanilla {
         constructor(directory: string);
-        finalize: func(ast: dejavu-root) -> result<_, dejavu-error>;
+        finalize: func(ast: dejavu-template) -> result<_, dejavu-error>;
     }
 
     resource rust-dejavu {
         constructor(directory: string);
-        generate: func(ast: dejavu-root) -> result<_, dejavu-error>;
+        generate: func(ast: dejavu-template) -> result<_, dejavu-error>;
     }
 
     resource java-script-vanilla {
         constructor(directory: string);
-        finalize: func(ast: dejavu-root) -> result<_, dejavu-error>;
+        finalize: func(ast: dejavu-template) -> result<_, dejavu-error>;
     }
 
     resource type-script-vanilla {
         constructor(directory: string);
-        finalize: func(ast: dejavu-root) -> result<_, dejavu-error>;
+        finalize: func(ast: dejavu-template) -> result<_, dejavu-error>;
     }
 }
 
