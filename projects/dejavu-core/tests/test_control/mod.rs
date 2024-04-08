@@ -6,16 +6,16 @@ use std::{fs::File, io::Write, str::FromStr};
 
 #[test]
 fn test_if_ast() {
-    let cst = DejavuParser::parse_cst(include_str!("test_if.djv"), DejavuRule::Root).unwrap();
+    let cst = DejavuParser::parse_cst(include_str!("test_if.dj"), DejavuRule::Root).unwrap();
     println!("Short Form:\n{}", cst);
-    let ast = RootNode::from_str(include_str!("test_if.djv")).unwrap();
+    let ast = RootNode::from_str(include_str!("test_if.dj")).unwrap();
     let mut file = File::create("tests/test_control/test_if.ron").unwrap();
     file.write_all(format!("{:#?}", ast).as_bytes()).unwrap();
 }
 
 #[test]
 fn test_for_ast() {
-    let input = include_str!("test_for.djv");
+    let input = include_str!("test_for.dj");
     let cst = DejavuParser::parse_cst(input, DejavuRule::Root).unwrap();
     println!("Short Form:\n{}", cst);
     let ast = RootNode::from_str(input).unwrap();

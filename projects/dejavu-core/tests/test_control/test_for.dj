@@ -1,0 +1,20 @@
+# for one pattern
+<% match self.terms %>
+   comment area
+<% end %>
+
+
+<% match self.terms %>
+   comment area
+<% case None %>
+   if text
+<% end %>
+
+<% match self.terms %>
+   comment area
+<% case None %>
+   if text
+<% else %>
+
+<% end %>
+

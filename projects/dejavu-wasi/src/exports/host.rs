@@ -32,11 +32,8 @@ pub mod exports {
                     pub fn new<T: GuestUrl>(val: T) -> Self {
                         Self::type_guard::<T>();
                         let val: _UrlRep<T> = Some(val);
-                        let ptr: *mut _UrlRep<T> =
-                            _rt::Box::into_raw(_rt::Box::new(val));
-                        unsafe {
-                            Self::from_handle(T::_resource_new(ptr.cast()))
-                        }
+                        let ptr: *mut _UrlRep<T> = _rt::Box::into_raw(_rt::Box::new(val));
+                        unsafe { Self::from_handle(T::_resource_new(ptr.cast())) }
                     }
 
                     /// Gets access to the underlying `T` which represents this resource.
@@ -60,9 +57,7 @@ pub mod exports {
 
                     #[doc(hidden)]
                     pub unsafe fn from_handle(handle: u32) -> Self {
-                        Self {
-                            handle: _rt::Resource::from_handle(handle),
-                        }
+                        Self { handle: _rt::Resource::from_handle(handle) }
                     }
 
                     #[doc(hidden)]
@@ -115,10 +110,7 @@ pub mod exports {
                 impl<'a> UrlBorrow<'a> {
                     #[doc(hidden)]
                     pub unsafe fn lift(rep: usize) -> Self {
-                        Self {
-                            rep: rep as *mut u8,
-                            _marker: core::marker::PhantomData,
-                        }
+                        Self { rep: rep as *mut u8, _marker: core::marker::PhantomData }
                     }
 
                     /// Gets access to the underlying `T` in this resource.
@@ -135,7 +127,6 @@ pub mod exports {
                         self.rep.cast()
                     }
                 }
-
 
                 unsafe impl _rt::WasmResource for Url {
                     #[inline]
@@ -168,30 +159,18 @@ pub mod exports {
                 impl ::core::fmt::Debug for Value {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         match self {
-                            Value::Null => {
-                                f.debug_tuple("Value::Null").finish()
-                            }
-                            Value::Bool(e) => {
-                                f.debug_tuple("Value::Bool").field(e).finish()
-                            }
-                            Value::Integer(e) => {
-                                f.debug_tuple("Value::Integer").field(e).finish()
-                            }
-                            Value::Decimal(e) => {
-                                f.debug_tuple("Value::Decimal").field(e).finish()
-                            }
-                            Value::String(e) => {
-                                f.debug_tuple("Value::String").field(e).finish()
-                            }
-                            Value::Url(e) => {
-                                f.debug_tuple("Value::Url").field(e).finish()
-                            }
+                            Value::Null => f.debug_tuple("Value::Null").finish(),
+                            Value::Bool(e) => f.debug_tuple("Value::Bool").field(e).finish(),
+                            Value::Integer(e) => f.debug_tuple("Value::Integer").field(e).finish(),
+                            Value::Decimal(e) => f.debug_tuple("Value::Decimal").field(e).finish(),
+                            Value::String(e) => f.debug_tuple("Value::String").field(e).finish(),
+                            Value::Url(e) => f.debug_tuple("Value::Url").field(e).finish(),
                         }
                     }
                 }
 
                 pub struct Object {
-                    pub map: _rt::Vec::<(_rt::String, Value, )>,
+                    pub map: _rt::Vec<(_rt::String, Value)>,
                 }
 
                 impl ::core::fmt::Debug for Object {
@@ -209,7 +188,10 @@ pub mod exports {
 
                 impl ::core::fmt::Debug for TextRange {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-                        f.debug_struct("TextRange").field("head-offset", &self.head_offset).field("tail-offset", &self.tail_offset).finish()
+                        f.debug_struct("TextRange")
+                            .field("head-offset", &self.head_offset)
+                            .field("tail-offset", &self.tail_offset)
+                            .finish()
                     }
                 }
 
@@ -221,7 +203,11 @@ pub mod exports {
 
                 impl ::core::fmt::Debug for SyntaxError {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-                        f.debug_struct("SyntaxError").field("reason", &self.reason).field("file", &self.file).field("range", &self.range).finish()
+                        f.debug_struct("SyntaxError")
+                            .field("reason", &self.reason)
+                            .field("file", &self.file)
+                            .field("range", &self.range)
+                            .finish()
                     }
                 }
 
@@ -232,9 +218,7 @@ pub mod exports {
                 impl ::core::fmt::Debug for NotedownError {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         match self {
-                            NotedownError::Syntax(e) => {
-                                f.debug_tuple("NotedownError::Syntax").field(e).finish()
-                            }
+                            NotedownError::Syntax(e) => f.debug_tuple("NotedownError::Syntax").field(e).finish(),
                         }
                     }
                 }
@@ -246,7 +230,8 @@ pub mod exports {
                 pub trait GuestUrl: 'static {
                     #[doc(hidden)]
                     unsafe fn _resource_new(val: *mut u8) -> u32
-                        where Self: Sized
+                        where
+                            Self: Sized,
                     {
                         #[cfg(not(target_arch = "wasm32"))]
                         {
@@ -267,7 +252,8 @@ pub mod exports {
 
                     #[doc(hidden)]
                     fn _resource_rep(handle: u32) -> *mut u8
-                        where Self: Sized
+                        where
+                            Self: Sized,
                     {
                         #[cfg(not(target_arch = "wasm32"))]
                         {
@@ -282,9 +268,7 @@ pub mod exports {
                                 #[link_name = "[resource-rep]url"]
                                 fn rep(_: u32) -> *mut u8;
                             }
-                            unsafe {
-                                rep(handle)
-                            }
+                            unsafe { rep(handle) }
                         }
                     }
                 }
@@ -304,7 +288,7 @@ pub mod exports {
                 >(rep)
               }
             };
-            
+
           };);
         }
                 #[doc(hidden)]
@@ -399,12 +383,8 @@ pub mod exports {
                 impl ::core::fmt::Debug for CommandAction {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         match self {
-                            CommandAction::Anonymous => {
-                                f.debug_tuple("CommandAction::Anonymous").finish()
-                            }
-                            CommandAction::Highlight(e) => {
-                                f.debug_tuple("CommandAction::Highlight").field(e).finish()
-                            }
+                            CommandAction::Anonymous => f.debug_tuple("CommandAction::Anonymous").finish(),
+                            CommandAction::Highlight(e) => f.debug_tuple("CommandAction::Highlight").field(e).finish(),
                         }
                     }
                 }
@@ -426,7 +406,11 @@ pub mod exports {
 
                 impl ::core::fmt::Debug for CodeEnvironment {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-                        f.debug_struct("CodeEnvironment").field("action", &self.action).field("lines", &self.lines).field("range", &self.range).finish()
+                        f.debug_struct("CodeEnvironment")
+                            .field("action", &self.action)
+                            .field("lines", &self.lines)
+                            .field("range", &self.range)
+                            .finish()
                     }
                 }
 
@@ -451,12 +435,8 @@ pub mod exports {
                 impl ::core::fmt::Debug for MathDisplay {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         match self {
-                            MathDisplay::Inline => {
-                                f.debug_tuple("MathDisplay::Inline").finish()
-                            }
-                            MathDisplay::Block => {
-                                f.debug_tuple("MathDisplay::Block").finish()
-                            }
+                            MathDisplay::Inline => f.debug_tuple("MathDisplay::Inline").finish(),
+                            MathDisplay::Block => f.debug_tuple("MathDisplay::Block").finish(),
                         }
                     }
                 }
@@ -473,15 +453,9 @@ pub mod exports {
                 impl ::core::fmt::Debug for MathContent {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         match self {
-                            MathContent::Mathml(e) => {
-                                f.debug_tuple("MathContent::Mathml").field(e).finish()
-                            }
-                            MathContent::Tex(e) => {
-                                f.debug_tuple("MathContent::Tex").field(e).finish()
-                            }
-                            MathContent::Asciimath(e) => {
-                                f.debug_tuple("MathContent::Asciimath").field(e).finish()
-                            }
+                            MathContent::Mathml(e) => f.debug_tuple("MathContent::Mathml").field(e).finish(),
+                            MathContent::Tex(e) => f.debug_tuple("MathContent::Tex").field(e).finish(),
+                            MathContent::Asciimath(e) => f.debug_tuple("MathContent::Asciimath").field(e).finish(),
                         }
                     }
                 }
@@ -502,7 +476,11 @@ pub mod exports {
 
                 impl ::core::fmt::Debug for MathEnvironment {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-                        f.debug_struct("MathEnvironment").field("display", &self.display).field("content", &self.content).field("range", &self.range).finish()
+                        f.debug_struct("MathEnvironment")
+                            .field("display", &self.display)
+                            .field("content", &self.content)
+                            .field("range", &self.range)
+                            .finish()
                     }
                 }
 
@@ -517,14 +495,18 @@ pub mod exports {
 
                 impl ::core::fmt::Debug for ListItem {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-                        f.debug_struct("ListItem").field("level", &self.level).field("checked", &self.checked).field("range", &self.range).finish()
+                        f.debug_struct("ListItem")
+                            .field("level", &self.level)
+                            .field("checked", &self.checked)
+                            .field("range", &self.range)
+                            .finish()
                     }
                 }
 
                 /// === line breaks === -----------------------------------------------------------------------------
                 #[derive(Clone)]
                 pub struct ListEnvironment {
-                    pub items: _rt::Vec::<ListItem>,
+                    pub items: _rt::Vec<ListItem>,
                     pub range: TextRange,
                 }
 
@@ -549,7 +531,7 @@ pub mod exports {
 
                 #[derive(Clone)]
                 pub struct TableRow {
-                    pub cells: _rt::Vec::<TableCell>,
+                    pub cells: _rt::Vec<TableCell>,
                     pub range: TextRange,
                 }
 
@@ -562,7 +544,7 @@ pub mod exports {
                 /// === line breaks === -----------------------------------------------------------------------------
                 #[derive(Clone)]
                 pub struct TableEnvironment {
-                    pub rows: _rt::Vec::<TableRow>,
+                    pub rows: _rt::Vec<TableRow>,
                     pub range: TextRange,
                 }
 
@@ -584,14 +566,14 @@ pub mod exports {
                     }
                 }
                 wit_bindgen::rt::bitflags::bitflags! {
-          #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Copy)]
-          pub struct StyleType: u8 {
-            const BOLD = 1 << 0;
-            const ITALIC = 1 << 1;
-            const UNDERLINE = 1 << 2;
-            const STRIKETHROUGH = 1 << 3;
-          }
-        }
+                  #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Copy)]
+                  pub struct StyleType: u8 {
+                    const BOLD = 1 << 0;
+                    const ITALIC = 1 << 1;
+                    const UNDERLINE = 1 << 2;
+                    const STRIKETHROUGH = 1 << 3;
+                  }
+                }
                 #[repr(C)]
                 #[derive(Clone, Copy)]
                 pub struct StyledText {
@@ -615,7 +597,11 @@ pub mod exports {
 
                 impl ::core::fmt::Debug for ImageReference {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-                        f.debug_struct("ImageReference").field("url", &self.url).field("alternative", &self.alternative).field("range", &self.range).finish()
+                        f.debug_struct("ImageReference")
+                            .field("url", &self.url)
+                            .field("alternative", &self.alternative)
+                            .field("range", &self.range)
+                            .finish()
                     }
                 }
 
@@ -628,7 +614,11 @@ pub mod exports {
 
                 impl ::core::fmt::Debug for LinkReference {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-                        f.debug_struct("LinkReference").field("url", &self.url).field("title", &self.title).field("range", &self.range).finish()
+                        f.debug_struct("LinkReference")
+                            .field("url", &self.url)
+                            .field("title", &self.title)
+                            .field("range", &self.range)
+                            .finish()
                     }
                 }
 
@@ -645,34 +635,20 @@ pub mod exports {
                 impl ::core::fmt::Debug for ParagraphItem {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         match self {
-                            ParagraphItem::Placeholder => {
-                                f.debug_tuple("ParagraphItem::Placeholder").finish()
-                            }
-                            ParagraphItem::Text(e) => {
-                                f.debug_tuple("ParagraphItem::Text").field(e).finish()
-                            }
-                            ParagraphItem::Style(e) => {
-                                f.debug_tuple("ParagraphItem::Style").field(e).finish()
-                            }
-                            ParagraphItem::Math(e) => {
-                                f.debug_tuple("ParagraphItem::Math").field(e).finish()
-                            }
-                            ParagraphItem::Code(e) => {
-                                f.debug_tuple("ParagraphItem::Code").field(e).finish()
-                            }
-                            ParagraphItem::Link(e) => {
-                                f.debug_tuple("ParagraphItem::Link").field(e).finish()
-                            }
-                            ParagraphItem::Image(e) => {
-                                f.debug_tuple("ParagraphItem::Image").field(e).finish()
-                            }
+                            ParagraphItem::Placeholder => f.debug_tuple("ParagraphItem::Placeholder").finish(),
+                            ParagraphItem::Text(e) => f.debug_tuple("ParagraphItem::Text").field(e).finish(),
+                            ParagraphItem::Style(e) => f.debug_tuple("ParagraphItem::Style").field(e).finish(),
+                            ParagraphItem::Math(e) => f.debug_tuple("ParagraphItem::Math").field(e).finish(),
+                            ParagraphItem::Code(e) => f.debug_tuple("ParagraphItem::Code").field(e).finish(),
+                            ParagraphItem::Link(e) => f.debug_tuple("ParagraphItem::Link").field(e).finish(),
+                            ParagraphItem::Image(e) => f.debug_tuple("ParagraphItem::Image").field(e).finish(),
                         }
                     }
                 }
 
                 /// === paragraph environment === -----------------------------------------------------------------------------
                 pub struct ParagraphBlock {
-                    pub terms: _rt::Vec::<ParagraphItem>,
+                    pub terms: _rt::Vec<ParagraphItem>,
                     pub range: TextRange,
                 }
 
@@ -692,7 +668,11 @@ pub mod exports {
 
                 impl ::core::fmt::Debug for HeadingBlock {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-                        f.debug_struct("HeadingBlock").field("level", &self.level).field("title", &self.title).field("range", &self.range).finish()
+                        f.debug_struct("HeadingBlock")
+                            .field("level", &self.level)
+                            .field("title", &self.title)
+                            .field("range", &self.range)
+                            .finish()
                     }
                 }
 
@@ -711,55 +691,41 @@ pub mod exports {
                 impl ::core::fmt::Debug for RootItem {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         match self {
-                            RootItem::Placeholder => {
-                                f.debug_tuple("RootItem::Placeholder").finish()
-                            }
-                            RootItem::Heading(e) => {
-                                f.debug_tuple("RootItem::Heading").field(e).finish()
-                            }
-                            RootItem::HorizontalRule(e) => {
-                                f.debug_tuple("RootItem::HorizontalRule").field(e).finish()
-                            }
-                            RootItem::Paragraph(e) => {
-                                f.debug_tuple("RootItem::Paragraph").field(e).finish()
-                            }
-                            RootItem::SpaceBreak(e) => {
-                                f.debug_tuple("RootItem::SpaceBreak").field(e).finish()
-                            }
-                            RootItem::Code(e) => {
-                                f.debug_tuple("RootItem::Code").field(e).finish()
-                            }
-                            RootItem::Math(e) => {
-                                f.debug_tuple("RootItem::Math").field(e).finish()
-                            }
-                            RootItem::List(e) => {
-                                f.debug_tuple("RootItem::List").field(e).finish()
-                            }
-                            RootItem::Table(e) => {
-                                f.debug_tuple("RootItem::Table").field(e).finish()
-                            }
+                            RootItem::Placeholder => f.debug_tuple("RootItem::Placeholder").finish(),
+                            RootItem::Heading(e) => f.debug_tuple("RootItem::Heading").field(e).finish(),
+                            RootItem::HorizontalRule(e) => f.debug_tuple("RootItem::HorizontalRule").field(e).finish(),
+                            RootItem::Paragraph(e) => f.debug_tuple("RootItem::Paragraph").field(e).finish(),
+                            RootItem::SpaceBreak(e) => f.debug_tuple("RootItem::SpaceBreak").field(e).finish(),
+                            RootItem::Code(e) => f.debug_tuple("RootItem::Code").field(e).finish(),
+                            RootItem::Math(e) => f.debug_tuple("RootItem::Math").field(e).finish(),
+                            RootItem::List(e) => f.debug_tuple("RootItem::List").field(e).finish(),
+                            RootItem::Table(e) => f.debug_tuple("RootItem::Table").field(e).finish(),
                         }
                     }
                 }
 
                 pub struct NotedownRoot {
-                    pub blocks: _rt::Vec::<RootItem>,
+                    pub blocks: _rt::Vec<RootItem>,
                     pub config: Object,
                     pub path: Option<Url>,
                 }
 
                 impl ::core::fmt::Debug for NotedownRoot {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-                        f.debug_struct("NotedownRoot").field("blocks", &self.blocks).field("config", &self.config).field("path", &self.path).finish()
+                        f.debug_struct("NotedownRoot")
+                            .field("blocks", &self.blocks)
+                            .field("config", &self.config)
+                            .field("path", &self.path)
+                            .finish()
                     }
                 }
                 #[doc(hidden)]
 
                 macro_rules! __export_dejavu_core_syntax_tree_0_1_0_cabi {
-          ($ty:ident with_types_in $($path_to_types:tt)*) => (const _: () = {
-
-          };);
-        }
+                    ($ty:ident with_types_in $($path_to_types:tt)*) => {
+                        const _: () = {};
+                    };
+                }
                 #[doc(hidden)]
                 pub(crate) use __export_dejavu_core_syntax_tree_0_1_0_cabi;
             }
@@ -773,10 +739,10 @@ pub mod exports {
                 #[doc(hidden)]
 
                 macro_rules! __export_dejavu_core_math_0_1_0_cabi {
-          ($ty:ident with_types_in $($path_to_types:tt)*) => (const _: () = {
-
-          };);
-        }
+                    ($ty:ident with_types_in $($path_to_types:tt)*) => {
+                        const _: () = {};
+                    };
+                }
                 #[doc(hidden)]
                 pub(crate) use __export_dejavu_core_math_0_1_0_cabi;
             }
@@ -790,10 +756,10 @@ pub mod exports {
                 #[doc(hidden)]
 
                 macro_rules! __export_dejavu_core_code_0_1_0_cabi {
-          ($ty:ident with_types_in $($path_to_types:tt)*) => (const _: () = {
-
-          };);
-        }
+                    ($ty:ident with_types_in $($path_to_types:tt)*) => {
+                        const _: () = {};
+                    };
+                }
                 #[doc(hidden)]
                 pub(crate) use __export_dejavu_core_code_0_1_0_cabi;
             }
@@ -802,9 +768,10 @@ pub mod exports {
 }
 
 mod _rt {
-    use core::fmt;
-    use core::marker;
-    use core::sync::atomic::{AtomicU32, Ordering::Relaxed};
+    use core::{
+        fmt, marker,
+        sync::atomic::{AtomicU32, Ordering::Relaxed},
+    };
 
     /// A type which represents a component model resource, either imported or
     /// exported into this component.
@@ -843,10 +810,7 @@ mod _rt {
         #[doc(hidden)]
         pub unsafe fn from_handle(handle: u32) -> Self {
             debug_assert!(handle != u32::MAX);
-            Self {
-                handle: AtomicU32::new(handle),
-                _marker: marker::PhantomData,
-            }
+            Self { handle: AtomicU32::new(handle), _marker: marker::PhantomData }
         }
 
         /// Takes ownership of the handle owned by `resource`.
@@ -874,9 +838,7 @@ mod _rt {
 
     impl<T: WasmResource> fmt::Debug for Resource<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            f.debug_struct("Resource")
-                .field("handle", &self.handle)
-                .finish()
+            f.debug_struct("Resource").field("handle", &self.handle).finish()
         }
     }
 
@@ -896,9 +858,7 @@ mod _rt {
         }
     }
 
-    pub use alloc_crate::boxed::Box;
-    pub use alloc_crate::string::String;
-    pub use alloc_crate::vec::Vec;
+    pub use alloc_crate::{boxed::Box, string::String, vec::Vec};
 
     extern crate alloc as alloc_crate;
 }
@@ -986,4 +946,3 @@ host\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-component\x070.202.0
 pub fn __link_custom_section_describing_imports() {
     wit_bindgen::rt::maybe_link_cabi_realloc();
 }
-

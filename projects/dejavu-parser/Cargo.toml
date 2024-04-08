@@ -1,10 +1,10 @@
 [package]
 name = "dejavu-parser"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Aster <192607617@qq.com>"]
 description = "Parser of DejaVu Language"
-homepage = "https://github.com/ygg-lang/yggdrasil-rs"
-repository = "https://github.com/ygg-lang/yggdrasil-template/tree/master/projects/build_by_dep"
+homepage = "https://github.com/oovm/dejavu-engine"
+repository = "https://github.com/oovm/dejavu-engine/tree/dev/projects/dejavu-parser"
 documentation = "https://docs.rs/dejavu-parser"
 readme = "readme.md"
 license = "MPL-2.0"
@@ -14,14 +14,10 @@ exclude = ["package.json", "tests/**"]
 [dependencies]
 
 [dependencies.yggdrasil-rt]
-version = "0.0.11"
+version = "0.1.3"
 #path = 'C:\Users\Dell\CLionProjects\yggdrasil.rs\projects\ygg-rt'
 
 [dev-dependencies]
-
-[dev-dependencies.yggdrasil-shared]
-version = "0.2.*"
-path = 'C:\Users\Dell\CLionProjects\yggdrasil.rs\projects\ygg-core'
 
 [features]
 default = []

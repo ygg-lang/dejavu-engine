@@ -3,8 +3,8 @@
 #![allow(clippy::unnecessary_cast)]
 #![doc = include_str!("readme.md")]
 
-mod parse_ast;
 mod parse_cst;
+mod parse_ast;
 
 use core::str::FromStr;
 use std::{borrow::Cow, ops::Range, sync::OnceLock};
@@ -82,15 +82,13 @@ pub enum DejavuRule {
     Identifier,
     Boolean,
     WhiteSpace,
-    /// Label for text literal
-    IgnoreText,
-    /// Label for regex literal
-    IgnoreRegex,
+    /// Label for unnamed text literal
+    HiddenText,
 }
 
 impl YggdrasilRule for DejavuRule {
     fn is_ignore(&self) -> bool {
-        matches!(self, Self::IgnoreText | Self::IgnoreRegex | Self::WhiteSpace)
+        matches!(self, Self::HiddenText)
     }
 
     fn get_style(&self) -> &'static str {
@@ -153,332 +151,250 @@ impl YggdrasilRule for DejavuRule {
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct RootNode {
-    pub element: Vec<ElementNode>,
-    pub span: Range<u32>,
+pub struct RootNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum ElementNode {
-    Export(TemplateExportNode),
-    For(TemplateForNode),
-    If(TemplateIfNode),
-    Text(TextManyNode),
+pub enum ElementNode<'i> {
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct TextManyNode {
-    pub text_element: Vec<TextElementNode>,
-    pub span: Range<u32>,
+pub struct TextManyNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum TextElementNode {
-    Escape(TemplateENode),
-    TextSpace(TextSpaceNode),
-    TextWord(TextWordNode),
+pub enum TextElementNode<'i> {
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct TemplateENode {
-    pub span: Range<u32>,
+pub struct TemplateENode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct TextSpaceNode {
-    pub text: String,
-    pub span: Range<u32>,
+pub struct TextSpaceNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct TextWordNode {
-    pub text: String,
-    pub span: Range<u32>,
+pub struct TextWordNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct TemplateLNode {
-    pub space_control: Option<SpaceControlNode>,
-    pub span: Range<u32>,
+pub struct TemplateLNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct TemplateRNode {
-    pub space_control: Option<SpaceControlNode>,
-    pub span: Range<u32>,
+pub struct TemplateRNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum SpaceControlNode {
-    Break0,
-    Break1,
-    Delete0,
-    Delete1,
-    Nothing,
+pub enum SpaceControlNode<'i> {
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct KwEndNode {
-    pub span: Range<u32>,
+pub struct KwEndNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct TemplateExportNode {
-    pub span: Range<u32>,
+pub struct TemplateExportNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct ExportItemNode {
-    pub class: Option<NamepathFreeNode>,
-    pub language: Option<IdentifierNode>,
-    pub name: IdentifierNode,
-    pub span: Range<u32>,
+pub struct ExportItemNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct KwExportNode {
-    pub span: Range<u32>,
+pub struct KwExportNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct KwClassNode {
-    pub span: Range<u32>,
+pub struct KwClassNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct KwTraitNode {
-    pub span: Range<u32>,
+pub struct KwTraitNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct KwToNode {
-    pub span: Range<u32>,
+pub struct KwToNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct KwByNode {
-    pub span: Range<u32>,
+pub struct KwByNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct TemplateIfNode {
-    pub if_begin: IfBeginNode,
-    pub if_else: Option<IfElseNode>,
-    pub if_else_if: Vec<IfElseIfNode>,
-    pub if_end: IfEndNode,
-    pub span: Range<u32>,
+pub struct TemplateIfNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct IfBeginNode {
-    pub element: Vec<ElementNode>,
-    pub expression: ExpressionNode,
-    pub template_l: TemplateLNode,
-    pub template_r: TemplateRNode,
-    pub span: Range<u32>,
+pub struct IfBeginNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct IfElseNode {
-    pub element: Vec<ElementNode>,
-    pub template_l: TemplateLNode,
-    pub template_r: TemplateRNode,
-    pub span: Range<u32>,
+pub struct IfElseNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct IfElseIfNode {
-    pub element: Vec<ElementNode>,
-    pub expression: ExpressionNode,
-    pub template_l: TemplateLNode,
-    pub template_r: TemplateRNode,
-    pub span: Range<u32>,
+pub struct IfElseIfNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct IfEndNode {
-    pub template_l: TemplateLNode,
-    pub template_r: TemplateRNode,
-    pub span: Range<u32>,
+pub struct IfEndNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct KwIfNode {
-    pub span: Range<u32>,
+pub struct KwIfNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct KwElseNode {
-    pub span: Range<u32>,
+pub struct KwElseNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct TemplateForNode {
-    pub for_begin: ForBeginNode,
-    pub for_else: Option<ForElseNode>,
-    pub for_end: ForEndNode,
-    pub span: Range<u32>,
+pub struct TemplateForNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct ForBeginNode {
-    pub element: Vec<ElementNode>,
-    pub kw_in: Vec<KwInNode>,
-    pub pattern: PatternNode,
-    pub template_l: TemplateLNode,
-    pub template_r: TemplateRNode,
-    pub condition: Option<ExpressionNode>,
-    pub iterator: ExpressionNode,
-    pub span: Range<u32>,
+pub struct ForBeginNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct ForElseNode {
-    pub element: Vec<ElementNode>,
-    pub template_l: TemplateLNode,
-    pub template_r: TemplateRNode,
-    pub span: Range<u32>,
+pub struct ForElseNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct ForEndNode {
-    pub template_l: TemplateLNode,
-    pub template_r: TemplateRNode,
-    pub span: Range<u32>,
+pub struct ForEndNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct KwForNode {
-    pub span: Range<u32>,
+pub struct KwForNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct KwInNode {
-    pub span: Range<u32>,
+pub struct KwInNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum PatternNode {
-    BarePattern(BarePatternNode),
+pub enum PatternNode<'i> {
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct BarePatternNode {
-    pub identifier: Vec<IdentifierNode>,
-    pub span: Range<u32>,
+pub struct BarePatternNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct ExpressionNode {
-    pub expression_rest: Vec<ExpressionRestNode>,
-    pub term: TermNode,
-    pub span: Range<u32>,
+pub struct ExpressionNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct ExpressionRestNode {
-    pub infix: InfixNode,
-    pub term: TermNode,
-    pub span: Range<u32>,
+pub struct ExpressionRestNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum InfixNode {
-    Add,
-    Mul,
+pub enum InfixNode<'i> {
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct TermNode {
-    pub atomic: AtomicNode,
-    pub prefix: Vec<PrefixNode>,
-    pub suffix: Vec<SuffixNode>,
-    pub span: Range<u32>,
+pub struct TermNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum PrefixNode {
-    Not,
+pub enum PrefixNode<'i> {
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum SuffixNode {
-    DotCall(IdentifierNode),
-    Null,
+pub enum SuffixNode<'i> {
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum AtomicNode {
-    Boolean(BooleanNode),
-    Identifier(IdentifierNode),
-    Number(NumberNode),
+pub enum AtomicNode<'i> {
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum StringNode {
-    DoubleQuote,
-    SingleQuote,
+pub enum StringNode<'i> {
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum NumberNode {
-    Bin(BinNode),
-    Dec(DigitsNode),
-    Hex(HexNode),
-    Oct(OctNode),
+pub enum NumberNode<'i> {
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct DigitsNode {
-    pub text: String,
-    pub span: Range<u32>,
+pub struct DigitsNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct UnitNode {
-    pub identifier: IdentifierNode,
-    pub span: Range<u32>,
+pub struct UnitNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct BinNode {
-    pub span: Range<u32>,
+pub struct BinNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct OctNode {
-    pub span: Range<u32>,
+pub struct OctNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct HexNode {
-    pub span: Range<u32>,
+pub struct HexNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct NamepathFreeNode {
-    pub identifier: Vec<IdentifierNode>,
-    pub span: Range<u32>,
+pub struct NamepathFreeNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct NamepathNode {
-    pub identifier: Vec<IdentifierNode>,
-    pub span: Range<u32>,
+pub struct NamepathNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct IdentifierNode {
-    pub span: Range<u32>,
+pub struct IdentifierNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum BooleanNode {
-    False,
-    True,
+pub enum BooleanNode<'i> {
 }
 #[derive(Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct WhiteSpaceNode {
-    pub span: Range<u32>,
+pub struct WhiteSpaceNode<'i> {
+    pair: TokenPair<'i, DejavuRule>,
 }

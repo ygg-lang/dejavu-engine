@@ -1,0 +1,7 @@
+[[build]]
+target = "rust"
+input = """
+grammars/**.ygg
+!debug.ygg
+"""
+output = "src"

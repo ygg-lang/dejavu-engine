@@ -1,1264 +1,1482 @@
+#![allow(unused_variables)]
 use super::*;
 #[automatically_derived]
-impl YggdrasilNode for RootNode {
+impl<'i> YggdrasilNode<'i> for RootNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self {
-            element: pair.take_tagged_items::<ElementNode>(Cow::Borrowed("element")).collect::<Result<Vec<_>, _>>()?,
-            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
-        })
-    }
-}
-#[automatically_derived]
-impl FromStr for RootNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::Root)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::Root
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> RootNode<'i> {
+    pub fn element(&self) -> Vec<ElementNode<'i>> {
+        self.pair.take_tagged_items("element").collect::<Result<Vec<_>, _>>().unwrap()
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for ElementNode {
+impl<'i> YggdrasilNode<'i> for ElementNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        match self {
-            Self::Export(s) => s.get_range(),
-            Self::For(s) => s.get_range(),
-            Self::If(s) => s.get_range(),
-            Self::Text(s) => s.get_range(),
-        }
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        if let Ok(s) = pair.take_tagged_one::<TemplateExportNode>(Cow::Borrowed("export")) {
-            return Ok(Self::Export(s));
-        }
-        if let Ok(s) = pair.take_tagged_one::<TemplateForNode>(Cow::Borrowed("for")) {
-            return Ok(Self::For(s));
-        }
-        if let Ok(s) = pair.take_tagged_one::<TemplateIfNode>(Cow::Borrowed("if")) {
-            return Ok(Self::If(s));
-        }
-        if let Ok(s) = pair.take_tagged_one::<TextManyNode>(Cow::Borrowed("text")) {
-            return Ok(Self::Text(s));
-        }
-        Err(YggdrasilError::invalid_node(DejavuRule::Element, _span))
-    }
-}
-#[automatically_derived]
-impl FromStr for ElementNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::Element)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        let _span = pair.get_span();
+        Err(YggdrasilError::invalid_node(DejavuRule::Element, _span))
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::Element
+    }
+
+    fn get_str(&self) -> &'i str {
+        match self {}
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        match self {}
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for TextManyNode {
+impl<'i> YggdrasilNode<'i> for TextManyNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self {
-            text_element: pair
-                .take_tagged_items::<TextElementNode>(Cow::Borrowed("text_element"))
-                .collect::<Result<Vec<_>, _>>()?,
-            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
-        })
-    }
-}
-#[automatically_derived]
-impl FromStr for TextManyNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::TextMany)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::TextMany
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> TextManyNode<'i> {
+    pub fn text_element(&self) -> Vec<TextElementNode<'i>> {
+        self.pair.take_tagged_items("text_element").collect::<Result<Vec<_>, _>>().unwrap()
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for TextElementNode {
+impl<'i> YggdrasilNode<'i> for TextElementNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        match self {
-            Self::Escape(s) => s.get_range(),
-            Self::TextSpace(s) => s.get_range(),
-            Self::TextWord(s) => s.get_range(),
-        }
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        if let Ok(s) = pair.take_tagged_one::<TemplateENode>(Cow::Borrowed("escape")) {
-            return Ok(Self::Escape(s));
-        }
-        if let Ok(s) = pair.take_tagged_one::<TextSpaceNode>(Cow::Borrowed("text_space")) {
-            return Ok(Self::TextSpace(s));
-        }
-        if let Ok(s) = pair.take_tagged_one::<TextWordNode>(Cow::Borrowed("text_word")) {
-            return Ok(Self::TextWord(s));
-        }
-        Err(YggdrasilError::invalid_node(DejavuRule::TextElement, _span))
-    }
-}
-#[automatically_derived]
-impl FromStr for TextElementNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::TextElement)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        let _span = pair.get_span();
+        Err(YggdrasilError::invalid_node(DejavuRule::TextElement, _span))
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::TextElement
+    }
+
+    fn get_str(&self) -> &'i str {
+        match self {}
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        match self {}
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for TemplateENode {
+impl<'i> YggdrasilNode<'i> for TemplateENode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
-    }
-}
-#[automatically_derived]
-impl FromStr for TemplateENode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::TEMPLATE_E)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::TEMPLATE_E
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> TemplateENode<'i> {
 }
 #[automatically_derived]
-impl YggdrasilNode for TextSpaceNode {
+impl<'i> YggdrasilNode<'i> for TextSpaceNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self { text: pair.get_string(), span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
-    }
-}
-#[automatically_derived]
-impl FromStr for TextSpaceNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::TEXT_SPACE)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::TEXT_SPACE
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> TextSpaceNode<'i> {
 }
 #[automatically_derived]
-impl YggdrasilNode for TextWordNode {
+impl<'i> YggdrasilNode<'i> for TextWordNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self { text: pair.get_string(), span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
-    }
-}
-#[automatically_derived]
-impl FromStr for TextWordNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::TEXT_WORD)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::TEXT_WORD
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> TextWordNode<'i> {
 }
 #[automatically_derived]
-impl YggdrasilNode for TemplateLNode {
+impl<'i> YggdrasilNode<'i> for TemplateLNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self {
-            space_control: pair.take_tagged_option::<SpaceControlNode>(Cow::Borrowed("space_control")),
-            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
-        })
-    }
-}
-#[automatically_derived]
-impl FromStr for TemplateLNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::TEMPLATE_L)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::TEMPLATE_L
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> TemplateLNode<'i> {
+    pub fn space_control(&self) -> Option<SpaceControlNode<'i>> {
+        self.pair.take_tagged_option("space_control")
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for TemplateRNode {
+impl<'i> YggdrasilNode<'i> for TemplateRNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self {
-            space_control: pair.take_tagged_option::<SpaceControlNode>(Cow::Borrowed("space_control")),
-            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
-        })
-    }
-}
-#[automatically_derived]
-impl FromStr for TemplateRNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::TEMPLATE_R)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::TEMPLATE_R
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> TemplateRNode<'i> {
+    pub fn space_control(&self) -> Option<SpaceControlNode<'i>> {
+        self.pair.take_tagged_option("space_control")
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for SpaceControlNode {
+impl<'i> YggdrasilNode<'i> for SpaceControlNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        match self {
-            Self::Break0 => None,
-            Self::Break1 => None,
-            Self::Delete0 => None,
-            Self::Delete1 => None,
-            Self::Nothing => None,
-        }
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        if let Some(_) = pair.find_first_tag("break_0") {
-            return Ok(Self::Break0);
-        }
-        if let Some(_) = pair.find_first_tag("break_1") {
-            return Ok(Self::Break1);
-        }
-        if let Some(_) = pair.find_first_tag("delete_0") {
-            return Ok(Self::Delete0);
-        }
-        if let Some(_) = pair.find_first_tag("delete_1") {
-            return Ok(Self::Delete1);
-        }
-        if let Some(_) = pair.find_first_tag("nothing") {
-            return Ok(Self::Nothing);
-        }
-        Err(YggdrasilError::invalid_node(DejavuRule::SpaceControl, _span))
-    }
-}
-#[automatically_derived]
-impl FromStr for SpaceControlNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::SpaceControl)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        let _span = pair.get_span();
+        Err(YggdrasilError::invalid_node(DejavuRule::SpaceControl, _span))
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::SpaceControl
+    }
+
+    fn get_str(&self) -> &'i str {
+        match self {}
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        match self {}
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for KwEndNode {
+impl<'i> YggdrasilNode<'i> for KwEndNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
-    }
-}
-#[automatically_derived]
-impl FromStr for KwEndNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::KW_END)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::KW_END
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> KwEndNode<'i> {
 }
 #[automatically_derived]
-impl YggdrasilNode for TemplateExportNode {
+impl<'i> YggdrasilNode<'i> for TemplateExportNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
-    }
-}
-#[automatically_derived]
-impl FromStr for TemplateExportNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::TemplateExport)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::TemplateExport
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> TemplateExportNode<'i> {
 }
 #[automatically_derived]
-impl YggdrasilNode for ExportItemNode {
+impl<'i> YggdrasilNode<'i> for ExportItemNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self {
-            class: pair.take_tagged_option::<NamepathFreeNode>(Cow::Borrowed("class")),
-            language: pair.take_tagged_option::<IdentifierNode>(Cow::Borrowed("language")),
-            name: pair.take_tagged_one::<IdentifierNode>(Cow::Borrowed("name"))?,
-            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
-        })
-    }
-}
-#[automatically_derived]
-impl FromStr for ExportItemNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::ExportItem)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::ExportItem
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> ExportItemNode<'i> {
+    pub fn class(&self) -> Option<NamepathFreeNode<'i>> {
+        self.pair.take_tagged_option("class")
+    }
+    pub fn language(&self) -> Option<IdentifierNode<'i>> {
+        self.pair.take_tagged_option("language")
+    }
+    pub fn name(&self) -> IdentifierNode<'i> {
+        self.pair.take_tagged_one("name").unwrap()
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for KwExportNode {
+impl<'i> YggdrasilNode<'i> for KwExportNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
-    }
-}
-#[automatically_derived]
-impl FromStr for KwExportNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::KW_EXPORT)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::KW_EXPORT
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> KwExportNode<'i> {
 }
 #[automatically_derived]
-impl YggdrasilNode for KwClassNode {
+impl<'i> YggdrasilNode<'i> for KwClassNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
-    }
-}
-#[automatically_derived]
-impl FromStr for KwClassNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::KW_CLASS)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::KW_CLASS
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> KwClassNode<'i> {
 }
 #[automatically_derived]
-impl YggdrasilNode for KwTraitNode {
+impl<'i> YggdrasilNode<'i> for KwTraitNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
-    }
-}
-#[automatically_derived]
-impl FromStr for KwTraitNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::KW_TRAIT)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::KW_TRAIT
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> KwTraitNode<'i> {
 }
 #[automatically_derived]
-impl YggdrasilNode for KwToNode {
+impl<'i> YggdrasilNode<'i> for KwToNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
-    }
-}
-#[automatically_derived]
-impl FromStr for KwToNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::KW_TO)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::KW_TO
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> KwToNode<'i> {
 }
 #[automatically_derived]
-impl YggdrasilNode for KwByNode {
+impl<'i> YggdrasilNode<'i> for KwByNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
-    }
-}
-#[automatically_derived]
-impl FromStr for KwByNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::KW_BY)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::KW_BY
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> KwByNode<'i> {
 }
 #[automatically_derived]
-impl YggdrasilNode for TemplateIfNode {
+impl<'i> YggdrasilNode<'i> for TemplateIfNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self {
-            if_begin: pair.take_tagged_one::<IfBeginNode>(Cow::Borrowed("if_begin"))?,
-            if_else: pair.take_tagged_option::<IfElseNode>(Cow::Borrowed("if_else")),
-            if_else_if: pair.take_tagged_items::<IfElseIfNode>(Cow::Borrowed("if_else_if")).collect::<Result<Vec<_>, _>>()?,
-            if_end: pair.take_tagged_one::<IfEndNode>(Cow::Borrowed("if_end"))?,
-            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
-        })
-    }
-}
-#[automatically_derived]
-impl FromStr for TemplateIfNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::TemplateIf)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::TemplateIf
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> TemplateIfNode<'i> {
+    pub fn if_begin(&self) -> IfBeginNode<'i> {
+        self.pair.take_tagged_one("if_begin").unwrap()
+    }
+    pub fn if_else(&self) -> Option<IfElseNode<'i>> {
+        self.pair.take_tagged_option("if_else")
+    }
+    pub fn if_else_if(&self) -> Vec<IfElseIfNode<'i>> {
+        self.pair.take_tagged_items("if_else_if").collect::<Result<Vec<_>, _>>().unwrap()
+    }
+    pub fn if_end(&self) -> IfEndNode<'i> {
+        self.pair.take_tagged_one("if_end").unwrap()
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for IfBeginNode {
+impl<'i> YggdrasilNode<'i> for IfBeginNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self {
-            element: pair.take_tagged_items::<ElementNode>(Cow::Borrowed("element")).collect::<Result<Vec<_>, _>>()?,
-            expression: pair.take_tagged_one::<ExpressionNode>(Cow::Borrowed("expression"))?,
-            template_l: pair.take_tagged_one::<TemplateLNode>(Cow::Borrowed("template_l"))?,
-            template_r: pair.take_tagged_one::<TemplateRNode>(Cow::Borrowed("template_r"))?,
-            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
-        })
-    }
-}
-#[automatically_derived]
-impl FromStr for IfBeginNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::IfBegin)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::IfBegin
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> IfBeginNode<'i> {
+    pub fn element(&self) -> Vec<ElementNode<'i>> {
+        self.pair.take_tagged_items("element").collect::<Result<Vec<_>, _>>().unwrap()
+    }
+    pub fn expression(&self) -> ExpressionNode<'i> {
+        self.pair.take_tagged_one("expression").unwrap()
+    }
+    pub fn template_l(&self) -> TemplateLNode<'i> {
+        self.pair.take_tagged_one("template_l").unwrap()
+    }
+    pub fn template_r(&self) -> TemplateRNode<'i> {
+        self.pair.take_tagged_one("template_r").unwrap()
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for IfElseNode {
+impl<'i> YggdrasilNode<'i> for IfElseNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self {
-            element: pair.take_tagged_items::<ElementNode>(Cow::Borrowed("element")).collect::<Result<Vec<_>, _>>()?,
-            template_l: pair.take_tagged_one::<TemplateLNode>(Cow::Borrowed("template_l"))?,
-            template_r: pair.take_tagged_one::<TemplateRNode>(Cow::Borrowed("template_r"))?,
-            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
-        })
-    }
-}
-#[automatically_derived]
-impl FromStr for IfElseNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::IfElse)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::IfElse
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> IfElseNode<'i> {
+    pub fn element(&self) -> Vec<ElementNode<'i>> {
+        self.pair.take_tagged_items("element").collect::<Result<Vec<_>, _>>().unwrap()
+    }
+    pub fn template_l(&self) -> TemplateLNode<'i> {
+        self.pair.take_tagged_one("template_l").unwrap()
+    }
+    pub fn template_r(&self) -> TemplateRNode<'i> {
+        self.pair.take_tagged_one("template_r").unwrap()
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for IfElseIfNode {
+impl<'i> YggdrasilNode<'i> for IfElseIfNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self {
-            element: pair.take_tagged_items::<ElementNode>(Cow::Borrowed("element")).collect::<Result<Vec<_>, _>>()?,
-            expression: pair.take_tagged_one::<ExpressionNode>(Cow::Borrowed("expression"))?,
-            template_l: pair.take_tagged_one::<TemplateLNode>(Cow::Borrowed("template_l"))?,
-            template_r: pair.take_tagged_one::<TemplateRNode>(Cow::Borrowed("template_r"))?,
-            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
-        })
-    }
-}
-#[automatically_derived]
-impl FromStr for IfElseIfNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::IfElseIf)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::IfElseIf
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> IfElseIfNode<'i> {
+    pub fn element(&self) -> Vec<ElementNode<'i>> {
+        self.pair.take_tagged_items("element").collect::<Result<Vec<_>, _>>().unwrap()
+    }
+    pub fn expression(&self) -> ExpressionNode<'i> {
+        self.pair.take_tagged_one("expression").unwrap()
+    }
+    pub fn template_l(&self) -> TemplateLNode<'i> {
+        self.pair.take_tagged_one("template_l").unwrap()
+    }
+    pub fn template_r(&self) -> TemplateRNode<'i> {
+        self.pair.take_tagged_one("template_r").unwrap()
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for IfEndNode {
+impl<'i> YggdrasilNode<'i> for IfEndNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self {
-            template_l: pair.take_tagged_one::<TemplateLNode>(Cow::Borrowed("template_l"))?,
-            template_r: pair.take_tagged_one::<TemplateRNode>(Cow::Borrowed("template_r"))?,
-            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
-        })
-    }
-}
-#[automatically_derived]
-impl FromStr for IfEndNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::IfEnd)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::IfEnd
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> IfEndNode<'i> {
+    pub fn template_l(&self) -> TemplateLNode<'i> {
+        self.pair.take_tagged_one("template_l").unwrap()
+    }
+    pub fn template_r(&self) -> TemplateRNode<'i> {
+        self.pair.take_tagged_one("template_r").unwrap()
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for KwIfNode {
+impl<'i> YggdrasilNode<'i> for KwIfNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
-    }
-}
-#[automatically_derived]
-impl FromStr for KwIfNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::KW_IF)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::KW_IF
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> KwIfNode<'i> {
 }
 #[automatically_derived]
-impl YggdrasilNode for KwElseNode {
+impl<'i> YggdrasilNode<'i> for KwElseNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
-    }
-}
-#[automatically_derived]
-impl FromStr for KwElseNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::KW_ELSE)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::KW_ELSE
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> KwElseNode<'i> {
 }
 #[automatically_derived]
-impl YggdrasilNode for TemplateForNode {
+impl<'i> YggdrasilNode<'i> for TemplateForNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self {
-            for_begin: pair.take_tagged_one::<ForBeginNode>(Cow::Borrowed("for_begin"))?,
-            for_else: pair.take_tagged_option::<ForElseNode>(Cow::Borrowed("for_else")),
-            for_end: pair.take_tagged_one::<ForEndNode>(Cow::Borrowed("for_end"))?,
-            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
-        })
-    }
-}
-#[automatically_derived]
-impl FromStr for TemplateForNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::TemplateFor)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::TemplateFor
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> TemplateForNode<'i> {
+    pub fn for_begin(&self) -> ForBeginNode<'i> {
+        self.pair.take_tagged_one("for_begin").unwrap()
+    }
+    pub fn for_else(&self) -> Option<ForElseNode<'i>> {
+        self.pair.take_tagged_option("for_else")
+    }
+    pub fn for_end(&self) -> ForEndNode<'i> {
+        self.pair.take_tagged_one("for_end").unwrap()
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for ForBeginNode {
+impl<'i> YggdrasilNode<'i> for ForBeginNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self {
-            element: pair.take_tagged_items::<ElementNode>(Cow::Borrowed("element")).collect::<Result<Vec<_>, _>>()?,
-            kw_in: pair.take_tagged_items::<KwInNode>(Cow::Borrowed("kw_in")).collect::<Result<Vec<_>, _>>()?,
-            pattern: pair.take_tagged_one::<PatternNode>(Cow::Borrowed("pattern"))?,
-            template_l: pair.take_tagged_one::<TemplateLNode>(Cow::Borrowed("template_l"))?,
-            template_r: pair.take_tagged_one::<TemplateRNode>(Cow::Borrowed("template_r"))?,
-            condition: pair.take_tagged_option::<ExpressionNode>(Cow::Borrowed("condition")),
-            iterator: pair.take_tagged_one::<ExpressionNode>(Cow::Borrowed("iterator"))?,
-            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
-        })
-    }
-}
-#[automatically_derived]
-impl FromStr for ForBeginNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::ForBegin)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::ForBegin
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> ForBeginNode<'i> {
+    pub fn element(&self) -> Vec<ElementNode<'i>> {
+        self.pair.take_tagged_items("element").collect::<Result<Vec<_>, _>>().unwrap()
+    }
+    pub fn kw_in(&self) -> Vec<KwInNode<'i>> {
+        self.pair.take_tagged_items("kw_in").collect::<Result<Vec<_>, _>>().unwrap()
+    }
+    pub fn pattern(&self) -> PatternNode<'i> {
+        self.pair.take_tagged_one("pattern").unwrap()
+    }
+    pub fn template_l(&self) -> TemplateLNode<'i> {
+        self.pair.take_tagged_one("template_l").unwrap()
+    }
+    pub fn template_r(&self) -> TemplateRNode<'i> {
+        self.pair.take_tagged_one("template_r").unwrap()
+    }
+    pub fn condition(&self) -> Option<ExpressionNode<'i>> {
+        self.pair.take_tagged_option("condition")
+    }
+    pub fn iterator(&self) -> ExpressionNode<'i> {
+        self.pair.take_tagged_one("iterator").unwrap()
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for ForElseNode {
+impl<'i> YggdrasilNode<'i> for ForElseNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self {
-            element: pair.take_tagged_items::<ElementNode>(Cow::Borrowed("element")).collect::<Result<Vec<_>, _>>()?,
-            template_l: pair.take_tagged_one::<TemplateLNode>(Cow::Borrowed("template_l"))?,
-            template_r: pair.take_tagged_one::<TemplateRNode>(Cow::Borrowed("template_r"))?,
-            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
-        })
-    }
-}
-#[automatically_derived]
-impl FromStr for ForElseNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::ForElse)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::ForElse
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> ForElseNode<'i> {
+    pub fn element(&self) -> Vec<ElementNode<'i>> {
+        self.pair.take_tagged_items("element").collect::<Result<Vec<_>, _>>().unwrap()
+    }
+    pub fn template_l(&self) -> TemplateLNode<'i> {
+        self.pair.take_tagged_one("template_l").unwrap()
+    }
+    pub fn template_r(&self) -> TemplateRNode<'i> {
+        self.pair.take_tagged_one("template_r").unwrap()
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for ForEndNode {
+impl<'i> YggdrasilNode<'i> for ForEndNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self {
-            template_l: pair.take_tagged_one::<TemplateLNode>(Cow::Borrowed("template_l"))?,
-            template_r: pair.take_tagged_one::<TemplateRNode>(Cow::Borrowed("template_r"))?,
-            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
-        })
-    }
-}
-#[automatically_derived]
-impl FromStr for ForEndNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::ForEnd)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::ForEnd
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> ForEndNode<'i> {
+    pub fn template_l(&self) -> TemplateLNode<'i> {
+        self.pair.take_tagged_one("template_l").unwrap()
+    }
+    pub fn template_r(&self) -> TemplateRNode<'i> {
+        self.pair.take_tagged_one("template_r").unwrap()
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for KwForNode {
+impl<'i> YggdrasilNode<'i> for KwForNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
-    }
-}
-#[automatically_derived]
-impl FromStr for KwForNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::KW_FOR)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::KW_FOR
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> KwForNode<'i> {
 }
 #[automatically_derived]
-impl YggdrasilNode for KwInNode {
+impl<'i> YggdrasilNode<'i> for KwInNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
-    }
-}
-#[automatically_derived]
-impl FromStr for KwInNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::KW_IN)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::KW_IN
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> KwInNode<'i> {
 }
 #[automatically_derived]
-impl YggdrasilNode for PatternNode {
+impl<'i> YggdrasilNode<'i> for PatternNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        match self {
-            Self::BarePattern(s) => s.get_range(),
-        }
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        if let Ok(s) = pair.take_tagged_one::<BarePatternNode>(Cow::Borrowed("bare_pattern")) {
-            return Ok(Self::BarePattern(s));
-        }
-        Err(YggdrasilError::invalid_node(DejavuRule::Pattern, _span))
-    }
-}
-#[automatically_derived]
-impl FromStr for PatternNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::Pattern)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        let _span = pair.get_span();
+        Err(YggdrasilError::invalid_node(DejavuRule::Pattern, _span))
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::Pattern
+    }
+
+    fn get_str(&self) -> &'i str {
+        match self {}
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        match self {}
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for BarePatternNode {
+impl<'i> YggdrasilNode<'i> for BarePatternNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self {
-            identifier: pair.take_tagged_items::<IdentifierNode>(Cow::Borrowed("identifier")).collect::<Result<Vec<_>, _>>()?,
-            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
-        })
-    }
-}
-#[automatically_derived]
-impl FromStr for BarePatternNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::BarePattern)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::BarePattern
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> BarePatternNode<'i> {
+    pub fn identifier(&self) -> Vec<IdentifierNode<'i>> {
+        self.pair.take_tagged_items("identifier").collect::<Result<Vec<_>, _>>().unwrap()
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for ExpressionNode {
+impl<'i> YggdrasilNode<'i> for ExpressionNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self {
-            expression_rest: pair
-                .take_tagged_items::<ExpressionRestNode>(Cow::Borrowed("expression_rest"))
-                .collect::<Result<Vec<_>, _>>()?,
-            term: pair.take_tagged_one::<TermNode>(Cow::Borrowed("term"))?,
-            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
-        })
-    }
-}
-#[automatically_derived]
-impl FromStr for ExpressionNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::Expression)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::Expression
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> ExpressionNode<'i> {
+    pub fn expression_rest(&self) -> Vec<ExpressionRestNode<'i>> {
+        self.pair.take_tagged_items("expression_rest").collect::<Result<Vec<_>, _>>().unwrap()
+    }
+    pub fn term(&self) -> TermNode<'i> {
+        self.pair.take_tagged_one("term").unwrap()
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for ExpressionRestNode {
+impl<'i> YggdrasilNode<'i> for ExpressionRestNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self {
-            infix: pair.take_tagged_one::<InfixNode>(Cow::Borrowed("infix"))?,
-            term: pair.take_tagged_one::<TermNode>(Cow::Borrowed("term"))?,
-            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
-        })
-    }
-}
-#[automatically_derived]
-impl FromStr for ExpressionRestNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::ExpressionRest)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::ExpressionRest
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> ExpressionRestNode<'i> {
+    pub fn infix(&self) -> InfixNode<'i> {
+        self.pair.take_tagged_one("infix").unwrap()
+    }
+    pub fn term(&self) -> TermNode<'i> {
+        self.pair.take_tagged_one("term").unwrap()
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for InfixNode {
+impl<'i> YggdrasilNode<'i> for InfixNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        match self {
-            Self::Add => None,
-            Self::Mul => None,
-        }
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        if let Some(_) = pair.find_first_tag("add") {
-            return Ok(Self::Add);
-        }
-        if let Some(_) = pair.find_first_tag("mul") {
-            return Ok(Self::Mul);
-        }
-        Err(YggdrasilError::invalid_node(DejavuRule::Infix, _span))
-    }
-}
-#[automatically_derived]
-impl FromStr for InfixNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::Infix)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        let _span = pair.get_span();
+        Err(YggdrasilError::invalid_node(DejavuRule::Infix, _span))
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::Infix
+    }
+
+    fn get_str(&self) -> &'i str {
+        match self {}
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        match self {}
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for TermNode {
+impl<'i> YggdrasilNode<'i> for TermNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self {
-            atomic: pair.take_tagged_one::<AtomicNode>(Cow::Borrowed("atomic"))?,
-            prefix: pair.take_tagged_items::<PrefixNode>(Cow::Borrowed("prefix")).collect::<Result<Vec<_>, _>>()?,
-            suffix: pair.take_tagged_items::<SuffixNode>(Cow::Borrowed("suffix")).collect::<Result<Vec<_>, _>>()?,
-            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
-        })
-    }
-}
-#[automatically_derived]
-impl FromStr for TermNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::Term)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::Term
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> TermNode<'i> {
+    pub fn atomic(&self) -> AtomicNode<'i> {
+        self.pair.take_tagged_one("atomic").unwrap()
+    }
+    pub fn prefix(&self) -> Vec<PrefixNode<'i>> {
+        self.pair.take_tagged_items("prefix").collect::<Result<Vec<_>, _>>().unwrap()
+    }
+    pub fn suffix(&self) -> Vec<SuffixNode<'i>> {
+        self.pair.take_tagged_items("suffix").collect::<Result<Vec<_>, _>>().unwrap()
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for PrefixNode {
+impl<'i> YggdrasilNode<'i> for PrefixNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        match self {
-            Self::Not => None,
-        }
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        if let Some(_) = pair.find_first_tag("not") {
-            return Ok(Self::Not);
-        }
-        Err(YggdrasilError::invalid_node(DejavuRule::Prefix, _span))
-    }
-}
-#[automatically_derived]
-impl FromStr for PrefixNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::Prefix)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        let _span = pair.get_span();
+        Err(YggdrasilError::invalid_node(DejavuRule::Prefix, _span))
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::Prefix
+    }
+
+    fn get_str(&self) -> &'i str {
+        match self {}
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        match self {}
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for SuffixNode {
+impl<'i> YggdrasilNode<'i> for SuffixNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        match self {
-            Self::DotCall(s) => s.get_range(),
-            Self::Null => None,
-        }
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        if let Ok(s) = pair.take_tagged_one::<IdentifierNode>(Cow::Borrowed("dot_call")) {
-            return Ok(Self::DotCall(s));
-        }
-        if let Some(_) = pair.find_first_tag("null") {
-            return Ok(Self::Null);
-        }
-        Err(YggdrasilError::invalid_node(DejavuRule::Suffix, _span))
-    }
-}
-#[automatically_derived]
-impl FromStr for SuffixNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::Suffix)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        let _span = pair.get_span();
+        Err(YggdrasilError::invalid_node(DejavuRule::Suffix, _span))
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::Suffix
+    }
+
+    fn get_str(&self) -> &'i str {
+        match self {}
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        match self {}
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for AtomicNode {
+impl<'i> YggdrasilNode<'i> for AtomicNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        match self {
-            Self::Boolean(s) => s.get_range(),
-            Self::Identifier(s) => s.get_range(),
-            Self::Number(s) => s.get_range(),
-        }
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        if let Ok(s) = pair.take_tagged_one::<BooleanNode>(Cow::Borrowed("boolean")) {
-            return Ok(Self::Boolean(s));
-        }
-        if let Ok(s) = pair.take_tagged_one::<IdentifierNode>(Cow::Borrowed("identifier")) {
-            return Ok(Self::Identifier(s));
-        }
-        if let Ok(s) = pair.take_tagged_one::<NumberNode>(Cow::Borrowed("number")) {
-            return Ok(Self::Number(s));
-        }
-        Err(YggdrasilError::invalid_node(DejavuRule::Atomic, _span))
-    }
-}
-#[automatically_derived]
-impl FromStr for AtomicNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::Atomic)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        let _span = pair.get_span();
+        Err(YggdrasilError::invalid_node(DejavuRule::Atomic, _span))
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::Atomic
+    }
+
+    fn get_str(&self) -> &'i str {
+        match self {}
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        match self {}
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for StringNode {
+impl<'i> YggdrasilNode<'i> for StringNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        match self {
-            Self::DoubleQuote => None,
-            Self::SingleQuote => None,
-        }
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        if let Some(_) = pair.find_first_tag("double_quote") {
-            return Ok(Self::DoubleQuote);
-        }
-        if let Some(_) = pair.find_first_tag("single_quote") {
-            return Ok(Self::SingleQuote);
-        }
-        Err(YggdrasilError::invalid_node(DejavuRule::String, _span))
-    }
-}
-#[automatically_derived]
-impl FromStr for StringNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::String)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        let _span = pair.get_span();
+        Err(YggdrasilError::invalid_node(DejavuRule::String, _span))
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::String
+    }
+
+    fn get_str(&self) -> &'i str {
+        match self {}
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        match self {}
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for NumberNode {
+impl<'i> YggdrasilNode<'i> for NumberNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        match self {
-            Self::Bin(s) => s.get_range(),
-            Self::Dec(s) => s.get_range(),
-            Self::Hex(s) => s.get_range(),
-            Self::Oct(s) => s.get_range(),
-        }
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        if let Ok(s) = pair.take_tagged_one::<BinNode>(Cow::Borrowed("bin")) {
-            return Ok(Self::Bin(s));
-        }
-        if let Ok(s) = pair.take_tagged_one::<DigitsNode>(Cow::Borrowed("dec")) {
-            return Ok(Self::Dec(s));
-        }
-        if let Ok(s) = pair.take_tagged_one::<HexNode>(Cow::Borrowed("hex")) {
-            return Ok(Self::Hex(s));
-        }
-        if let Ok(s) = pair.take_tagged_one::<OctNode>(Cow::Borrowed("oct")) {
-            return Ok(Self::Oct(s));
-        }
-        Err(YggdrasilError::invalid_node(DejavuRule::Number, _span))
-    }
-}
-#[automatically_derived]
-impl FromStr for NumberNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::Number)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        let _span = pair.get_span();
+        Err(YggdrasilError::invalid_node(DejavuRule::Number, _span))
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::Number
+    }
+
+    fn get_str(&self) -> &'i str {
+        match self {}
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        match self {}
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for DigitsNode {
+impl<'i> YggdrasilNode<'i> for DigitsNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self { text: pair.get_string(), span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
-    }
-}
-#[automatically_derived]
-impl FromStr for DigitsNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::Digits)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::Digits
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> DigitsNode<'i> {
 }
 #[automatically_derived]
-impl YggdrasilNode for UnitNode {
+impl<'i> YggdrasilNode<'i> for UnitNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self {
-            identifier: pair.take_tagged_one::<IdentifierNode>(Cow::Borrowed("identifier"))?,
-            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
-        })
-    }
-}
-#[automatically_derived]
-impl FromStr for UnitNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::Unit)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::Unit
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> UnitNode<'i> {
+    pub fn identifier(&self) -> IdentifierNode<'i> {
+        self.pair.take_tagged_one("identifier").unwrap()
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for BinNode {
+impl<'i> YggdrasilNode<'i> for BinNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
-    }
-}
-#[automatically_derived]
-impl FromStr for BinNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::BIN)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::BIN
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> BinNode<'i> {
 }
 #[automatically_derived]
-impl YggdrasilNode for OctNode {
+impl<'i> YggdrasilNode<'i> for OctNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
-    }
-}
-#[automatically_derived]
-impl FromStr for OctNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::OCT)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::OCT
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> OctNode<'i> {
 }
 #[automatically_derived]
-impl YggdrasilNode for HexNode {
+impl<'i> YggdrasilNode<'i> for HexNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
-    }
-}
-#[automatically_derived]
-impl FromStr for HexNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::HEX)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::HEX
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> HexNode<'i> {
 }
 #[automatically_derived]
-impl YggdrasilNode for NamepathFreeNode {
+impl<'i> YggdrasilNode<'i> for NamepathFreeNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self {
-            identifier: pair.take_tagged_items::<IdentifierNode>(Cow::Borrowed("identifier")).collect::<Result<Vec<_>, _>>()?,
-            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
-        })
-    }
-}
-#[automatically_derived]
-impl FromStr for NamepathFreeNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::NamepathFree)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::NamepathFree
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> NamepathFreeNode<'i> {
+    pub fn identifier(&self) -> Vec<IdentifierNode<'i>> {
+        self.pair.take_tagged_items("identifier").collect::<Result<Vec<_>, _>>().unwrap()
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for NamepathNode {
+impl<'i> YggdrasilNode<'i> for NamepathNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self {
-            identifier: pair.take_tagged_items::<IdentifierNode>(Cow::Borrowed("identifier")).collect::<Result<Vec<_>, _>>()?,
-            span: Range { start: _span.start() as u32, end: _span.end() as u32 },
-        })
-    }
-}
-#[automatically_derived]
-impl FromStr for NamepathNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::Namepath)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::Namepath
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> NamepathNode<'i> {
+    pub fn identifier(&self) -> Vec<IdentifierNode<'i>> {
+        self.pair.take_tagged_items("identifier").collect::<Result<Vec<_>, _>>().unwrap()
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for IdentifierNode {
+impl<'i> YggdrasilNode<'i> for IdentifierNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
-    }
-}
-#[automatically_derived]
-impl FromStr for IdentifierNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::Identifier)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::Identifier
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> IdentifierNode<'i> {
 }
 #[automatically_derived]
-impl YggdrasilNode for BooleanNode {
+impl<'i> YggdrasilNode<'i> for BooleanNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        match self {
-            Self::False => None,
-            Self::True => None,
-        }
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        if let Some(_) = pair.find_first_tag("false") {
-            return Ok(Self::False);
-        }
-        if let Some(_) = pair.find_first_tag("true") {
-            return Ok(Self::True);
-        }
-        Err(YggdrasilError::invalid_node(DejavuRule::Boolean, _span))
-    }
-}
-#[automatically_derived]
-impl FromStr for BooleanNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::Boolean)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        let _span = pair.get_span();
+        Err(YggdrasilError::invalid_node(DejavuRule::Boolean, _span))
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::Boolean
+    }
+
+    fn get_str(&self) -> &'i str {
+        match self {}
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        match self {}
+    }
 }
 #[automatically_derived]
-impl YggdrasilNode for WhiteSpaceNode {
+impl<'i> YggdrasilNode<'i> for WhiteSpaceNode<'i> {
     type Rule = DejavuRule;
 
-    fn get_range(&self) -> Option<Range<usize>> {
-        Some(Range { start: self.span.start as usize, end: self.span.end as usize })
-    }
-    fn from_pair(pair: TokenPair<Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
-        let _span = pair.get_span();
-        Ok(Self { span: Range { start: _span.start() as u32, end: _span.end() as u32 } })
-    }
-}
-#[automatically_derived]
-impl FromStr for WhiteSpaceNode {
-    type Err = YggdrasilError<DejavuRule>;
-
-    fn from_str(input: &str) -> Result<Self, YggdrasilError<DejavuRule>> {
+    fn from_str(input: &'i str, offset: usize) -> Result<Self, YggdrasilError<Self::Rule>> {
         Self::from_cst(DejavuParser::parse_cst(input, DejavuRule::WhiteSpace)?)
     }
+    fn from_pair(pair: TokenPair<'i, Self::Rule>) -> Result<Self, YggdrasilError<Self::Rule>> {
+        Ok(Self { pair })
+    }
+
+    fn get_rule(&self) -> Self::Rule {
+        DejavuRule::WhiteSpace
+    }
+
+    fn get_str(&self) -> &'i str {
+        self.pair.get_span().as_str()
+    }
+
+    fn get_range(&self) -> Range<usize> {
+        self.pair.get_span().get_range()
+    }
+}
+
+impl<'i> WhiteSpaceNode<'i> {
 }

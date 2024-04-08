@@ -54,28 +54,19 @@ pub(super) fn parse_cst(input: &str, rule: DejavuRule) -> OutputResult<DejavuRul
         DejavuRule::Identifier => parse_identifier(state),
         DejavuRule::Boolean => parse_boolean(state),
         DejavuRule::WhiteSpace => parse_white_space(state),
-        DejavuRule::IgnoreText => unreachable!(),
-        DejavuRule::IgnoreRegex => unreachable!(),
+        DejavuRule::HiddenText => unreachable!(),
     })
 }
 #[inline]
 fn parse_root(state: Input) -> Output {
     state.rule(DejavuRule::Root, |s| {
-        s.repeat(0..4294967295, |s| {
-            s.sequence(|s| {
-                Ok(s).and_then(|s| builtin_ignore(s)).and_then(|s| parse_element(s).and_then(|s| s.tag_node("element")))
-            })
-        })
+        s.repeat(0..4294967295, |s| s.sequence(|s| Ok(s).and_then(|s| builtin_ignore(s)).and_then(|s| parse_element(s).and_then(|s| s.tag_node("element")))))
     })
 }
 #[inline]
 fn parse_element(state: Input) -> Output {
     state.rule(DejavuRule::Element, |s| {
         Err(s)
-            .or_else(|s| parse_text_many(s).and_then(|s| s.tag_node("text")))
-            .or_else(|s| parse_template_export(s).and_then(|s| s.tag_node("export")))
-            .or_else(|s| parse_template_if(s).and_then(|s| s.tag_node("if")))
-            .or_else(|s| parse_template_for(s).and_then(|s| s.tag_node("for")))
     })
 }
 #[inline]
@@ -88,21 +79,20 @@ fn parse_text_many(state: Input) -> Output {
 fn parse_text_element(state: Input) -> Output {
     state.rule(DejavuRule::TextElement, |s| {
         Err(s)
-            .or_else(|s| parse_template_e(s).and_then(|s| s.tag_node("escape")))
-            .or_else(|s| parse_text_space(s).and_then(|s| s.tag_node("text_space")))
-            .or_else(|s| parse_text_word(s).and_then(|s| s.tag_node("text_word")))
     })
 }
 #[inline]
 fn parse_template_e(state: Input) -> Output {
-    state.rule(DejavuRule::TEMPLATE_E, |s| s.match_string("<%!", false))
+    state.rule(DejavuRule::TEMPLATE_E, |s| {
+        s.match_string("<%!", false)
+    })
 }
 #[inline]
 fn parse_text_space(state: Input) -> Output {
     state.rule(DejavuRule::TEXT_SPACE, |s| {
         s.match_regex({
             static REGEX: OnceLock<Regex> = OnceLock::new();
-            REGEX.get_or_init(|| Regex::new("^(\\p{White_Space}+)").unwrap())
+            REGEX.get_or_init(|| Regex::new("^(?x)(/\\p{White_Space}+/)").unwrap())
         })
     })
 }
@@ -111,493 +101,218 @@ fn parse_text_word(state: Input) -> Output {
     state.rule(DejavuRule::TEXT_WORD, |s| {
         s.match_regex({
             static REGEX: OnceLock<Regex> = OnceLock::new();
-            REGEX.get_or_init(|| Regex::new("^([^<\\p{White_Space}]+)").unwrap())
+            REGEX.get_or_init(|| Regex::new("^(?x)(/[^<\\p{White_Space}]+/)").unwrap())
         })
     })
 }
 #[inline]
 fn parse_template_l(state: Input) -> Output {
     state.rule(DejavuRule::TEMPLATE_L, |s| {
-        s.sequence(|s| {
-            Ok(s)
-                .and_then(|s| builtin_text(s, "<%", false))
-                .and_then(|s| s.optional(|s| parse_space_control(s).and_then(|s| s.tag_node("space_control"))))
-        })
+        s.sequence(|s| Ok(s).and_then(|s| builtin_text(s, "<%", false)).and_then(|s| s.optional(|s| parse_space_control(s).and_then(|s| s.tag_node("space_control")))))
     })
 }
 #[inline]
 fn parse_template_r(state: Input) -> Output {
     state.rule(DejavuRule::TEMPLATE_R, |s| {
-        s.sequence(|s| {
-            Ok(s)
-                .and_then(|s| s.optional(|s| parse_space_control(s).and_then(|s| s.tag_node("space_control"))))
-                .and_then(|s| builtin_text(s, "%>", false))
-        })
+        s.sequence(|s| Ok(s).and_then(|s| s.optional(|s| parse_space_control(s).and_then(|s| s.tag_node("space_control")))).and_then(|s| builtin_text(s, "%>", false)))
     })
 }
 #[inline]
 fn parse_space_control(state: Input) -> Output {
     state.rule(DejavuRule::SpaceControl, |s| {
         Err(s)
-            .or_else(|s| builtin_text(s, "=", false).and_then(|s| s.tag_node("nothing")))
-            .or_else(|s| builtin_text(s, "~", false).and_then(|s| s.tag_node("break_0")))
-            .or_else(|s| builtin_text(s, "-", false).and_then(|s| s.tag_node("break_1")))
-            .or_else(|s| builtin_text(s, "_", false).and_then(|s| s.tag_node("delete_0")))
-            .or_else(|s| builtin_text(s, ".", false).and_then(|s| s.tag_node("delete_1")))
     })
 }
 #[inline]
 fn parse_kw_end(state: Input) -> Output {
-    state.rule(DejavuRule::KW_END, |s| s.match_string("end", false))
+    state.rule(DejavuRule::KW_END, |s| {
+        s.match_string("end", false)
+    })
 }
 #[inline]
 fn parse_template_export(state: Input) -> Output {
     state.rule(DejavuRule::TemplateExport, |s| {
-        s.sequence(|s| {
-            Ok(s)
-                .and_then(|s| parse_template_l(s))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| {
-                    s.repeat(0..4294967295, |s| {
-                        s.sequence(|s| Ok(s).and_then(|s| builtin_ignore(s)).and_then(|s| parse_export_item(s)))
-                    })
-                    .and_then(|s| s.tag_node("exports"))
-                })
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_template_r(s))
-        })
+        s.sequence(|s| Ok(s).and_then(|s| s.sequence(|s| Ok(s).and_then(|s| parse_template_l(s)).and_then(|s| builtin_ignore(s)))).and_then(|s| s.repeat(0..4294967295, |s| s.sequence(|s| Ok(s).and_then(|s| builtin_ignore(s)).and_then(|s| parse_export_item(s)))).and_then(|s| s.tag_node("exports"))).and_then(|s| builtin_ignore(s)).and_then(|s| parse_template_r(s)))
     })
 }
 #[inline]
 fn parse_export_item(state: Input) -> Output {
     state.rule(DejavuRule::ExportItem, |s| {
-        s.sequence(|s| {
-            Ok(s)
-                .and_then(|s| parse_kw_export(s))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_identifier(s).and_then(|s| s.tag_node("name")))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| {
-                    s.optional(|s| {
-                        s.sequence(|s| {
-                            Ok(s)
-                                .and_then(|s| parse_kw_to(s))
-                                .and_then(|s| builtin_ignore(s))
-                                .and_then(|s| parse_identifier(s).and_then(|s| s.tag_node("language")))
-                        })
-                    })
-                })
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| {
-                    s.optional(|s| {
-                        s.sequence(|s| {
-                            Ok(s)
-                                .and_then(|s| {
-                                    s.sequence(|s| {
-                                        Ok(s)
-                                            .and_then(|s| parse_kw_by(s))
-                                            .and_then(|s| builtin_ignore(s))
-                                            .and_then(|s| parse_kw_class(s))
-                                    })
-                                })
-                                .and_then(|s| builtin_ignore(s))
-                                .and_then(|s| parse_namepath_free(s).and_then(|s| s.tag_node("class")))
-                        })
-                    })
-                })
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| {
-                    s.optional(|s| {
-                        s.sequence(|s| {
-                            Ok(s)
-                                .and_then(|s| {
-                                    s.sequence(|s| {
-                                        Ok(s)
-                                            .and_then(|s| parse_kw_by(s))
-                                            .and_then(|s| builtin_ignore(s))
-                                            .and_then(|s| parse_kw_trait(s))
-                                    })
-                                })
-                                .and_then(|s| builtin_ignore(s))
-                                .and_then(|s| s.optional(|s| parse_namepath_free(s)).and_then(|s| s.tag_node("trait")))
-                        })
-                    })
-                })
-        })
+        s.sequence(|s| Ok(s).and_then(|s| s.sequence(|s| Ok(s).and_then(|s| parse_kw_export(s)).and_then(|s| builtin_ignore(s)))).and_then(|s| parse_identifier(s).and_then(|s| s.tag_node("name"))).and_then(|s| builtin_ignore(s)).and_then(|s| s.optional(|s| s.sequence(|s| Ok(s).and_then(|s| s.sequence(|s| Ok(s).and_then(|s| parse_kw_to(s)).and_then(|s| builtin_ignore(s)))).and_then(|s| parse_identifier(s).and_then(|s| s.tag_node("language")))))).and_then(|s| builtin_ignore(s)).and_then(|s| s.optional(|s| s.sequence(|s| Ok(s).and_then(|s| s.sequence(|s| Ok(s).and_then(|s| parse_kw_by(s)).and_then(|s| builtin_ignore(s)).and_then(|s| parse_kw_class(s)).and_then(|s| builtin_ignore(s)))).and_then(|s| parse_namepath_free(s).and_then(|s| s.tag_node("class")))))).and_then(|s| builtin_ignore(s)).and_then(|s| s.optional(|s| s.sequence(|s| Ok(s).and_then(|s| s.sequence(|s| Ok(s).and_then(|s| parse_kw_by(s)).and_then(|s| builtin_ignore(s)).and_then(|s| parse_kw_trait(s)).and_then(|s| builtin_ignore(s)))).and_then(|s| s.optional(|s| parse_namepath_free(s)).and_then(|s| s.tag_node("trait")))))))
     })
 }
 #[inline]
 fn parse_kw_export(state: Input) -> Output {
-    state.rule(DejavuRule::KW_EXPORT, |s| s.match_string("export", false))
+    state.rule(DejavuRule::KW_EXPORT, |s| {
+        s.match_string("export", false)
+    })
 }
 #[inline]
 fn parse_kw_class(state: Input) -> Output {
-    state.rule(DejavuRule::KW_CLASS, |s| s.match_string("class", false))
+    state.rule(DejavuRule::KW_CLASS, |s| {
+        s.match_string("class", false)
+    })
 }
 #[inline]
 fn parse_kw_trait(state: Input) -> Output {
-    state.rule(DejavuRule::KW_TRAIT, |s| s.match_string("trait", false))
+    state.rule(DejavuRule::KW_TRAIT, |s| {
+        s.match_string("trait", false)
+    })
 }
 #[inline]
 fn parse_kw_to(state: Input) -> Output {
-    state.rule(DejavuRule::KW_TO, |s| s.match_string("to", false))
+    state.rule(DejavuRule::KW_TO, |s| {
+        s.match_string("to", false)
+    })
 }
 #[inline]
 fn parse_kw_by(state: Input) -> Output {
-    state.rule(DejavuRule::KW_BY, |s| s.match_string("by", false))
+    state.rule(DejavuRule::KW_BY, |s| {
+        s.match_string("by", false)
+    })
 }
 #[inline]
 fn parse_template_if(state: Input) -> Output {
     state.rule(DejavuRule::TemplateIf, |s| {
-        s.sequence(|s| {
-            Ok(s)
-                .and_then(|s| parse_if_begin(s).and_then(|s| s.tag_node("if_begin")))
-                .and_then(|s| s.repeat(0..4294967295, |s| parse_if_else_if(s).and_then(|s| s.tag_node("if_else_if"))))
-                .and_then(|s| s.optional(|s| parse_if_else(s).and_then(|s| s.tag_node("if_else"))))
-                .and_then(|s| parse_if_end(s).and_then(|s| s.tag_node("if_end")))
-        })
+        s.sequence(|s| Ok(s).and_then(|s| parse_if_begin(s).and_then(|s| s.tag_node("if_begin"))).and_then(|s| s.repeat(0..4294967295, |s| parse_if_else_if(s).and_then(|s| s.tag_node("if_else_if")))).and_then(|s| s.optional(|s| parse_if_else(s).and_then(|s| s.tag_node("if_else")))).and_then(|s| parse_if_end(s).and_then(|s| s.tag_node("if_end"))))
     })
 }
 #[inline]
 fn parse_if_begin(state: Input) -> Output {
     state.rule(DejavuRule::IfBegin, |s| {
-        s.sequence(|s| {
-            Ok(s)
-                .and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l")))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_kw_if(s))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_expression(s).and_then(|s| s.tag_node("expression")))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
-                .and_then(|s| s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element"))))
-        })
+        s.sequence(|s| Ok(s).and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l"))).and_then(|s| builtin_ignore(s)).and_then(|s| parse_kw_if(s)).and_then(|s| builtin_ignore(s)).and_then(|s| parse_expression(s).and_then(|s| s.tag_node("expression"))).and_then(|s| builtin_ignore(s)).and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r"))).and_then(|s| s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element")))))
     })
 }
 #[inline]
 fn parse_if_else(state: Input) -> Output {
     state.rule(DejavuRule::IfElse, |s| {
-        s.sequence(|s| {
-            Ok(s)
-                .and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l")))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_kw_else(s))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
-                .and_then(|s| s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element"))))
-        })
+        s.sequence(|s| Ok(s).and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l"))).and_then(|s| builtin_ignore(s)).and_then(|s| parse_kw_else(s)).and_then(|s| builtin_ignore(s)).and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r"))).and_then(|s| s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element")))))
     })
 }
 #[inline]
 fn parse_if_else_if(state: Input) -> Output {
     state.rule(DejavuRule::IfElseIf, |s| {
-        s.sequence(|s| {
-            Ok(s)
-                .and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l")))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_kw_else(s))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_kw_if(s))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_expression(s).and_then(|s| s.tag_node("expression")))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
-                .and_then(|s| s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element"))))
-        })
+        s.sequence(|s| Ok(s).and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l"))).and_then(|s| builtin_ignore(s)).and_then(|s| parse_kw_else(s)).and_then(|s| builtin_ignore(s)).and_then(|s| parse_kw_if(s)).and_then(|s| builtin_ignore(s)).and_then(|s| parse_expression(s).and_then(|s| s.tag_node("expression"))).and_then(|s| builtin_ignore(s)).and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r"))).and_then(|s| s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element")))))
     })
 }
 #[inline]
 fn parse_if_end(state: Input) -> Output {
     state.rule(DejavuRule::IfEnd, |s| {
-        s.sequence(|s| {
-            Ok(s)
-                .and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l")))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_kw_end(s))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| s.optional(|s| parse_kw_if(s)))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
-        })
+        s.sequence(|s| Ok(s).and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l"))).and_then(|s| builtin_ignore(s)).and_then(|s| parse_kw_end(s)).and_then(|s| builtin_ignore(s)).and_then(|s| s.optional(|s| parse_kw_if(s))).and_then(|s| builtin_ignore(s)).and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r"))))
     })
 }
 #[inline]
 fn parse_kw_if(state: Input) -> Output {
-    state.rule(DejavuRule::KW_IF, |s| s.match_string("if", false))
+    state.rule(DejavuRule::KW_IF, |s| {
+        s.match_string("if", false)
+    })
 }
 #[inline]
 fn parse_kw_else(state: Input) -> Output {
-    state.rule(DejavuRule::KW_ELSE, |s| s.match_string("else", false))
+    state.rule(DejavuRule::KW_ELSE, |s| {
+        s.match_string("else", false)
+    })
 }
 #[inline]
 fn parse_template_for(state: Input) -> Output {
     state.rule(DejavuRule::TemplateFor, |s| {
-        s.sequence(|s| {
-            Ok(s)
-                .and_then(|s| parse_for_begin(s).and_then(|s| s.tag_node("for_begin")))
-                .and_then(|s| s.optional(|s| parse_for_else(s).and_then(|s| s.tag_node("for_else"))))
-                .and_then(|s| parse_for_end(s).and_then(|s| s.tag_node("for_end")))
-        })
+        s.sequence(|s| Ok(s).and_then(|s| parse_for_begin(s).and_then(|s| s.tag_node("for_begin"))).and_then(|s| s.optional(|s| parse_for_else(s).and_then(|s| s.tag_node("for_else")))).and_then(|s| parse_for_end(s).and_then(|s| s.tag_node("for_end"))))
     })
 }
 #[inline]
 fn parse_for_begin(state: Input) -> Output {
     state.rule(DejavuRule::ForBegin, |s| {
-        s.sequence(|s| {
-            Ok(s)
-                .and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l")))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_kw_for(s))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| s.lookahead(false, |s| parse_kw_in(s).and_then(|s| s.tag_node("kw_in"))))
-                .and_then(|s| parse_pattern(s).and_then(|s| s.tag_node("pattern")))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_kw_in(s))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_expression(s).and_then(|s| s.tag_node("iterator")))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| {
-                    s.optional(|s| {
-                        s.sequence(|s| {
-                            Ok(s)
-                                .and_then(|s| parse_kw_if(s))
-                                .and_then(|s| builtin_ignore(s))
-                                .and_then(|s| parse_expression(s).and_then(|s| s.tag_node("condition")))
-                        })
-                    })
-                })
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
-                .and_then(|s| s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element"))))
-        })
+        s.sequence(|s| Ok(s).and_then(|s| s.sequence(|s| Ok(s).and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l"))).and_then(|s| builtin_ignore(s)).and_then(|s| parse_kw_for(s)).and_then(|s| builtin_ignore(s)).and_then(|s| s.lookahead(false, |s| parse_kw_in(s).and_then(|s| s.tag_node("kw_in")))).and_then(|s| parse_pattern(s).and_then(|s| s.tag_node("pattern"))).and_then(|s| builtin_ignore(s)).and_then(|s| parse_kw_in(s)).and_then(|s| builtin_ignore(s)))).and_then(|s| parse_expression(s).and_then(|s| s.tag_node("iterator"))).and_then(|s| builtin_ignore(s)).and_then(|s| s.optional(|s| s.sequence(|s| Ok(s).and_then(|s| s.sequence(|s| Ok(s).and_then(|s| parse_kw_if(s)).and_then(|s| builtin_ignore(s)))).and_then(|s| parse_expression(s).and_then(|s| s.tag_node("condition")))))).and_then(|s| builtin_ignore(s)).and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r"))).and_then(|s| s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element")))))
     })
 }
 #[inline]
 fn parse_for_else(state: Input) -> Output {
     state.rule(DejavuRule::ForElse, |s| {
-        s.sequence(|s| {
-            Ok(s)
-                .and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l")))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_kw_else(s))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
-                .and_then(|s| s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element"))))
-        })
+        s.sequence(|s| Ok(s).and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l"))).and_then(|s| builtin_ignore(s)).and_then(|s| parse_kw_else(s)).and_then(|s| builtin_ignore(s)).and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r"))).and_then(|s| s.repeat(0..4294967295, |s| parse_element(s).and_then(|s| s.tag_node("element")))))
     })
 }
 #[inline]
 fn parse_for_end(state: Input) -> Output {
     state.rule(DejavuRule::ForEnd, |s| {
-        s.sequence(|s| {
-            Ok(s)
-                .and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l")))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_kw_end(s))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| s.optional(|s| parse_kw_for(s)))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r")))
-        })
+        s.sequence(|s| Ok(s).and_then(|s| parse_template_l(s).and_then(|s| s.tag_node("template_l"))).and_then(|s| builtin_ignore(s)).and_then(|s| parse_kw_end(s)).and_then(|s| builtin_ignore(s)).and_then(|s| s.optional(|s| parse_kw_for(s))).and_then(|s| builtin_ignore(s)).and_then(|s| parse_template_r(s).and_then(|s| s.tag_node("template_r"))))
     })
 }
 #[inline]
 fn parse_kw_for(state: Input) -> Output {
-    state.rule(DejavuRule::KW_FOR, |s| s.match_string("for", false))
+    state.rule(DejavuRule::KW_FOR, |s| {
+        s.match_string("for", false)
+    })
 }
 #[inline]
 fn parse_kw_in(state: Input) -> Output {
-    state.rule(DejavuRule::KW_IN, |s| s.match_string("in", false))
+    state.rule(DejavuRule::KW_IN, |s| {
+        s.match_string("in", false)
+    })
 }
 #[inline]
 fn parse_pattern(state: Input) -> Output {
-    state.rule(DejavuRule::Pattern, |s| Err(s).or_else(|s| parse_bare_pattern(s).and_then(|s| s.tag_node("bare_pattern"))))
+    state.rule(DejavuRule::Pattern, |s| {
+        Err(s)
+    })
 }
 #[inline]
 fn parse_bare_pattern(state: Input) -> Output {
     state.rule(DejavuRule::BarePattern, |s| {
-        s.sequence(|s| {
-            Ok(s)
-                .and_then(|s| parse_identifier(s).and_then(|s| s.tag_node("identifier")))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| {
-                    s.repeat(0..4294967295, |s| {
-                        s.sequence(|s| {
-                            Ok(s).and_then(|s| builtin_ignore(s)).and_then(|s| {
-                                s.sequence(|s| {
-                                    Ok(s)
-                                        .and_then(|s| builtin_text(s, ",", false))
-                                        .and_then(|s| builtin_ignore(s))
-                                        .and_then(|s| parse_identifier(s).and_then(|s| s.tag_node("identifier")))
-                                })
-                            })
-                        })
-                    })
-                })
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| s.optional(|s| builtin_text(s, ",", false)))
-        })
+        s.sequence(|s| Ok(s).and_then(|s| parse_identifier(s).and_then(|s| s.tag_node("identifier"))).and_then(|s| builtin_ignore(s)).and_then(|s| s.repeat(0..4294967295, |s| s.sequence(|s| Ok(s).and_then(|s| builtin_ignore(s)).and_then(|s| s.sequence(|s| Ok(s).and_then(|s| builtin_text(s, ",", false)).and_then(|s| builtin_ignore(s)).and_then(|s| parse_identifier(s).and_then(|s| s.tag_node("identifier")))))))).and_then(|s| builtin_ignore(s)).and_then(|s| s.optional(|s| builtin_text(s, ",", false))))
     })
 }
 #[inline]
 fn parse_expression(state: Input) -> Output {
     state.rule(DejavuRule::Expression, |s| {
-        s.sequence(|s| {
-            Ok(s).and_then(|s| parse_term(s).and_then(|s| s.tag_node("term"))).and_then(|s| builtin_ignore(s)).and_then(|s| {
-                s.repeat(0..4294967295, |s| {
-                    s.sequence(|s| {
-                        Ok(s)
-                            .and_then(|s| builtin_ignore(s))
-                            .and_then(|s| parse_expression_rest(s).and_then(|s| s.tag_node("expression_rest")))
-                    })
-                })
-            })
-        })
+        s.sequence(|s| Ok(s).and_then(|s| parse_term(s).and_then(|s| s.tag_node("term"))).and_then(|s| builtin_ignore(s)).and_then(|s| s.repeat(0..4294967295, |s| s.sequence(|s| Ok(s).and_then(|s| builtin_ignore(s)).and_then(|s| parse_expression_rest(s).and_then(|s| s.tag_node("expression_rest")))))))
     })
 }
 #[inline]
 fn parse_expression_rest(state: Input) -> Output {
     state.rule(DejavuRule::ExpressionRest, |s| {
-        s.sequence(|s| {
-            Ok(s)
-                .and_then(|s| parse_infix(s).and_then(|s| s.tag_node("infix")))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_term(s).and_then(|s| s.tag_node("term")))
-        })
+        s.sequence(|s| Ok(s).and_then(|s| parse_infix(s).and_then(|s| s.tag_node("infix"))).and_then(|s| builtin_ignore(s)).and_then(|s| parse_term(s).and_then(|s| s.tag_node("term"))))
     })
 }
 #[inline]
 fn parse_infix(state: Input) -> Output {
     state.rule(DejavuRule::Infix, |s| {
         Err(s)
-            .or_else(|s| builtin_text(s, "+", false).and_then(|s| s.tag_node("add")))
-            .or_else(|s| builtin_text(s, "-", false).and_then(|s| s.tag_node("mul")))
     })
 }
 #[inline]
 fn parse_term(state: Input) -> Output {
     state.rule(DejavuRule::Term, |s| {
-        s.sequence(|s| {
-            Ok(s)
-                .and_then(|s| {
-                    s.repeat(0..4294967295, |s| {
-                        s.sequence(|s| {
-                            Ok(s)
-                                .and_then(|s| builtin_ignore(s))
-                                .and_then(|s| parse_prefix(s).and_then(|s| s.tag_node("prefix")))
-                        })
-                    })
-                })
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| parse_atomic(s).and_then(|s| s.tag_node("atomic")))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| {
-                    s.repeat(0..4294967295, |s| {
-                        s.sequence(|s| {
-                            Ok(s)
-                                .and_then(|s| builtin_ignore(s))
-                                .and_then(|s| parse_suffix(s).and_then(|s| s.tag_node("suffix")))
-                        })
-                    })
-                })
-        })
+        s.sequence(|s| Ok(s).and_then(|s| s.repeat(0..4294967295, |s| s.sequence(|s| Ok(s).and_then(|s| builtin_ignore(s)).and_then(|s| parse_prefix(s).and_then(|s| s.tag_node("prefix")))))).and_then(|s| builtin_ignore(s)).and_then(|s| parse_atomic(s).and_then(|s| s.tag_node("atomic"))).and_then(|s| builtin_ignore(s)).and_then(|s| s.repeat(0..4294967295, |s| s.sequence(|s| Ok(s).and_then(|s| builtin_ignore(s)).and_then(|s| parse_suffix(s).and_then(|s| s.tag_node("suffix")))))))
     })
 }
 #[inline]
 fn parse_prefix(state: Input) -> Output {
-    state.rule(DejavuRule::Prefix, |s| Err(s).or_else(|s| builtin_text(s, "!", false).and_then(|s| s.tag_node("not"))))
+    state.rule(DejavuRule::Prefix, |s| {
+        Err(s)
+    })
 }
 #[inline]
 fn parse_suffix(state: Input) -> Output {
     state.rule(DejavuRule::Suffix, |s| {
-        Err(s).or_else(|s| builtin_text(s, "?", false).and_then(|s| s.tag_node("null"))).or_else(|s| {
-            s.sequence(|s| {
-                Ok(s)
-                    .and_then(|s| builtin_text(s, ".", false))
-                    .and_then(|s| builtin_ignore(s))
-                    .and_then(|s| parse_identifier(s).and_then(|s| s.tag_node("identifier")))
-            })
-            .and_then(|s| s.tag_node("dot_call"))
-        })
+        Err(s)
     })
 }
 #[inline]
 fn parse_atomic(state: Input) -> Output {
     state.rule(DejavuRule::Atomic, |s| {
         Err(s)
-            .or_else(|s| parse_boolean(s).and_then(|s| s.tag_node("boolean")))
-            .or_else(|s| parse_identifier(s).and_then(|s| s.tag_node("identifier")))
-            .or_else(|s| parse_number(s).and_then(|s| s.tag_node("number")))
     })
 }
 #[inline]
 fn parse_string(state: Input) -> Output {
     state.rule(DejavuRule::String, |s| {
         Err(s)
-            .or_else(|s| {
-                s.sequence(|s| {
-                    Ok(s)
-                        .and_then(|s| builtin_text(s, "'", false))
-                        .and_then(|s| builtin_ignore(s))
-                        .and_then(|s| builtin_text(s, "'", false))
-                })
-                .and_then(|s| s.tag_node("double_quote"))
-            })
-            .or_else(|s| {
-                s.sequence(|s| {
-                    Ok(s)
-                        .and_then(|s| builtin_text(s, "\"", false))
-                        .and_then(|s| builtin_ignore(s))
-                        .and_then(|s| builtin_text(s, "\"", false))
-                })
-                .and_then(|s| s.tag_node("single_quote"))
-            })
     })
 }
 #[inline]
 fn parse_number(state: Input) -> Output {
     state.rule(DejavuRule::Number, |s| {
         Err(s)
-            .or_else(|s| parse_digits(s).and_then(|s| s.tag_node("dec")))
-            .or_else(|s| {
-                s.sequence(|s| {
-                    Ok(s)
-                        .and_then(|s| {
-                            builtin_regex(s, {
-                                static REGEX: OnceLock<Regex> = OnceLock::new();
-                                REGEX.get_or_init(|| Regex::new("^(0b)").unwrap())
-                            })
-                        })
-                        .and_then(|s| parse_bin(s).and_then(|s| s.tag_node("bin")))
-                })
-                .and_then(|s| s.tag_node("bin"))
-            })
-            .or_else(|s| {
-                s.sequence(|s| {
-                    Ok(s)
-                        .and_then(|s| {
-                            builtin_regex(s, {
-                                static REGEX: OnceLock<Regex> = OnceLock::new();
-                                REGEX.get_or_init(|| Regex::new("^(0o)").unwrap())
-                            })
-                        })
-                        .and_then(|s| parse_oct(s).and_then(|s| s.tag_node("oct")))
-                })
-                .and_then(|s| s.tag_node("oct"))
-            })
-            .or_else(|s| {
-                s.sequence(|s| {
-                    Ok(s)
-                        .and_then(|s| {
-                            builtin_regex(s, {
-                                static REGEX: OnceLock<Regex> = OnceLock::new();
-                                REGEX.get_or_init(|| Regex::new("^(0x)").unwrap())
-                            })
-                        })
-                        .and_then(|s| parse_hex(s).and_then(|s| s.tag_node("hex")))
-                })
-                .and_then(|s| s.tag_node("hex"))
-            })
     })
 }
 #[inline]
@@ -605,20 +320,22 @@ fn parse_digits(state: Input) -> Output {
     state.rule(DejavuRule::Digits, |s| {
         s.match_regex({
             static REGEX: OnceLock<Regex> = OnceLock::new();
-            REGEX.get_or_init(|| Regex::new("^((0|[1-9][0-9])(.[0-9]+)?)").unwrap())
+            REGEX.get_or_init(|| Regex::new("^(?x)(/(0|[1-9][0-9])(.[0-9]+)?/)").unwrap())
         })
     })
 }
 #[inline]
 fn parse_unit(state: Input) -> Output {
-    state.rule(DejavuRule::Unit, |s| parse_identifier(s).and_then(|s| s.tag_node("identifier")))
+    state.rule(DejavuRule::Unit, |s| {
+        parse_identifier(s).and_then(|s| s.tag_node("identifier"))
+    })
 }
 #[inline]
 fn parse_bin(state: Input) -> Output {
     state.rule(DejavuRule::BIN, |s| {
         s.match_regex({
             static REGEX: OnceLock<Regex> = OnceLock::new();
-            REGEX.get_or_init(|| Regex::new("^([0-1]+)").unwrap())
+            REGEX.get_or_init(|| Regex::new("^(?x)(/[0-1]+/)").unwrap())
         })
     })
 }
@@ -627,7 +344,7 @@ fn parse_oct(state: Input) -> Output {
     state.rule(DejavuRule::OCT, |s| {
         s.match_regex({
             static REGEX: OnceLock<Regex> = OnceLock::new();
-            REGEX.get_or_init(|| Regex::new("^([0-7]+)").unwrap())
+            REGEX.get_or_init(|| Regex::new("^(?x)(/[0-7]+/)").unwrap())
         })
     })
 }
@@ -636,60 +353,20 @@ fn parse_hex(state: Input) -> Output {
     state.rule(DejavuRule::HEX, |s| {
         s.match_regex({
             static REGEX: OnceLock<Regex> = OnceLock::new();
-            REGEX.get_or_init(|| Regex::new("^([0-9a-fA-F]+)").unwrap())
+            REGEX.get_or_init(|| Regex::new("^(?x)(/[0-9a-fA-F]+/)").unwrap())
         })
     })
 }
 #[inline]
 fn parse_namepath_free(state: Input) -> Output {
     state.rule(DejavuRule::NamepathFree, |s| {
-        s.sequence(|s| {
-            Ok(s)
-                .and_then(|s| parse_identifier(s).and_then(|s| s.tag_node("identifier")))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| {
-                    s.repeat(0..4294967295, |s| {
-                        s.sequence(|s| {
-                            Ok(s).and_then(|s| builtin_ignore(s)).and_then(|s| {
-                                s.sequence(|s| {
-                                    Ok(s)
-                                        .and_then(|s| {
-                                            Err(s)
-                                                .or_else(|s| builtin_text(s, ".", false))
-                                                .or_else(|s| builtin_text(s, "::", false))
-                                        })
-                                        .and_then(|s| builtin_ignore(s))
-                                        .and_then(|s| parse_identifier(s).and_then(|s| s.tag_node("identifier")))
-                                })
-                            })
-                        })
-                    })
-                })
-        })
+        s.sequence(|s| Ok(s).and_then(|s| parse_identifier(s).and_then(|s| s.tag_node("identifier"))).and_then(|s| builtin_ignore(s)).and_then(|s| s.repeat(0..4294967295, |s| s.sequence(|s| Ok(s).and_then(|s| builtin_ignore(s)).and_then(|s| s.sequence(|s| Ok(s).and_then(|s| Err(s).or_else(|s| builtin_text(s, ".", false)).or_else(|s| builtin_text(s, "::", false))).and_then(|s| builtin_ignore(s)).and_then(|s| parse_identifier(s).and_then(|s| s.tag_node("identifier")))))))))
     })
 }
 #[inline]
 fn parse_namepath(state: Input) -> Output {
     state.rule(DejavuRule::Namepath, |s| {
-        s.sequence(|s| {
-            Ok(s)
-                .and_then(|s| parse_identifier(s).and_then(|s| s.tag_node("identifier")))
-                .and_then(|s| builtin_ignore(s))
-                .and_then(|s| {
-                    s.repeat(0..4294967295, |s| {
-                        s.sequence(|s| {
-                            Ok(s).and_then(|s| builtin_ignore(s)).and_then(|s| {
-                                s.sequence(|s| {
-                                    Ok(s)
-                                        .and_then(|s| builtin_text(s, "::", false))
-                                        .and_then(|s| builtin_ignore(s))
-                                        .and_then(|s| parse_identifier(s).and_then(|s| s.tag_node("identifier")))
-                                })
-                            })
-                        })
-                    })
-                })
-        })
+        s.sequence(|s| Ok(s).and_then(|s| parse_identifier(s).and_then(|s| s.tag_node("identifier"))).and_then(|s| builtin_ignore(s)).and_then(|s| s.repeat(0..4294967295, |s| s.sequence(|s| Ok(s).and_then(|s| builtin_ignore(s)).and_then(|s| s.sequence(|s| Ok(s).and_then(|s| builtin_text(s, "::", false)).and_then(|s| builtin_ignore(s)).and_then(|s| parse_identifier(s).and_then(|s| s.tag_node("identifier")))))))))
     })
 }
 #[inline]
@@ -697,7 +374,7 @@ fn parse_identifier(state: Input) -> Output {
     state.rule(DejavuRule::Identifier, |s| {
         s.match_regex({
             static REGEX: OnceLock<Regex> = OnceLock::new();
-            REGEX.get_or_init(|| Regex::new("^([_\\p{XID_start}]\\p{XID_continue}*)").unwrap())
+            REGEX.get_or_init(|| Regex::new("^(?x)(/[_\\p{XID_start}]\\p{XID_continue}*/)").unwrap())
         })
     })
 }
@@ -705,8 +382,6 @@ fn parse_identifier(state: Input) -> Output {
 fn parse_boolean(state: Input) -> Output {
     state.rule(DejavuRule::Boolean, |s| {
         Err(s)
-            .or_else(|s| builtin_text(s, "true", false).and_then(|s| s.tag_node("true")))
-            .or_else(|s| builtin_text(s, "false", false).and_then(|s| s.tag_node("false")))
     })
 }
 #[inline]
@@ -714,24 +389,25 @@ fn parse_white_space(state: Input) -> Output {
     state.rule(DejavuRule::WhiteSpace, |s| {
         s.match_regex({
             static REGEX: OnceLock<Regex> = OnceLock::new();
-            REGEX.get_or_init(|| Regex::new("^(\\p{White_Space}+)").unwrap())
+            REGEX.get_or_init(|| Regex::new("^(?x)(/\\p{White_Space}+/)").unwrap())
         })
     })
 }
 
 /// All rules ignored in ast mode, inline is not recommended
 fn builtin_ignore(state: Input) -> Output {
-    state.repeat(0..u32::MAX, |s| parse_white_space(s))
+    state.repeat(0..u32::MAX, |s| {})
+
 }
 
 fn builtin_any(state: Input) -> Output {
-    state.rule(DejavuRule::IgnoreText, |s| s.match_char_if(|_| true))
+    state.rule(DejavuRule::HiddenText, |s| s.match_char_if(|_| true))
 }
 
 fn builtin_text<'i>(state: Input<'i>, text: &'static str, case: bool) -> Output<'i> {
-    state.rule(DejavuRule::IgnoreText, |s| s.match_string(text, case))
+    state.rule(DejavuRule::HiddenText, |s| s.match_string(text, case))
 }
 
 fn builtin_regex<'i, 'r>(state: Input<'i>, regex: &'r Regex) -> Output<'i> {
-    state.rule(DejavuRule::IgnoreRegex, |s| s.match_regex(regex))
+    state.rule(DejavuRule::HiddenText, |s| s.match_regex(regex))
 }

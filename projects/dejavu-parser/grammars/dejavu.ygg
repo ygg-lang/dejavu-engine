@@ -1,5 +1,5 @@
 grammar Dejavu {
-
+file: "*.dejavu"
 }
 
 entry class Root {
@@ -9,115 +9,59 @@ entry class Root {
 union Element {
     | TextMany       #Text
     | TemplateExport #Export
-    | TemplateIf     #If
-    | TemplateFor    #For
+    | IfBlock        #If
+| ForBlock       #For
 }
 // === text area === ---------------------------------------------------------------------------------------------------
 atomic class TextMany {
     TextElement+
 }
 union TextElement {
-    | ^TEMPLATE_E #Escape
     | TEXT_SPACE #TextSpace
     | TEXT_WORD  #TextWord
 }
-
-@style(escape)
-class TEMPLATE_E {
-    '<%!'
-}
-
-text token {
-    TEXT_SPACE: /\p{White_Space}+/
-    TEXT_WORD:  /[^<\p{White_Space}]+/
-}
-// === template token === ----------------------------------------------------------------------------------------------
-@style(operator)
-atomic class TEMPLATE_L {
-    // !'<%!'
-    '<%' SpaceControl?
-}
-atomic class TEMPLATE_R {
-    SpaceControl? '%>'
-}
-union SpaceControl {
-    | '=' #Nothing
-    | '~' #Break0
-    | '-' #Break1
-    | '_' #Delete0
-    | '.' #Delete1
-}
-@style(keyword)
-token {
-    KW_END: 'end'
-}
 // === template export === -------------------------------------------------------------------------------------------------
 class TemplateExport ^ {
-    TEMPLATE_L exports:ExportItem* TEMPLATE_R
+TEMPLATE_L exports=ExportItem* TEMPLATE_R
 }
 class ExportItem ^ {
-    KW_EXPORT name:Identifier
-    (KW_TO language:Identifier)?
-    (KW_BY KW_CLASS class :NamepathFree)?
-    (KW_BY KW_TRAIT trait:NamepathFree?)?
-}
-@style(keyword)
-token {
-    KW_EXPORT: 'export'
-    KW_CLASS: 'class'
-    KW_TRAIT: 'trait'
-    KW_TO: 'to'
-    KW_BY: 'by'
+KW_EXPORT name=Identifier
+(KW_TO language=Identifier)?
+(KW_BY KW_CLASS class=NamepathFree)?
+(KW_BY KW_TRAIT trait=NamepathFree?)?
 }
 // === template if === -------------------------------------------------------------------------------------------------
-atomic class TemplateIf {
-    IfBegin IfElseIf* IfElse? IfEnd
+atomic class IfBlock {
+TemplateIf TemplateElseIf* TemplateElse? TemplateEnd
 }
-atomic class IfBegin {
+atomic class TemplateIf {
     TEMPLATE_L ~ ^KW_IF ~ Expression ~ TEMPLATE_R Element*
 }
-atomic class IfElse {
-    TEMPLATE_L ~ ^KW_ELSE ~ TEMPLATE_R Element*
-}
-atomic class IfElseIf {
+atomic class TemplateElseIf {
     TEMPLATE_L ~ ^KW_ELSE ~ ^KW_IF ~ Expression ~ TEMPLATE_R Element*
 }
-atomic class IfEnd {
-    TEMPLATE_L ~ ^KW_END ~ ^KW_IF? ~ TEMPLATE_R
-}
-@style(keyword)
-token {
-    KW_IF: 'if'
-    KW_ELSE: 'else'
+atomic class TemplateElse {
+TEMPLATE_L ~ ^KW_ELSE ~ TEMPLATE_R Element*
 }
 // === template for === ------------------------------------------------------------------------------------------------
+atomic class ForBlock {
+TemplateFor TemplateElse? TemplateEnd
+}
 atomic class TemplateFor {
-    ForBegin ForElse? ForEnd
+TEMPLATE_L ~ ^KW_FOR ~ (!KW_IN Pattern) ~ (^KW_IN ~ iterator=Expression) ~ (^KW_IF ~ condition=Expression)? ~ TEMPLATE_R Element*
 }
-atomic class ForBegin {
-    TEMPLATE_L ~
-    ^KW_FOR ~ (!KW_IN Pattern) ~
-    (^KW_IN ~ iterator:Expression) ~
-    (^KW_IF ~ condition:Expression)? ~
-    TEMPLATE_R Element*
+// === template enj === ------------------------------------------------------------------------------------------------
+atomic class TemplateEnd {
+| TEMPLATE_L ~ ^KW_END ~ Identifier? ~ TEMPLATE_R
+| TEMPLATE_L ~ Identifier? ~ ^KW_END ~ TEMPLATE_R
 }
-atomic class ForElse {
-    TEMPLATE_L ~ ^KW_ELSE ~ TEMPLATE_R Element*
-}
-atomic class ForEnd {
-    TEMPLATE_L ~ ^KW_END ~ ^KW_FOR? ~ TEMPLATE_R
-}
-@style(keyword)
-token {
-    KW_FOR: 'for'
-    KW_IN: 'in'
-}
-// === pattern === ---------------------------------------------------------------------------------------------------
+// === pattern === -----------------------------------------------------------------------------------------------------
 union Pattern {
     | BarePattern
+    | Identifier
 }
 class BarePattern {
-    Identifier (',' Identifier)* ','?
+Pattern (COMMA Pattern)* COMMA?
 }
 // === text area === ---------------------------------------------------------------------------------------------------
 class Expression {
@@ -138,37 +82,68 @@ union Prefix {
 }
 union Suffix {
     | '?' #Null
-    | '.' Identifier #DotCall
+    | DotCall #DotCall
 }
-// === string === ------------------------------------------------------------------------------------------------------
+// === calls === -------------------------------------------------------------------------------------------------------
+class FunctionCall {
+Namepath Tuple?
+}
+class DotCall {
+'.' Identifier Tuple?
+}
+class Tuple {
+| '(' ')'
+| '(' Arguement COMMA ')'
+| '(' Arguement (COMMA Expression)* COMMA? ')'
+}
+class Arguement {
+Key COLON Expression
+}
+union Key {
+| Identifier #Identifier
+}
+// === atomic === ------------------------------------------------------------------------------------------------------
 union Atomic {
-//  | '(' @box(Expression) ')' #Group
-    | Boolean                  #Boolean
-    | Identifier               #Identifier
-    | Number                   #Number
+| GroupExpression #Group
+| Tuple           #Tuple
+| Special         #Boolean
+| FunctionCall    #Function
+| Identifier      #Identifier
+| Number          #Number
+}
+class GroupExpression {
+'(' Expression ')'
+}
+
+// === special === -----------------------------------------------------------------------------------------------------
+#railway(false)
+#style(keyword)
+union Special {
+| 'null'  #Null
+| 'true'  #True
+| 'false' #False
+}
+// === number === ------------------------------------------------------------------------------------------------------
+#railway(false)
+#style(number)
+union Number {
+| DEC #Dec
+| BIN #Bin
+| HEX #Hex
+}
+token {
+DEC: /(0|[1-9][0-9])(.[0-9]+)?/
+BIN: /0b[0-1]+/
+OCT: /0o[0-7]+/
+HEX: /0x[0-9a-fA-F]+/
+}
+class Unit {
+Identifier
 }
 // === string === ------------------------------------------------------------------------------------------------------
 union String {
     | "'" "'" #DoubleQuote
     | '"' '"' #SingleQuote
-}
-// === number === ------------------------------------------------------------------------------------------------------
-atomic union Number {
-    | Digits     #Dec
-    | /0b/ BIN   #Bin
-    | /0o/ OCT   #Oct
-    | /0x/ HEX   #Hex
-}
-text class Digits {
-    /(0|[1-9][0-9])(.[0-9]+)?/
-}
-class Unit {
-    Identifier
-}
-token {
-    BIN: /[0-1]+/
-    OCT: /[0-7]+/
-    HEX: /[0-9a-fA-F]+/
 }
 // === identifier === --------------------------------------------------------------------------------------------------
 class NamepathFree -> Namepath {
@@ -180,16 +155,51 @@ class Namepath {
 class Identifier {
     /[_\p{XID_start}]\p{XID_continue}*/
 }
-union Boolean {
-    | 'true'  #True
-    | 'false' #False
+// === keywords === ----------------------------------------------------------------------------------------------------
+#railway(false)
+#style(keyword)
+token {
+KW_EXPORT: 'export'
+KW_CLASS: 'class'
+KW_TRAIT: 'trait'
+KW_TO: 'to'
+KW_BY: 'by'
+
+KW_FOR: 'for'
+KW_IN: 'in'
+KW_IF: 'if'
+KW_ELSE: 'else'
+KW_END: 'end'
+}
+#style(operator)
+atomic token {
+TEMPLATE_L: ('<%' SpaceControl?)
+TEMPLATE_R: (SpaceControl? '%>')
+}
+union SpaceControl {
+| '=' #Nothing
+| '~' #Break0
+| '-' #Break1
+| '_' #Delete0
+| '.' #Delete1
+}
+#railway(false)
+token {
+DOT:   '.'
+COMMA: ','
+COLON: ':'
+}
+#railway(false)
+token {
+TEXT_SPACE: /\p{White_Space}+/
+TEXT_WORD:  /[^<\p{White_Space}]+/
 }
 // === ignores === -----------------------------------------------------------------------------------------------------
+#railway(false)
 ignore class WhiteSpace {
     /\p{White_Space}+/
 }
-
-//@style(comment)
+//#style(comment)
 //ignore union Comment {
 //    | @comment_line('//')
 //    | @comment_line('#')
