@@ -1,12 +1,12 @@
-use dejavu_parser::dejavu::{AtomicNode, BooleanNode, IdentifierNode, TermNode};
+use dejavu_parser::dejavu::{AtomicNode, IdentifierNode, IfBlockNode, TermNode};
 
 use crate::hir::DejavuIdentifier;
 
 use super::*;
 
-impl<'i> From<&'i TemplateIfNode> for DejavuBranches {
-    fn from(value: &TemplateIfNode) -> Self {
-        let mut out = DejavuBranches::new(value.if_else_if.len());
+impl<'i> From<IfBlockNode<'i>> for DejavuBranches {
+    fn from(value: IfBlockNode<'i>) -> Self {
+        let mut out = DejavuBranches::new(value.template_else_if().len());
         let cond = value.conditions();
         let start = value.rights();
         let end = value.lefts();
@@ -32,9 +32,9 @@ impl<'i> From<&'i TemplateIfNode> for DejavuBranches {
     }
 }
 
-impl<'i> From<&'i ExpressionNode> for DejavuExpression {
-    fn from(value: &ExpressionNode) -> Self {
-        let base = Self::from(&value.term);
+impl<'i> From<ExpressionNode<'i>> for DejavuExpression {
+    fn from(value: ExpressionNode<'i>) -> Self {
+        let base = Self::from(value.term());
         base
     }
 }

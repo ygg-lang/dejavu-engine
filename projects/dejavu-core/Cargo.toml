@@ -11,12 +11,6 @@ edition = "2018"
 
 [dependencies]
 
-
-[dependencies.dejavu-parser]
-version = "0.1.*"
-path = '../dejavu-parser'
-
-
 [dependencies.indentation]
 version = "0.1.*"
 path = "../indentation"

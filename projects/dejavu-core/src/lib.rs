@@ -19,4 +19,4 @@
 extern crate alloc;
 
 pub mod hir;
-mod parser;
+// mod parser;

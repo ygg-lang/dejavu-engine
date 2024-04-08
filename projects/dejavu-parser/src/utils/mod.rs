@@ -1,4 +1,5 @@
-use crate::dejavu::{ElementNode, ExpressionNode, TemplateIfNode, TemplateLNode, TemplateRNode, TextElementNode};
+use crate::dejavu::{ElementNode, ExpressionNode, IfBlockNode, TemplateLNode, TemplateRNode, TextElementNode};
+use yggdrasil_rt::YggdrasilNode;
 
 impl<'i> TextElementNode<'i> {
     pub fn pure_space(&self) -> bool {
@@ -6,9 +7,8 @@ impl<'i> TextElementNode<'i> {
     }
     pub fn write_buffer(&self, w: &mut String) {
         match self {
-            TextElementNode::Escape(_) => w.push_str("<%"),
-            TextElementNode::TextSpace(s) => w.push_str(&s.text),
-            TextElementNode::TextWord(s) => w.push_str(&s.text),
+            TextElementNode::TextSpace(s) => w.push_str(s.get_str()),
+            TextElementNode::TextWord(s) => w.push_str(s.get_str()),
         }
     }
 }
@@ -22,47 +22,47 @@ impl<'i> TextElementNode<'i> {
 ///    text
 /// <% end %>
 /// ```
-impl<'i> TemplateIfNode<'i> {
-    pub fn rights(&self) -> Vec<&TemplateRNode> {
-        let mut out = Vec::with_capacity(self.if_else_if.len() + 1);
-        out.push(&self.if_begin.template_r);
-        for term in &self.if_else_if {
-            out.push(&term.template_r)
+impl<'i> IfBlockNode<'i> {
+    pub fn rights(&self) -> Vec<TemplateRNode> {
+        let mut out = Vec::with_capacity(self.template_else_if().len() + 1);
+        out.push(self.template_if().template_r());
+        for term in &self.template_else_if() {
+            out.push(term.template_r())
         }
-        match &self.if_else {
-            Some(s) => out.push(&s.template_r),
+        match &self.template_else() {
+            Some(s) => out.push(s.template_r()),
             None => {}
         }
         out
     }
-    pub fn lefts(&self) -> Vec<&TemplateLNode> {
-        let mut out = Vec::with_capacity(self.if_else_if.len() + 1);
-        for term in &self.if_else_if {
-            out.push(&term.template_l)
+    pub fn lefts(&self) -> Vec<TemplateLNode> {
+        let mut out = Vec::with_capacity(self.template_else_if().len() + 1);
+        for term in &self.template_else_if() {
+            out.push(term.template_l())
         }
-        match &self.if_else {
-            Some(s) => out.push(&s.template_l),
+        match &self.template_else() {
+            Some(s) => out.push(s.template_l()),
             None => {}
         }
-        out.push(&self.if_end.template_l);
+        out.push(self.template_end().template_l());
         out
     }
-    pub fn conditions(&self) -> Vec<&ExpressionNode> {
-        let mut out = Vec::with_capacity(self.if_else_if.len() + 1);
-        out.push(&self.if_begin.expression);
-        for term in &self.if_else_if {
-            out.push(&term.expression)
+    pub fn conditions(&self) -> Vec<ExpressionNode> {
+        let mut out = Vec::with_capacity(self.template_else_if().len() + 1);
+        out.push(self.template_if().expression());
+        for term in self.template_else_if() {
+            out.push(term.expression())
         }
         out
     }
-    pub fn bodies(&self) -> Vec<&[ElementNode]> {
-        let mut out = Vec::with_capacity(self.if_else_if.len() + 1);
-        out.push(self.if_begin.element.as_slice());
-        for term in &self.if_else_if {
-            out.push(term.element.as_slice())
+    pub fn bodies(&self) -> Vec<Vec<ElementNode>> {
+        let mut out = Vec::with_capacity(self.template_else_if().len() + 1);
+        out.push(self.template_if().element());
+        for term in &self.template_else_if() {
+            out.push(term.element())
         }
-        match &self.if_else {
-            Some(s) => out.push(s.element.as_slice()),
+        match &self.template_else() {
+            Some(s) => out.push(s.element()),
             None => {}
         }
         out

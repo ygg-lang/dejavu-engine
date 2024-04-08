@@ -1,11 +1,12 @@
 use crate::hir::DejavuIdentifier;
+use dejavu_parser::dejavu::ForBlockNode;
 
 use super::*;
 
-impl<'i> From<&'i TemplateForNode> for DejavuLoop {
-    fn from(value: &TemplateForNode) -> Self {
-        let pattern = DejavuPattern::from(&value.for_begin.pattern);
-        let iterator = DejavuExpression::from(&value.for_begin.iterator);
+impl<'i> From<ForBlockNode<'i>> for DejavuLoop {
+    fn from(value: ForBlockNode<'i>) -> Self {
+        let pattern = DejavuPattern::from(value.template_for().pattern());
+        let iterator = DejavuExpression::from(&value.template_for().iterator);
         let condition = value.for_begin.condition.as_ref().map(DejavuExpression::from);
         let mut body = take_elements(&value.for_begin.element);
         let s = take_control_r(&value.for_begin.template_r, true);
@@ -28,16 +29,17 @@ impl<'i> From<&'i TemplateForNode> for DejavuLoop {
     }
 }
 
-impl<'i> From<&'i PatternNode> for DejavuPattern {
-    fn from(node: &'i PatternNode) -> Self {
+impl<'i> From<PatternNode<'i>> for DejavuPattern {
+    fn from(node: PatternNode<'i>) -> Self {
         match node {
             PatternNode::BarePattern(v) => DejavuPattern::from(v),
+            PatternNode::Identifier(_) => {}
         }
     }
 }
 
-impl<'i> From<&'i BarePatternNode> for DejavuPattern {
-    fn from(node: &'i BarePatternNode) -> Self {
+impl<'i> From<BarePatternNode<'i>> for DejavuPattern {
+    fn from(node: BarePatternNode<'i>) -> Self {
         Self::Bare(node.identifier.iter().map(DejavuIdentifier::from).collect())
     }
 }
