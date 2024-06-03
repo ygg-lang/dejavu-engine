@@ -1,10 +1,10 @@
-{% loop while i %}
+{% loop until i %}
     loop body
 {% loop end %}
 
 
 
-{% loop while i %}
+{% loop until i %}
     loop body
 {% else %}
     empty body
