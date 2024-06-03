@@ -1,11 +1,18 @@
-<% while i %>
+{% loop while i %}
     loop body
-<% while end %>
+{% loop end %}
 
 
 
-<% while i %>
+{% loop while i %}
     loop body
-<% else %>
+{% else %}
     empty body
-<% for end %>
+{% loop end %}
+
+{% loop until i %}
+    loop body
+{% else %}
+    empty body
+{% loop end %\]]]--
+

@@ -26,13 +26,13 @@ It is recommended to name the file as `*.rs.djv`.
 
 | Symbol | Control                                          |
 |:-------|:-------------------------------------------------|
-| `<%!`  | Represents text `<%`, does not start a statement |
-| `<%`   | `<%.` if expression, `<%-` if statement          |
-| `<%.`  | Destroy nothing                                  |
-| `<%_`  | Destroy `WS`, except `NL`                        |
-| `<%-`  | Destroy `WS` and recent `NL`                     |
-| `<%~`  | Destroy `WS` and `NL` except farthest `NL`       |
-| `<%=`  | Destroy `WS` and `NL`, all                       |
+| `{%!`  | Represents text `{%`, does not start a statement |
+| `{%`   | `{%.` if expression, `{%-` if statement          |
+| `{%.`  | Destroy nothing                                  |
+| `{%_`  | Destroy `WS`, except `NL`                        |
+| `{%-`  | Destroy `WS` and recent `NL`                     |
+| `{%~`  | Destroy `WS` and `NL` except farthest `NL`       |
+| `{%=`  | Destroy `WS` and `NL`, all                       |
 
 
 

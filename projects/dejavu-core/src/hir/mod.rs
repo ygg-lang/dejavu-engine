@@ -119,7 +119,7 @@ impl DejavuSequence {
     pub fn is_empty(&self) -> bool {
         self.statements.is_empty()
     }
-    /// `%> ... <%`
+    /// `%} ... {%`
     pub fn trim_text(&mut self, head: DejavuTextTrim, tail: DejavuTextTrim) {
         if let Some(DejavuStatement::Text(v)) = self.statements.first_mut() {
             v.trim_head(head)

@@ -11,17 +11,17 @@ fn test_unicode() {
 
 #[test]
 fn test_unicode2() {
-    let cst = NexusParser::parse_cst("<% export parse_template %>", NexusRule::TemplateExport).unwrap();
+    let cst = NexusParser::parse_cst("{% export parse_template %}", NexusRule::TemplateExport).unwrap();
     println!("{}", cst);
-    let cst = NexusParser::parse_cst("<% export parse_template to rust %>", NexusRule::TemplateExport).unwrap();
+    let cst = NexusParser::parse_cst("{% export parse_template to rust %}", NexusRule::TemplateExport).unwrap();
     println!("{}", cst);
-    let cst = NexusParser::parse_cst("<% export parse_template by class Template %>", NexusRule::TemplateExport).unwrap();
-    println!("{}", cst);
-    let cst =
-        NexusParser::parse_cst("<% export parse_template by class Template by trait %>", NexusRule::TemplateExport).unwrap();
+    let cst = NexusParser::parse_cst("{% export parse_template by class Template %}", NexusRule::TemplateExport).unwrap();
     println!("{}", cst);
     let cst =
-        NexusParser::parse_cst("<% export parse_template by class Template by trait TemplateExt %>", NexusRule::TemplateExport)
+        NexusParser::parse_cst("{% export parse_template by class Template by trait %}", NexusRule::TemplateExport).unwrap();
+    println!("{}", cst);
+    let cst =
+        NexusParser::parse_cst("{% export parse_template by class Template by trait TemplateExt %}", NexusRule::TemplateExport)
             .unwrap();
     println!("{}", cst);
 }

@@ -1,11 +1,11 @@
 use super::*;
 
 /// ```dejavu
-/// <% for i in j if k %>
+/// {% for i in j if k %}
 ///
-/// <% else %>
+/// {% else %}
 ///
-/// <% end %>
+/// {% end %}
 /// ```
 #[derive(Clone, Debug)]
 pub struct DejavuLoop {

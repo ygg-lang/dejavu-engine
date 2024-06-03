@@ -26,9 +26,9 @@ fn test_for_ast() {
 #[test]
 fn test_if() {
     let cst = DejavuParser::parse_cst(
-        r###"<% if true %>
+        r###"{% if true %}
    if text
-<% end %>"###,
+{% end %}"###,
         DejavuRule::TemplateIf,
     )
     .unwrap();
@@ -37,18 +37,18 @@ fn test_if() {
 
 #[test]
 fn test_for_begin() {
-    let cst = DejavuParser::parse_cst("<%= for i in j -%>", DejavuRule::ForBegin).unwrap();
+    let cst = DejavuParser::parse_cst("{%= for i in j -%}", DejavuRule::ForBegin).unwrap();
     println!("Short Form:\n{}", cst);
 }
 
 #[test]
 fn test_if_begin() {
-    let cst = DejavuParser::parse_cst("<%= if ture -%>", DejavuRule::IfBegin).unwrap();
+    let cst = DejavuParser::parse_cst("{%= if ture -%}", DejavuRule::IfBegin).unwrap();
     println!("Short Form:\n{}", cst);
 }
 
 #[test]
 fn test_if_end() {
-    let cst = DejavuParser::parse_cst("<%= end -%>", DejavuRule::IfEnd).unwrap();
+    let cst = DejavuParser::parse_cst("{%= end -%}", DejavuRule::IfEnd).unwrap();
     println!("Short Form:\n{}", cst);
 }

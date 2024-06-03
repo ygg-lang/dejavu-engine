@@ -1,14 +1,14 @@
-<% for i in j %>
+{% loop i in j %}
     loop body
-<% end for %>
+{% end for %}
 
 
 
-<% for i in j %>
+{% loop i in j %}
     loop body
-<% else %>
+{% else %}
     empty body
-<% end for %>
+{% end for %}
 
 
 

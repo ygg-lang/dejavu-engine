@@ -1,28 +1,28 @@
-<% if i %>
+{% if i %}
     then body
-<% if end %>
+{% if end %}
 
 
-<% if i %>
+{% if i == true != false %}
     then body
-<% else %>
+{% else %}
     else body
-<% end if %>
+{% end if %}
 
+{% "{inline}" %}
 
-
-<% if i %>
+{% if i %}
     then body
-<% else if x %>
+{% else if x %}
     else body
-<% end if %>
+{% end if %}
 
 
 
-<% if i %>
+{% if i %}
     then body
-<% else if x %>
+{% else if x %}
     else if body
-<% else %>
+{% else %}
     else body
-<% end if %>
+{% end if %}

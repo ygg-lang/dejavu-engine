@@ -27,15 +27,15 @@ impl DisplayIndent for DejavuText {
 #[derive(Copy, Clone, Debug, Ord, PartialOrd, Eq, PartialEq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum DejavuTextTrim {
-    /// `<%= ... =%>`
+    /// `{%= ... =%}`
     Nothing,
-    /// `<%~ ... ~%>`
+    /// `{%~ ... ~%}`
     UntilLineBreak,
-    /// `<%- ... -%>`
+    /// `{%- ... -%}`
     RecentLineBreak,
-    /// `<%_ ... _%>`
+    /// `{%_ ... _%}`
     FurthestLineBreak,
-    /// `<%. ... .%>`
+    /// `{%. ... .%}`
     AllLineBreaks,
 }
 
@@ -46,7 +46,7 @@ impl Default for DejavuTextTrim {
 }
 
 impl DejavuText {
-    /// `... %>   \n  text`
+    /// `... %}   \n  text`
     pub fn trim_head(&mut self, mode: DejavuTextTrim) {
         let mut offset = 0;
         let all = self.head.len();
@@ -93,7 +93,7 @@ impl DejavuText {
             DejavuTextTrim::AllLineBreaks => self.head.clear(),
         }
     }
-    /// `text  \n   <%`
+    /// `text  \n   {%`
     pub fn trim_tail(&mut self, mode: DejavuTextTrim) {
         let mut offset = self.tail.len();
         match mode {

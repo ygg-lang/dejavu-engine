@@ -1,37 +1,37 @@
 # simple if elements
-<% if true %>
+{% if true %}
    if text
-<% end %>
+{% end %}
 
 # if-else element
-<% if true %>
+{% if true %}
    if text
-<% else %>
+{% else %}
    else text
-<% end %>
+{% end %}
 
 
 # if-else-if element
-<% if true %>
+{% if true %}
    if text
-<% else if false %>
+{% else if false %}
    else if text
-<% end %>
+{% end %}
 
 # if-else-if element
-<% if true %>
+{% if true %}
    if text
-<% else if false %>
+{% else if false %}
    else if text
-<% else %>
+{% else %}
    else text
-<% end %>
+{% end %}
 
 # nested if statement
-<% if true %>
+{% if true %}
     term 1
-    <% if false %>
+    {% if false %}
        term 2
-    <% end %>
+    {% end %}
     term 3
-<% end %>
+{% end %}
