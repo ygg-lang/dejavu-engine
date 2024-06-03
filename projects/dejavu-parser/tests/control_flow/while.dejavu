@@ -14,5 +14,5 @@
     loop body
 {% else %}
     empty body
-{% loop end %\]]]--
+{% loop end %}
 
