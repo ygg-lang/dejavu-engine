@@ -18,7 +18,6 @@ class RustWriteMain {
     {% end slot %}
 {% else %}
 
-{% end for %}
-
+{% loop end %}
 
 
