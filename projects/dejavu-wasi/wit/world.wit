@@ -38,15 +38,17 @@ interface syntax-tree {
     use types.{text-range, url, object, dejavu-error};
 
     record dejavu-template {
-        blocks: list<template-item>,
+        root: dejavu-root,
         config: object,
         path: option<url>
     }
-    variant template-item {
+    record dejavu-root {
+        elements: list<root-item>,
+    }
+    variant root-item {
         %placeholder,
         %text(text-element),
     }
-
     record text-element {
         body: string,
         range: text-range,

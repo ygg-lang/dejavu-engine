@@ -313,27 +313,36 @@ pub mod exports {
                     }
                 }
                 #[derive(Clone)]
-                pub enum TemplateItem {
+                pub enum RootItem {
                     Placeholder,
                     Text(TextElement),
                 }
-                impl ::core::fmt::Debug for TemplateItem {
+                impl ::core::fmt::Debug for RootItem {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         match self {
-                            TemplateItem::Placeholder => f.debug_tuple("TemplateItem::Placeholder").finish(),
-                            TemplateItem::Text(e) => f.debug_tuple("TemplateItem::Text").field(e).finish(),
+                            RootItem::Placeholder => f.debug_tuple("RootItem::Placeholder").finish(),
+                            RootItem::Text(e) => f.debug_tuple("RootItem::Text").field(e).finish(),
                         }
                     }
                 }
+                #[derive(Clone)]
+                pub struct DejavuRoot {
+                    pub elements: _rt::Vec<RootItem>,
+                }
+                impl ::core::fmt::Debug for DejavuRoot {
+                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+                        f.debug_struct("DejavuRoot").field("elements", &self.elements).finish()
+                    }
+                }
                 pub struct DejavuTemplate {
-                    pub blocks: _rt::Vec<TemplateItem>,
+                    pub root: DejavuRoot,
                     pub config: Object,
                     pub path: Option<Url>,
                 }
                 impl ::core::fmt::Debug for DejavuTemplate {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         f.debug_struct("DejavuTemplate")
-                            .field("blocks", &self.blocks)
+                            .field("root", &self.root)
                             .field("config", &self.config)
                             .field("path", &self.path)
                             .finish()
@@ -922,7 +931,7 @@ pub mod exports {
                         let base = base7.add(i * 20);
                         let e7 = {
                             let l0 = i32::from(*base.add(0).cast::<u8>());
-                            use super::super::super::super::exports::dejavu::core::syntax_tree::TemplateItem as V6;
+                            use super::super::super::super::exports::dejavu::core::syntax_tree::RootItem as V6;
                             let v6 = match l0 {
                                 0 => V6::Placeholder,
                                 n => {
@@ -1012,7 +1021,9 @@ pub mod exports {
                     let result20 = T::finalize(
                         RustVanillaBorrow::lift(arg0 as u32 as usize).get(),
                         super::super::super::super::exports::dejavu::core::syntax_tree::DejavuTemplate {
-                            blocks: result7,
+                            root: super::super::super::super::exports::dejavu::core::syntax_tree::DejavuRoot {
+                                elements: result7,
+                            },
                             config: super::super::super::super::exports::dejavu::core::types::Object { map: result19 },
                             path: match arg5 {
                                 0 => None,
@@ -1116,7 +1127,7 @@ pub mod exports {
                         let base = base7.add(i * 20);
                         let e7 = {
                             let l0 = i32::from(*base.add(0).cast::<u8>());
-                            use super::super::super::super::exports::dejavu::core::syntax_tree::TemplateItem as V6;
+                            use super::super::super::super::exports::dejavu::core::syntax_tree::RootItem as V6;
                             let v6 = match l0 {
                                 0 => V6::Placeholder,
                                 n => {
@@ -1206,7 +1217,9 @@ pub mod exports {
                     let result20 = T::generate(
                         RustDejavuBorrow::lift(arg0 as u32 as usize).get(),
                         super::super::super::super::exports::dejavu::core::syntax_tree::DejavuTemplate {
-                            blocks: result7,
+                            root: super::super::super::super::exports::dejavu::core::syntax_tree::DejavuRoot {
+                                elements: result7,
+                            },
                             config: super::super::super::super::exports::dejavu::core::types::Object { map: result19 },
                             path: match arg5 {
                                 0 => None,
@@ -1313,7 +1326,7 @@ pub mod exports {
                         let base = base7.add(i * 20);
                         let e7 = {
                             let l0 = i32::from(*base.add(0).cast::<u8>());
-                            use super::super::super::super::exports::dejavu::core::syntax_tree::TemplateItem as V6;
+                            use super::super::super::super::exports::dejavu::core::syntax_tree::RootItem as V6;
                             let v6 = match l0 {
                                 0 => V6::Placeholder,
                                 n => {
@@ -1403,7 +1416,9 @@ pub mod exports {
                     let result20 = T::finalize(
                         JavaScriptVanillaBorrow::lift(arg0 as u32 as usize).get(),
                         super::super::super::super::exports::dejavu::core::syntax_tree::DejavuTemplate {
-                            blocks: result7,
+                            root: super::super::super::super::exports::dejavu::core::syntax_tree::DejavuRoot {
+                                elements: result7,
+                            },
                             config: super::super::super::super::exports::dejavu::core::types::Object { map: result19 },
                             path: match arg5 {
                                 0 => None,
@@ -1510,7 +1525,7 @@ pub mod exports {
                         let base = base7.add(i * 20);
                         let e7 = {
                             let l0 = i32::from(*base.add(0).cast::<u8>());
-                            use super::super::super::super::exports::dejavu::core::syntax_tree::TemplateItem as V6;
+                            use super::super::super::super::exports::dejavu::core::syntax_tree::RootItem as V6;
                             let v6 = match l0 {
                                 0 => V6::Placeholder,
                                 n => {
@@ -1600,7 +1615,9 @@ pub mod exports {
                     let result20 = T::finalize(
                         TypeScriptVanillaBorrow::lift(arg0 as u32 as usize).get(),
                         super::super::super::super::exports::dejavu::core::syntax_tree::DejavuTemplate {
-                            blocks: result7,
+                            root: super::super::super::super::exports::dejavu::core::syntax_tree::DejavuRoot {
+                                elements: result7,
+                            },
                             config: super::super::super::super::exports::dejavu::core::types::Object { map: result19 },
                             path: match arg5 {
                                 0 => None,
@@ -2214,8 +2231,8 @@ pub(crate) use __export_host_impl as export;
 #[cfg(target_arch = "wasm32")]
 #[link_section = "component-type:wit-bindgen:0.24.0:host:encoded world"]
 #[doc(hidden)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 1379] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xe8\x09\x01A\x02\x01\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 1403] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x80\x0a\x01A\x02\x01\
 A\x0b\x01B\x0f\x01q\x05\x04null\0\0\x04bool\x01\x7f\0\x07integer\x01x\0\x07decim\
 al\x01u\0\x06string\x01s\0\x04\0\x05value\x03\0\0\x01o\x02s\x01\x01p\x02\x01r\x01\
 \x03map\x03\x04\0\x06object\x03\0\x04\x04\0\x03url\x03\x01\x01r\x02\x0bhead-offs\
@@ -2223,30 +2240,31 @@ ety\x0btail-offsety\x04\0\x0atext-range\x03\0\x07\x01i\x06\x01k\x09\x01r\x03\x06
 reasons\x04file\x0a\x05range\x08\x04\0\x0csyntax-error\x03\0\x0b\x01q\x01\x06syn\
 tax\x01\x0c\0\x04\0\x0cdejavu-error\x03\0\x0d\x04\x01\x17dejavu:core/types@0.1.0\
 \x05\0\x02\x03\0\0\x0atext-range\x02\x03\0\0\x03url\x02\x03\0\0\x06object\x02\x03\
-\0\0\x0cdejavu-error\x01B\x11\x02\x03\x02\x01\x01\x04\0\x0atext-range\x03\0\0\x02\
+\0\0\x0cdejavu-error\x01B\x13\x02\x03\x02\x01\x01\x04\0\x0atext-range\x03\0\0\x02\
 \x03\x02\x01\x02\x04\0\x03url\x03\0\x02\x02\x03\x02\x01\x03\x04\0\x06object\x03\0\
 \x04\x02\x03\x02\x01\x04\x04\0\x0cdejavu-error\x03\0\x06\x01r\x02\x04bodys\x05ra\
 nge\x01\x04\0\x0ctext-element\x03\0\x08\x01q\x02\x0bplaceholder\0\0\x04text\x01\x09\
-\0\x04\0\x0dtemplate-item\x03\0\x0a\x01p\x0b\x01i\x03\x01k\x0d\x01r\x03\x06block\
-s\x0c\x06config\x05\x04path\x0e\x04\0\x0fdejavu-template\x03\0\x0f\x04\x01\x1dde\
-javu:core/syntax-tree@0.1.0\x05\x05\x02\x03\0\x01\x0fdejavu-template\x01B'\x02\x03\
-\x02\x01\x06\x04\0\x0fdejavu-template\x03\0\0\x02\x03\x02\x01\x01\x04\0\x0atext-\
-range\x03\0\x02\x02\x03\x02\x01\x02\x04\0\x03url\x03\0\x04\x02\x03\x02\x01\x03\x04\
-\0\x06object\x03\0\x06\x02\x03\x02\x01\x04\x04\0\x0cdejavu-error\x03\0\x08\x04\0\
-\x0crust-vanilla\x03\x01\x04\0\x0brust-dejavu\x03\x01\x04\0\x13java-script-vanil\
-la\x03\x01\x04\0\x13type-script-vanilla\x03\x01\x01i\x0a\x01@\x01\x09directorys\0\
-\x0e\x04\0\x19[constructor]rust-vanilla\x01\x0f\x01h\x0a\x01j\0\x01\x09\x01@\x02\
-\x04self\x10\x03ast\x01\0\x11\x04\0\x1d[method]rust-vanilla.finalize\x01\x12\x01\
-i\x0b\x01@\x01\x09directorys\0\x13\x04\0\x18[constructor]rust-dejavu\x01\x14\x01\
-h\x0b\x01@\x02\x04self\x15\x03ast\x01\0\x11\x04\0\x1c[method]rust-dejavu.generat\
-e\x01\x16\x01i\x0c\x01@\x01\x09directorys\0\x17\x04\0\x20[constructor]java-scrip\
-t-vanilla\x01\x18\x01h\x0c\x01@\x02\x04self\x19\x03ast\x01\0\x11\x04\0$[method]j\
-ava-script-vanilla.finalize\x01\x1a\x01i\x0d\x01@\x01\x09directorys\0\x1b\x04\0\x20\
-[constructor]type-script-vanilla\x01\x1c\x01h\x0d\x01@\x02\x04self\x1d\x03ast\x01\
-\0\x11\x04\0$[method]type-script-vanilla.finalize\x01\x1e\x04\x01\x1adejavu:core\
-/backends@0.1.0\x05\x07\x04\x01\x16dejavu:core/host@0.1.0\x04\0\x0b\x0a\x01\0\x04\
-host\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-component\x070.202.0\
-\x10wit-bindgen-rust\x060.24.0";
+\0\x04\0\x09root-item\x03\0\x0a\x01p\x0b\x01r\x01\x08elements\x0c\x04\0\x0bdejav\
+u-root\x03\0\x0d\x01i\x03\x01k\x0f\x01r\x03\x04root\x0e\x06config\x05\x04path\x10\
+\x04\0\x0fdejavu-template\x03\0\x11\x04\x01\x1ddejavu:core/syntax-tree@0.1.0\x05\
+\x05\x02\x03\0\x01\x0fdejavu-template\x01B'\x02\x03\x02\x01\x06\x04\0\x0fdejavu-\
+template\x03\0\0\x02\x03\x02\x01\x01\x04\0\x0atext-range\x03\0\x02\x02\x03\x02\x01\
+\x02\x04\0\x03url\x03\0\x04\x02\x03\x02\x01\x03\x04\0\x06object\x03\0\x06\x02\x03\
+\x02\x01\x04\x04\0\x0cdejavu-error\x03\0\x08\x04\0\x0crust-vanilla\x03\x01\x04\0\
+\x0brust-dejavu\x03\x01\x04\0\x13java-script-vanilla\x03\x01\x04\0\x13type-scrip\
+t-vanilla\x03\x01\x01i\x0a\x01@\x01\x09directorys\0\x0e\x04\0\x19[constructor]ru\
+st-vanilla\x01\x0f\x01h\x0a\x01j\0\x01\x09\x01@\x02\x04self\x10\x03ast\x01\0\x11\
+\x04\0\x1d[method]rust-vanilla.finalize\x01\x12\x01i\x0b\x01@\x01\x09directorys\0\
+\x13\x04\0\x18[constructor]rust-dejavu\x01\x14\x01h\x0b\x01@\x02\x04self\x15\x03\
+ast\x01\0\x11\x04\0\x1c[method]rust-dejavu.generate\x01\x16\x01i\x0c\x01@\x01\x09\
+directorys\0\x17\x04\0\x20[constructor]java-script-vanilla\x01\x18\x01h\x0c\x01@\
+\x02\x04self\x19\x03ast\x01\0\x11\x04\0$[method]java-script-vanilla.finalize\x01\
+\x1a\x01i\x0d\x01@\x01\x09directorys\0\x1b\x04\0\x20[constructor]type-script-van\
+illa\x01\x1c\x01h\x0d\x01@\x02\x04self\x1d\x03ast\x01\0\x11\x04\0$[method]type-s\
+cript-vanilla.finalize\x01\x1e\x04\x01\x1adejavu:core/backends@0.1.0\x05\x07\x04\
+\x01\x16dejavu:core/host@0.1.0\x04\0\x0b\x0a\x01\0\x04host\x03\0\0\0G\x09produce\
+rs\x01\x0cprocessed-by\x02\x0dwit-component\x070.202.0\x10wit-bindgen-rust\x060.\
+24.0";
 
 #[inline(never)]
 #[doc(hidden)]

@@ -17,6 +17,9 @@
 // mod value;
 
 extern crate alloc;
+extern crate core;
 
+pub use crate::errors::{DejavuError, Result};
+
+mod errors;
 pub mod hir;
-// mod parser;
